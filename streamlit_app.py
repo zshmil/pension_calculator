@@ -59,8 +59,8 @@ class StreamlitUI:
                 while True:
                     with st.form("הכנסת הצעה"):
                         offer_name = st.text_input("שם ההצעה")
-                        fee_from_deposit = st.text_input("עמלה מהפקדה (%)")
-                        fee_from_balance = st.text_input("עמלה מהיתרה (%)")
+                        fee_from_deposit = st.text_input("דמי ניהול מהפקדה (%)")
+                        fee_from_balance = st.text_input("דמי ניהול מהיתרה (%)")
                         offer_submitted = st.form_submit_button("הוסף הצעה")
 
                     if offer_submitted and offer_name and fee_from_deposit and fee_from_balance:
