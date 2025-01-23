@@ -1,7 +1,7 @@
 streamlit
 pandas
 datetime
-dateutil
+#dateutil
 random
 matplotlib
 IPython
