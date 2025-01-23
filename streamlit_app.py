@@ -83,6 +83,8 @@ class StreamlitUI:
         else:
             st.warning("יש למלא את כל הפרטים לפני השליחה")
             return None
+
+
 class PensionCalculator:
     """
     Handles all calculations related to the pension savings plan.
