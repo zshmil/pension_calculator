@@ -64,8 +64,8 @@ import pandas as pd
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-st.title("💰🧮 מחשבון פנסיה לשכיר 💰🧮")
-st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
+# st.title("💰🧮 מחשבון פנסיה לשכירים 💰🧮")
+# st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
 
 
 class StreamlitUI:
@@ -181,7 +181,9 @@ class PensionApp:
     """
 
     def run(self):
-        st.title("חישוב פנסיה לשכיר")
+        # st.title("חישוב פנסיה לשכיר")
+        st.title("💰🧮 מחשבון פנסיה לשכירים 💰🧮")
+        st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
         user_inputs = StreamlitUI.get_user_inputs()
 
         if user_inputs:
