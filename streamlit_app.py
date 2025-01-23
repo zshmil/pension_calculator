@@ -54,7 +54,7 @@ class StreamlitHelper:
                     "retirement_age": int(retirement_age.strip()) if retirement_age.strip() else None,
                     "employee_deposit": float(employee_deposit.strip()) if employee_deposit.strip() else 6.0,
                     "employer_deposit": float(employer_deposit.strip()) if employer_deposit.strip() else 6.5,
-                    "expected_annual_yield": float(expected_annual_yield.strip() if expected_annual_yield.strip()) else 6.5   
+                    "expected_annual_yield": float(expected_annual_yield.strip()) if expected_annual_yield.strip() else 4.5   
                 }
             except ValueError:
                 st.error("נא לוודא שהזנתם מספרים תקינים")
