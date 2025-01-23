@@ -30,10 +30,10 @@ class StreamlitHelper:
             dict: A dictionary containing user input values.
         """
         with st.form("חישוב פנסיה לשכיר"):
-            salary = st.text_input("*שכר חודשי (ברוטו)", placeholder=" לדוגמה: 15,000 ")
-            current_balance = st.text_input("*צבירה נוכחית", placeholder=" לדוגמה: 300,000 ")
-            current_age = st.text_input("*גיל", placeholder="לדוגמא:  30 ")
-            retirement_age = st.text_input("*גיל פרישה", placeholder=" נשים 64, גברים 67 ")
+            salary = st.text_input(" *שכר חודשי (ברוטו)", placeholder=" לדוגמה: 15,000 ")
+            current_balance = st.text_input(" *צבירה נוכחית", placeholder=" לדוגמה: 300,000 ")
+            current_age = st.text_input(" *גיל", placeholder="לדוגמא:  30 ")
+            retirement_age = st.text_input(" *גיל פרישה", placeholder=" נשים 64, גברים 67 ")
             employee_deposit = st.text_input("אחוז הפקדה של העובד",placeholder=" בדרך כלל 6% (אפשר ואפילו מומלץ להגדיל ל-7%) ")
             employer_deposit = st.text_input("אחוז הפקדה של המעסיק",placeholder=" בדרך כלל 6.5% ")
             submitted = st.form_submit_button("חשב פנסיה")
