@@ -18,7 +18,7 @@ p, div, input, label, h1, h2, h3, h4, h5, h6 {
 
 
 st.title("🎈 מחשבון פנסיה")
-# st.write(#"Let's start building! For help and inspiration, head over to [docs.streamlit.io](https://docs.streamlit.io/)."# )
+st.write("תוצאות הסימולטור לא מהוות המלצה או תחליף לייעוץ.")
 
 
 class StreamlitHelper:
