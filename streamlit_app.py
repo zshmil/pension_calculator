@@ -77,49 +77,6 @@ class StreamlitUI:
                 st.warning("יש למלא את כל הפרטים לפני השליחה")
                 return None
 
-class StreamlitUI:
-    """
-    Handles the Streamlit interface for user interaction.
-    """
-
-    @staticmethod
-    def get_user_inputs():
-        """
-        Collects user input via Streamlit UI and returns a dictionary.
-        """
-        with st.form("חישוב פנסיה לשכיר"):
-            salary = st.text_input(" שכר חודשי (ברוטו) *", placeholder="לדוגמה: 15,000")
-            current_balance = st.text_input("צבירה נוכחית *", placeholder="לדוגמה: 300,000")
-            current_age = st.text_input("גיל", placeholder="לדוגמא: 30")
-            retirement_age = st.text_input("גיל פרישה", placeholder="נשים 64, גברים 67")
-            employee_deposit = st.text_input("אחוז הפקדה של העובד", placeholder="בדרך כלל 6% (אפשר להגדיל עד ל-7%)")
-            employer_deposit = st.text_input("אחוז הפקדה של המעסיק", placeholder="בדרך כלל 6.5%")
-            expected_annual_yield = st.text_input("תשואה שנתית צפויה", placeholder="לדוגמה: 4.5%")
-            submitted = st.form_submit_button("חשב")
-
-        offers = []
-        while True:
-            offer_name = st.text_input("שם ההצעה")
-            fee_from_deposit = st.text_input("עמלה מהפקדה (%)")
-            fee_from_balance = st.text_input("עמלה מהיתרה (%)")
-            offers.append((offer_name, float(fee_from_deposit), float(fee_from_balance)))
-            another_offer = st.radio("האם יש הצעה נוספת?", ("כן", "לא"))
-            if another_offer == "לא":
-                break
-
-        return {
-            "salary": float(salary.strip().replace(",", "")),
-            "current_balance": float(current_balance.strip().replace(",", "")),
-            "expected_annual_yield": float(expected_annual_yield.strip().replace("%", "")),
-            "current_age": int(current_age.strip()),
-            "retirement_age": int(retirement_age.strip()),
-            "employee_deposit": float(employee_deposit.strip().replace("%", "")),
-            "employer_deposit": float(employer_deposit.strip().replace("%", "")),
-            "offers": offers
-        }
-
-
-
 
 class PensionCalculator:
     """
