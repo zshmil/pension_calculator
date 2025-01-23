@@ -19,7 +19,7 @@ import pandas as pd
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-# st.title("💰🧮 מחשבון פנסיה לשכירים 💰🧮")
+# st.title("💰🧮 מחשבון פנסיה לשכירים 🧮💰")
 # st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
 
 
@@ -61,7 +61,7 @@ class StreamlitUI:
         if user_data:
             offer_count = 0
             while True:
-                form_key = f"offer_form_{offer_count}_{st.session_state.get('offer_counter', 0)}"
+                form_key = f"offer_form_{offer_count}_{st.session_state.get('offer_counter', 0) + offer_count}"
                 with st.form(form_key):
                     offer_name = st.text_input("שם ההצעה", key=f"offer_name_{offer_count}")
                     fee_from_deposit = st.text_input("דמי ניהול מהפקדה (%)", key=f"fee_from_deposit_{offer_count}")
@@ -77,13 +77,12 @@ class StreamlitUI:
                     if st.radio("האם יש הצעה נוספת?", ("כן", "לא"), key=f"more_offers_{offer_count}") == "לא":
                         break
                     offer_count += 1
-                    st.session_state['offer_counter'] = offer_count
+                    st.session_state['offer_counter'] = st.session_state.get('offer_counter', 0) + 1
 
             return user_data
         else:
             st.warning("יש למלא את כל הפרטים לפני השליחה")
             return None
-
 class PensionCalculator:
     """
     Handles all calculations related to the pension savings plan.
