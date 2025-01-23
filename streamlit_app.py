@@ -21,9 +21,6 @@ import pandas as pd
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-st.title("💰🧮 מחשבון פנסיה לשכיר 💰🧮")
-st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
-
 # st.markdown("""
 # <style>
 # body, html {
@@ -164,7 +161,9 @@ class DataFormatter:
 
 # Main Streamlit App
 def main():
-    st.title("Pension Calculator")
+    # st.title("Pension Calculator")
+    st.title("💰🧮 מחשבון פנסיה לשכיר 💰🧮")
+    st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
 
     # Step 1: Get user inputs
     user_inputs = StreamlitUI.get_user_inputs()
