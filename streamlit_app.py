@@ -1,20 +1,20 @@
 import streamlit as st
 
 
-# st.markdown("""
-# <style>
-# body, html {
-#     direction: RTL;
-#     unicode-bidi: bidi-override;
-#     text-align: right;
-# }
-# p, div, input, label, h1, h2, h3, h4, h5, h6 {
-#     direction: RTL;
-#     unicode-bidi: bidi-override;
-#     text-align: right;
-# }
-# </style>
-# """, unsafe_allow_html=True)
+st.markdown("""
+<style>
+body, html {
+    direction: RTL;
+    unicode-bidi: bidi-override;
+    text-align: right;
+}
+p, div, input, label, h1, h2, h3, h4, h5, h6 {
+    direction: RTL;
+    unicode-bidi: bidi-override;
+    text-align: right;
+}
+</style>
+""", unsafe_allow_html=True)
 
 
 st.title("🎈 מחשבון פנסיה")
@@ -36,7 +36,7 @@ class StreamlitHelper:
             retirement_age = st.text_input("*גיל פרישה", placeholder=" נשים 64, גברים 67 ")
             employee_deposit = st.text_input("אחוז הפקדה של העובד",placeholder=" בדרך כלל 6% (אפשר ואפילו מומלץ להגדיל ל-7%) ")
             employer_deposit = st.text_input("אחוז הפקדה של המעסיק",placeholder=" בדרך כלל 6.5% ")
-            expected_annual_yield = st.text_input("*תשואה שנתית צפויה", placeholder="לדוגמה: 4.5%")
+            expected_annual_yield = st.text_input("תשואה שנתית צפויה", placeholder="לדוגמה: 4.5%")
             submitted = st.form_submit_button("חשב פנסיה")
 
         if submitted:
