@@ -194,8 +194,11 @@ class PensionApp:
                 forecast_df[fee_columns] = forecast_df[fee_columns].apply(pd.to_numeric, errors='coerce').fillna(float('inf'))
                 forecast_df['Lowest Total Fee'] = forecast_df[fee_columns].min(axis=1)
                 forecast_df['Best Offer'] = forecast_df[fee_columns].idxmin(axis=1)
-            st.write("תוצאות הסימולציה")
-            st.dataframe(forecast_df[['date', 'Lowest Total Fee', 'Best Offer']])
+                st.write("תוצאות הסימולציה")
+                st.dataframe(forecast_df[['date', 'Lowest Total Fee', 'Best Offer']])
+            else:
+                st.write("אין נתוני עמלות להצגה")
+                st.dataframe(forecast_df[['date', 'balance', 'monthly_deposit']])
 
 if __name__ == "__main__":
     app = PensionApp()
