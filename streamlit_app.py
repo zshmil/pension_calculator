@@ -35,7 +35,7 @@ class StreamlitUI:
         """
         user_data = None
 
-        with st.form("חישוב פנסיה לשכיר"):
+        with st.form("חישוב פנסיה לשכיר", clear_on_submit=True):
             salary = st.text_input(" שכר חודשי (ברוטו) *", placeholder="לדוגמה: 15,000")
             current_balance = st.text_input("צבירה נוכחית *", placeholder="לדוגמה: 300,000")
             current_age = st.text_input("גיל *", placeholder="לדוגמא: 30")
@@ -61,7 +61,7 @@ class StreamlitUI:
         if user_data:
             offer_count = 0
             while True:
-                form_key = f"offer_form_{offer_count}"
+                form_key = f"offer_form_{offer_count}_{st.session_state.get('offer_counter', 0)}"
                 with st.form(form_key):
                     offer_name = st.text_input("שם ההצעה", key=f"offer_name_{offer_count}")
                     fee_from_deposit = st.text_input("דמי ניהול מהפקדה (%)", key=f"fee_from_deposit_{offer_count}")
@@ -77,12 +77,12 @@ class StreamlitUI:
                     if st.radio("האם יש הצעה נוספת?", ("כן", "לא"), key=f"more_offers_{offer_count}") == "לא":
                         break
                     offer_count += 1
+                    st.session_state['offer_counter'] = offer_count
 
             return user_data
         else:
             st.warning("יש למלא את כל הפרטים לפני השליחה")
             return None
-
 
 class PensionCalculator:
     """
