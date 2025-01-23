@@ -17,7 +17,7 @@ p, div, input, label, h1, h2, h3, h4, h5, h6 {
 """, unsafe_allow_html=True)
 
 
-st.title("🎈 מחשבון פנסיה לשכיר ")
+st.title("💰🧮 מחשבון פנסיה לשכיר 💰🧮")
 st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
 
 
