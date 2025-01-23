@@ -353,8 +353,3 @@ class PensionApp:
 if __name__ == "__main__":
     app = PensionApp()
     app.run()
-
-
-if __name__ == "__main__":
-    app = PensionApp()
-    app.run()
