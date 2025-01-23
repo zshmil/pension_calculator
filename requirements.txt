@@ -1,8 +1,8 @@
 streamlit
 pandas
 datetime
-dateutil.relativedelta
+dateutil
 random
-matplotlib.colors
-IPython.display
+matplotlib
+IPython
 sys
