@@ -161,7 +161,7 @@ class PensionApp:
 
     def run(self):
         # st.title("חישוב פנסיה לשכיר")
-        st.title("💰🧮 מחשבון פנסיה לשכירים 💰🧮")
+        st.title("💰🧮 מחשבון פנסיה לשכירים 🧮💰")
         st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
         user_inputs = StreamlitUI.get_user_inputs()
 
