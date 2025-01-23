@@ -22,7 +22,6 @@ from dateutil.relativedelta import relativedelta
 # st.title("💰🧮 מחשבון פנסיה לשכירים 🧮💰")
 # st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
 
-
 class StreamlitUI:
     """
     Handles the Streamlit interface for user interaction.
@@ -83,6 +82,7 @@ class StreamlitUI:
         else:
             st.warning("יש למלא את כל הפרטים לפני השליחה")
             return None
+
 
 
 class PensionCalculator:
