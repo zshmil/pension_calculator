@@ -33,6 +33,8 @@ class StreamlitUI:
         """
         Collects user input via Streamlit UI and returns a dictionary.
         """
+        user_data = None
+
         with st.form("חישוב פנסיה לשכיר"):
             salary = st.text_input(" שכר חודשי (ברוטו) *", placeholder="לדוגמה: 15,000")
             current_balance = st.text_input("צבירה נוכחית *", placeholder="לדוגמה: 300,000")
@@ -56,26 +58,27 @@ class StreamlitUI:
                     "offers": []
                 }
 
-                while True:
-                    with st.form("הכנסת הצעה"):
-                        offer_name = st.text_input("שם ההצעה")
-                        fee_from_deposit = st.text_input("דמי ניהול מהפקדה (%)")
-                        fee_from_balance = st.text_input("דמי ניהול מצבירה (%)")
-                        offer_submitted = st.form_submit_button("הוסף הצעה")
+        if user_data:
+            while True:
+                with st.form("הכנסת הצעה"):
+                    offer_name = st.text_input("שם ההצעה")
+                    fee_from_deposit = st.text_input("דמי ניהול מהפקדה (%)")
+                    fee_from_balance = st.text_input("דמי ניהול מצבירה (%)")
+                    offer_submitted = st.form_submit_button("הוסף הצעה")
 
-                    if offer_submitted and offer_name and fee_from_deposit and fee_from_balance:
-                        user_data["offers"].append({
-                            "offer_name": offer_name,
-                            "fee_from_deposit": float(fee_from_deposit.strip().replace("%", "")),
-                            "fee_from_balance": float(fee_from_balance.strip().replace("%", ""))
-                        })
-                        if st.radio("האם יש הצעה נוספת?", ("כן", "לא")) == "לא":
-                            break
+                if offer_submitted and offer_name and fee_from_deposit and fee_from_balance:
+                    user_data["offers"].append({
+                        "offer_name": offer_name,
+                        "fee_from_deposit": float(fee_from_deposit.strip().replace("%", "")),
+                        "fee_from_balance": float(fee_from_balance.strip().replace("%", ""))
+                    })
+                    if st.radio("האם יש הצעה נוספת?", ("כן", "לא")) == "לא":
+                        break
 
-                return user_data
-            else:
-                st.warning("יש למלא את כל הפרטים לפני השליחה")
-                return None
+            return user_data
+        else:
+            st.warning("יש למלא את כל הפרטים לפני השליחה")
+            return None
 
 
 class PensionCalculator:
