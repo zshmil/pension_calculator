@@ -22,8 +22,8 @@ class StreamlitHelper:
             current_balance = st.text_input("צבירה נוכחית *", placeholder="לדוגמה: 300,000")
             current_age = st.text_input("גיל", placeholder="לדוגמא: 30")
             retirement_age = st.text_input("גיל פרישה", placeholder="נשים 64, גברים 67 (ניתן לפרוש בגיל מאוחר יותר, הפנסיה היא רק מגיל הפרישה כך שלא ניתן לקבל קצבה לפני גיל הפרישה)")
-            employee_deposit = st.text_input("אחוז הפקדה של העובד",placeholder="(אפשר ואפילו מומלץ להגדיל ל7%) בד\"כ 6%")
-            employer_deposit = st.text_input("אחוז הפקדה של המעסיק",placeholder="בד\"כ 6.5%")
+            employee_deposit = st.text_input("אחוז הפקדה של העובד",placeholder="(אפשר ואפילו מומלץ להגדיל ל7%) בדרך כלל 6%")
+            employer_deposit = st.text_input("אחוז הפקדה של המעסיק",placeholder="בדרך כלל 6.5%")
             submitted = st.form_submit_button("חשב פנסיה")
 
         if submitted:
