@@ -133,8 +133,8 @@ class StreamlitUI:
                     "retirement_age": int(retirement_age.strip()),
                     # "employee_deposit": float(employee_deposit.strip()),
                     # "employer_deposit": float(employer_deposit.strip())
-                    "employee_deposit": float(employee_deposit.strip()) if employee_deposit.strip() else 6.0,
-                    "employer_deposit": float(employer_deposit.strip()) if employer_deposit.strip() else 6.5
+                    "employee_deposit": float(employee_deposit.strip().replace("%", "")) if employee_deposit.strip() else 6.0,
+                    "employer_deposit": float(employer_deposit.strip().replace("%", "")) if employer_deposit.strip() else 6.5
                 }
             else:
                 st.warning("יש למלא את כל הפרטים לפני השליחה")
