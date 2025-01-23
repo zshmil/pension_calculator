@@ -43,10 +43,25 @@ class StreamlitHelper:
         else:
             return None
 
-# Run the input form and store the results
-pension_data = StreamlitHelper.get_user_inputs()
+# # Run the input form and store the results
+# pension_data = StreamlitHelper.get_user_inputs()
 
-# Display the collected data
-if pension_data:
-    st.success("פרטי הפנסיה שהוזנו:")
-    st.write(pension_data)
+# # Display the collected data
+# if pension_data:
+#     st.success("פרטי הפנסיה שהוזנו:")
+#     st.write(pension_data)
+
+
+def main():
+    """
+    """
+    # Run the input form and store the results
+    pension_data = StreamlitHelper.get_user_inputs()
+
+    # Display the collected data
+    if pension_data:
+        st.success("פרטי הפנסיה שהוזנו:")
+        st.write(pension_data)
+
+if __name__ == "__main__":
+    main()
