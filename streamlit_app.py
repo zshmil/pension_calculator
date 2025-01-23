@@ -1,9 +1,4 @@
 
-# import streamlit as st
-# import pandas as pd
-# from datetime import datetime
-# from dateutil.relativedelta import relativedelta
-
 # # st.markdown("""
 # # <style>
 # # body, html {
@@ -18,46 +13,6 @@
 # # }
 # # </style>
 # # """, unsafe_allow_html=True)
-
-
-# class StreamlitUI:
-#     """
-#     Handles the Streamlit interface for user interaction.
-#     """
-
-#     @staticmethod
-#     def get_user_inputs():
-#         """
-#         Collects user input via Streamlit UI and returns a dictionary.
-#         """
-#         with st.form("חישוב פנסיה לשכיר"):
-#             salary = st.text_input(" שכר חודשי (ברוטו) *", placeholder="לדוגמה: 15,000")
-#             current_balance = st.text_input("צבירה נוכחית *", placeholder="לדוגמה: 300,000")
-#             current_age = st.text_input("גיל", placeholder="לדוגמא: 30")
-#             retirement_age = st.text_input("גיל פרישה", placeholder="נשים 64, גברים 67")
-#             employee_deposit = st.text_input("אחוז הפקדה של העובד",placeholder="בדרך כלל 6% (אפשר להגדיל עד ל-7%)")
-#             employer_deposit = st.text_input("אחוז הפקדה של המעסיק",placeholder="בדרך כלל 6.5%")
-#             expected_annual_yield = st.text_input("תשואה שנתית צפויה", placeholder="לדוגמה: 4.5%")
-            
-#             submitted = st.form_submit_button("Submit")
-
-#         if submitted:
-#             # if all([salary, current_balance, expected_annual_yield, current_age, retirement_age, employee_deposit, employer_deposit]):
-#             if all([salary, current_balance, current_age, retirement_age]):
-#                 return {
-#                     "salary": float(salary.strip().replace(",", "")),
-#                     "current_balance": float(current_balance.strip().replace(",", "")),
-#                     "expected_annual_yield": float(expected_annual_yield.strip().replace("%", "")) if expected_annual_yield.strip() else 4.5,
-#                     "current_age": int(current_age.strip()),
-#                     "retirement_age": int(retirement_age.strip()),
-#                     # "employee_deposit": float(employee_deposit.strip()),
-#                     # "employer_deposit": float(employer_deposit.strip())
-#                     "employee_deposit": float(employee_deposit.strip().replace("%", "")) if employee_deposit.strip() else 6.0,
-#                     "employer_deposit": float(employer_deposit.strip().replace("%", "")) if employer_deposit.strip() else 6.5
-#                 }
-
-
-
 
 import streamlit as st
 import pandas as pd
@@ -86,23 +41,84 @@ class StreamlitUI:
             employee_deposit = st.text_input("אחוז הפקדה של העובד", placeholder="בדרך כלל 6% (אפשר להגדיל עד ל-7%)")
             employer_deposit = st.text_input("אחוז הפקדה של המעסיק", placeholder="בדרך כלל 6.5%")
             expected_annual_yield = st.text_input("תשואה שנתית צפויה", placeholder="לדוגמה: 4.5%")
-            
             submitted = st.form_submit_button("חשב")
 
         if submitted:
             if all([salary, current_balance, current_age, retirement_age]):
-                return {
+                user_data = {
                     "salary": float(salary.strip().replace(",", "")),
                     "current_balance": float(current_balance.strip().replace(",", "")),
                     "expected_annual_yield": float(expected_annual_yield.strip().replace("%", "")) if expected_annual_yield.strip() else 4.5,
                     "current_age": int(current_age.strip()),
                     "retirement_age": int(retirement_age.strip()),
                     "employee_deposit": float(employee_deposit.strip().replace("%", "")) if employee_deposit.strip() else 6.0,
-                    "employer_deposit": float(employer_deposit.strip().replace("%", "")) if employer_deposit.strip() else 6.5
+                    "employer_deposit": float(employer_deposit.strip().replace("%", "")) if employer_deposit.strip() else 6.5,
+                    "offers": []
                 }
+
+                while True:
+                    with st.form("הכנסת הצעה"):
+                        offer_name = st.text_input("שם ההצעה")
+                        fee_from_deposit = st.text_input("עמלה מהפקדה (%)")
+                        fee_from_balance = st.text_input("עמלה מהיתרה (%)")
+                        offer_submitted = st.form_submit_button("הוסף הצעה")
+
+                    if offer_submitted and offer_name and fee_from_deposit and fee_from_balance:
+                        user_data["offers"].append({
+                            "offer_name": offer_name,
+                            "fee_from_deposit": float(fee_from_deposit.strip().replace("%", "")),
+                            "fee_from_balance": float(fee_from_balance.strip().replace("%", ""))
+                        })
+                        if st.radio("האם יש הצעה נוספת?", ("כן", "לא")) == "לא":
+                            break
+
+                return user_data
             else:
                 st.warning("יש למלא את כל הפרטים לפני השליחה")
                 return None
+
+class StreamlitUI:
+    """
+    Handles the Streamlit interface for user interaction.
+    """
+
+    @staticmethod
+    def get_user_inputs():
+        """
+        Collects user input via Streamlit UI and returns a dictionary.
+        """
+        with st.form("חישוב פנסיה לשכיר"):
+            salary = st.text_input(" שכר חודשי (ברוטו) *", placeholder="לדוגמה: 15,000")
+            current_balance = st.text_input("צבירה נוכחית *", placeholder="לדוגמה: 300,000")
+            current_age = st.text_input("גיל", placeholder="לדוגמא: 30")
+            retirement_age = st.text_input("גיל פרישה", placeholder="נשים 64, גברים 67")
+            employee_deposit = st.text_input("אחוז הפקדה של העובד", placeholder="בדרך כלל 6% (אפשר להגדיל עד ל-7%)")
+            employer_deposit = st.text_input("אחוז הפקדה של המעסיק", placeholder="בדרך כלל 6.5%")
+            expected_annual_yield = st.text_input("תשואה שנתית צפויה", placeholder="לדוגמה: 4.5%")
+            submitted = st.form_submit_button("חשב")
+
+        offers = []
+        while True:
+            offer_name = st.text_input("שם ההצעה")
+            fee_from_deposit = st.text_input("עמלה מהפקדה (%)")
+            fee_from_balance = st.text_input("עמלה מהיתרה (%)")
+            offers.append((offer_name, float(fee_from_deposit), float(fee_from_balance)))
+            another_offer = st.radio("האם יש הצעה נוספת?", ("כן", "לא"))
+            if another_offer == "לא":
+                break
+
+        return {
+            "salary": float(salary.strip().replace(",", "")),
+            "current_balance": float(current_balance.strip().replace(",", "")),
+            "expected_annual_yield": float(expected_annual_yield.strip().replace("%", "")),
+            "current_age": int(current_age.strip()),
+            "retirement_age": int(retirement_age.strip()),
+            "employee_deposit": float(employee_deposit.strip().replace("%", "")),
+            "employer_deposit": float(employer_deposit.strip().replace("%", "")),
+            "offers": offers
+        }
+
+
 
 
 class PensionCalculator:
