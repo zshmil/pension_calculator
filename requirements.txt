@@ -1,1 +1,8 @@
 streamlit
+pandas
+datetime
+dateutil.relativedelta
+random
+matplotlib.colors as mcolors
+IPython.display
+sys
