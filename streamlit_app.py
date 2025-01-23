@@ -167,7 +167,7 @@ class StreamlitUI:
             current_balance = st.text_input("צבירה נוכחית *", placeholder="לדוגמה: 300,000")
             expected_annual_yield = st.text_input("תשואה שנתית צפויה *", placeholder="לדוגמה: 4.5%")
             current_age = st.text_input("גיל", placeholder="לדוגמא: 30")
-            retirement_age = st.text_input("גיל פרישה", placeholder="לדוגמה: 67")
+            retirement_age = st.text_input("גיל פרישה", placeholder="נשים 64, גברים 67")
             employee_deposit = st.text_input("אחוז הפקדה של העובד", placeholder="6%")
             employer_deposit = st.text_input("אחוז הפקדה של המעסיק", placeholder="6.5%")
             
