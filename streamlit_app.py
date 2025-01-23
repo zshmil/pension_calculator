@@ -168,8 +168,9 @@ class StreamlitUI:
             expected_annual_yield = st.text_input("תשואה שנתית צפויה *", placeholder="לדוגמה: 4.5%")
             current_age = st.text_input("גיל", placeholder="לדוגמא: 30")
             retirement_age = st.text_input("גיל פרישה", placeholder="נשים 64, גברים 67")
-            employee_deposit = st.text_input("אחוז הפקדה של העובד", placeholder="6%")
-            employer_deposit = st.text_input("אחוז הפקדה של המעסיק", placeholder="6.5%")
+            employee_deposit = st.text_input("אחוז הפקדה של העובד",placeholder=" בדרך כלל 6% (אפשר ואפילו מומלץ להגדיל ל-7%) ")
+            employer_deposit = st.text_input("אחוז הפקדה של המעסיק",placeholder=" בדרך כלל 6.5% ")
+            expected_annual_yield = st.text_input("תשואה שנתית צפויה", placeholder=" לדוגמה: 4.5% ")
             
             submitted = st.form_submit_button("Submit")
 
@@ -178,11 +179,13 @@ class StreamlitUI:
                 return {
                     "salary": float(salary.strip().replace(",", "")),
                     "current_balance": float(current_balance.strip().replace(",", "")),
-                    "expected_annual_yield": float(expected_annual_yield.strip().replace("%", "")),
+                    "expected_annual_yield": float(expected_annual_yield.strip().replace("%", "")) if expected_annual_yield.strip() else 4.5,
                     "current_age": int(current_age.strip()),
                     "retirement_age": int(retirement_age.strip()),
-                    "employee_deposit": float(employee_deposit.strip()),
-                    "employer_deposit": float(employer_deposit.strip())
+                    # "employee_deposit": float(employee_deposit.strip()),
+                    # "employer_deposit": float(employer_deposit.strip())
+                    "employee_deposit": float(employee_deposit.strip()) if employee_deposit.strip() else 6.0,
+                    "employer_deposit": float(employer_deposit.strip()) if employer_deposit.strip() else 6.5
                 }
             else:
                 st.warning("יש למלא את כל הפרטים לפני השליחה")
