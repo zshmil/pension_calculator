@@ -5,6 +5,10 @@ st.title("🎈 מחשבון פנסיה")
 #     "Let's start building! For help and inspiration, head over to [docs.streamlit.io](https://docs.streamlit.io/)."
 # )
 
+import streamlit as st
+
+st.title("🎈 מחשבון פנסיה")
+
 class StreamlitHelper:
     @staticmethod
     def get_user_inputs():
@@ -13,27 +17,41 @@ class StreamlitHelper:
         Returns:
             dict: A dictionary containing user input values.
         """
-        # st.title("AppLovin Campaign Manager")
         with st.form("חישוב פנסיה לשכיר"):
-            salary = st.text_input(" שכר חודשי (ברוטו) *", placeholder="לדוגמה: 15,000")
+            salary = st.text_input("שכר חודשי (ברוטו) *", placeholder="לדוגמה: 15,000")
             current_balance = st.text_input("צבירה נוכחית *", placeholder="לדוגמה: 300,000")
             current_age = st.text_input("גיל", placeholder="לדוגמא: 30")
-            retirement_age = st.text_input("גיל פרישה", placeholder='''נשים 64, גברים 67 (ניתן לפרוש בגיל מאוחר יותר, הפנסיה היא רק מגיל הפרישה כך שלא ניתן לקבל קצבה לפני גיל הפרישה)''') #input('When Are You Planning To Retire?: ').strip()
-            employee_deposit = st.text_input("אחוז הפקדה של העובד", placeholder='''(אפשר ואפילו מומלץ להגדיל ל7%) בד"כ 6%''')
-            employer_deposit = st.text_input("אחוז הפקדה של המעסיק", placeholder='''בד"כ 6.5%''')
+            retirement_age = st.text_input("גיל פרישה", placeholder="נשים 64, גברים 67 (ניתן לפרוש בגיל מאוחר יותר, הפנסיה היא רק מגיל הפרישה כך שלא ניתן לקבל קצבה לפני גיל הפרישה)")
+            employee_deposit = st.text_input("אחוז הפקדה של העובד",placeholder="(אפשר ואפילו מומלץ להגדיל ל7%) בד\"כ 6%")
+            employer_deposit = st.text_input("אחוז הפקדה של המעסיק",placeholder="בד\"כ 6.5%")
+            submitted = st.form_submit_button("חשב פנסיה")
+
+        if submitted:
+            # Ensure required fields are filled
+            if not salary or not current_balance:
+                st.warning("יש למלא את כל הפרטים המסומנים בכוכבית לפני השליחה")
+                return None
             
-            submitted = st.form_submit_button("Submit")
-    
-        if submitted and campaign_name:
-            return {
-                "salary": salary.strip(),
-                "current_balance": float(current_balance.strip()),
-                "current_age": int(current_age.strip() if creative_set_description.strip()) else None,
-                "retirement_age": int(etirement_age.strip() if product_page.strip()) else None,
-                "employee_deposit": float(employee_deposit.strip() if product_page.strip()) else 6.0,
-                "employer_deposit": float(employer_deposit.strip() if product_page.strip()) else 6.5,
-               
-            }
+            try:
+                # Convert input values and set defaults if necessary
+                return {
+                    "salary": float(salary.replace(',', '').strip()) if salary.strip() else 0.0,
+                    "current_balance": float(current_balance.replace(',', '').strip()) if current_balance.strip() else 0.0,
+                    "current_age": int(current_age.strip()) if current_age.strip() else None,
+                    "retirement_age": int(retirement_age.strip()) if retirement_age.strip() else None,
+                    "employee_deposit": float(employee_deposit.strip()) if employee_deposit.strip() else 6.0,
+                    "employer_deposit": float(employer_deposit.strip()) if employer_deposit.strip() else 6.5,
+                }
+            except ValueError:
+                st.error("נא לוודא שהזנתם מספרים תקינים")
+                return None
         else:
-            st.warning("יש למלא את כל הפרטים לפני השליחה")
             return None
+
+# Run the input form and store the results
+pension_data = StreamlitHelper.get_user_inputs()
+
+# Display the collected data
+if pension_data:
+    st.success("פרטי הפנסיה שהוזנו:")
+    st.write(pension_data)
