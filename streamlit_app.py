@@ -59,11 +59,13 @@ class StreamlitUI:
                 }
 
         if user_data:
+            offer_count = 0
             while True:
-                with st.form("הכנסת הצעה"):
-                    offer_name = st.text_input("שם ההצעה")
-                    fee_from_deposit = st.text_input("דמי ניהול מהפקדה (%)")
-                    fee_from_balance = st.text_input("דמי ניהול מצבירה (%)")
+                form_key = f"offer_form_{offer_count}"
+                with st.form(form_key):
+                    offer_name = st.text_input("שם ההצעה", key=f"offer_name_{offer_count}")
+                    fee_from_deposit = st.text_input("דמי ניהול מהפקדה (%)", key=f"fee_from_deposit_{offer_count}")
+                    fee_from_balance = st.text_input("דמי ניהול מצבירה (%)", key=f"fee_from_balance_{offer_count}")
                     offer_submitted = st.form_submit_button("הוסף הצעה")
 
                 if offer_submitted and offer_name and fee_from_deposit and fee_from_balance:
@@ -72,8 +74,9 @@ class StreamlitUI:
                         "fee_from_deposit": float(fee_from_deposit.strip().replace("%", "")),
                         "fee_from_balance": float(fee_from_balance.strip().replace("%", ""))
                     })
-                    if st.radio("האם יש הצעה נוספת?", ("כן", "לא")) == "לא":
+                    if st.radio("האם יש הצעה נוספת?", ("כן", "לא"), key=f"more_offers_{offer_count}") == "לא":
                         break
+                    offer_count += 1
 
             return user_data
         else:
