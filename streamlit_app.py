@@ -67,10 +67,43 @@ from dateutil.relativedelta import relativedelta
 st.title("💰🧮 מחשבון פנסיה לשכיר 💰🧮")
 st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
 
-import streamlit as st
-import pandas as pd
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
+
+class StreamlitUI:
+    """
+    Handles the Streamlit interface for user interaction.
+    """
+
+    @staticmethod
+    def get_user_inputs():
+        """
+        Collects user input via Streamlit UI and returns a dictionary.
+        """
+        with st.form("חישוב פנסיה לשכיר"):
+            salary = st.text_input(" שכר חודשי (ברוטו) *", placeholder="לדוגמה: 15,000")
+            current_balance = st.text_input("צבירה נוכחית *", placeholder="לדוגמה: 300,000")
+            current_age = st.text_input("גיל *", placeholder="לדוגמא: 30")
+            retirement_age = st.text_input("גיל פרישה *", placeholder="נשים 64, גברים 67")
+            employee_deposit = st.text_input("אחוז הפקדה של העובד", placeholder="בדרך כלל 6% (אפשר להגדיל עד ל-7%)")
+            employer_deposit = st.text_input("אחוז הפקדה של המעסיק", placeholder="בדרך כלל 6.5%")
+            expected_annual_yield = st.text_input("תשואה שנתית צפויה", placeholder="לדוגמה: 4.5%")
+            
+            submitted = st.form_submit_button("חשב")
+
+        if submitted:
+            if all([salary, current_balance, current_age, retirement_age]):
+                return {
+                    "salary": float(salary.strip().replace(",", "")),
+                    "current_balance": float(current_balance.strip().replace(",", "")),
+                    "expected_annual_yield": float(expected_annual_yield.strip().replace("%", "")) if expected_annual_yield.strip() else 4.5,
+                    "current_age": int(current_age.strip()),
+                    "retirement_age": int(retirement_age.strip()),
+                    "employee_deposit": float(employee_deposit.strip().replace("%", "")) if employee_deposit.strip() else 6.0,
+                    "employer_deposit": float(employer_deposit.strip().replace("%", "")) if employer_deposit.strip() else 6.5
+                }
+            else:
+                st.warning("יש למלא את כל הפרטים לפני השליחה")
+                return None
+
 
 class PensionCalculator:
     """
@@ -142,43 +175,6 @@ class PensionCalculator:
         return df
 
 
-class StreamlitUI:
-    """
-    Handles the Streamlit interface for user interaction.
-    """
-
-    @staticmethod
-    def get_user_inputs():
-        """
-        Collects user input via Streamlit UI and returns a dictionary.
-        """
-        with st.form("חישוב פנסיה לשכיר"):
-            salary = st.text_input(" שכר חודשי (ברוטו) *", placeholder="לדוגמה: 15,000")
-            current_balance = st.text_input("צבירה נוכחית *", placeholder="לדוגמה: 300,000")
-            current_age = st.text_input("גיל *", placeholder="לדוגמא: 30")
-            retirement_age = st.text_input("גיל פרישה *", placeholder="נשים 64, גברים 67")
-            employee_deposit = st.text_input("אחוז הפקדה של העובד", placeholder="בדרך כלל 6% (אפשר להגדיל עד ל-7%)")
-            employer_deposit = st.text_input("אחוז הפקדה של המעסיק", placeholder="בדרך כלל 6.5%")
-            expected_annual_yield = st.text_input("תשואה שנתית צפויה", placeholder="לדוגמה: 4.5%")
-            
-            submitted = st.form_submit_button("חשב")
-
-        if submitted:
-            if all([salary, current_balance, current_age, retirement_age]):
-                return {
-                    "salary": float(salary.strip().replace(",", "")),
-                    "current_balance": float(current_balance.strip().replace(",", "")),
-                    "expected_annual_yield": float(expected_annual_yield.strip().replace("%", "")) if expected_annual_yield.strip() else 4.5,
-                    "current_age": int(current_age.strip()),
-                    "retirement_age": int(retirement_age.strip()),
-                    "employee_deposit": float(employee_deposit.strip().replace("%", "")) if employee_deposit.strip() else 6.0,
-                    "employer_deposit": float(employer_deposit.strip().replace("%", "")) if employer_deposit.strip() else 6.5
-                }
-            else:
-                st.warning("יש למלא את כל הפרטים לפני השליחה")
-                return None
-
-
 class PensionApp:
     """
     The main application class that integrates UI and calculations.
@@ -192,9 +188,10 @@ class PensionApp:
             pension_calculator = PensionCalculator(**user_inputs)
             forecast_df = pension_calculator.generate_pension_forecast()
             fee_columns = forecast_df.filter(like='total_fee').columns
-            forecast_df[fee_columns] = forecast_df[fee_columns].apply(pd.to_numeric, errors='coerce').fillna(float('inf'))
-            forecast_df['Lowest Total Fee'] = forecast_df[fee_columns].min(axis=1)
-            forecast_df['Best Offer'] = forecast_df[fee_columns].idxmin(axis=1)
+            if not fee_columns.empty:
+                forecast_df[fee_columns] = forecast_df[fee_columns].apply(pd.to_numeric, errors='coerce').fillna(float('inf'))
+                forecast_df['Lowest Total Fee'] = forecast_df[fee_columns].min(axis=1)
+                forecast_df['Best Offer'] = forecast_df[fee_columns].idxmin(axis=1)
             st.write("תוצאות הסימולציה")
             st.dataframe(forecast_df[['date', 'Lowest Total Fee', 'Best Offer']])
 
