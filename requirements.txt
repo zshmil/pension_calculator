@@ -3,6 +3,6 @@ pandas
 datetime
 dateutil.relativedelta
 random
-matplotlib.colors as mcolors
+matplotlib.colors
 IPython.display
 sys
