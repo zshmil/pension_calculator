@@ -1,20 +1,20 @@
 import streamlit as st
 
 
-st.markdown("""
-<style>
-body, html {
-    direction: RTL;
-    unicode-bidi: bidi-override;
-    text-align: right;
-}
-p, div, input, label, h1, h2, h3, h4, h5, h6 {
-    direction: RTL;
-    unicode-bidi: bidi-override;
-    text-align: right;
-}
-</style>
-""", unsafe_allow_html=True)
+# st.markdown("""
+# <style>
+# body, html {
+#     direction: RTL;
+#     unicode-bidi: bidi-override;
+#     text-align: right;
+# }
+# p, div, input, label, h1, h2, h3, h4, h5, h6 {
+#     direction: RTL;
+#     unicode-bidi: bidi-override;
+#     text-align: right;
+# }
+# </style>
+# """, unsafe_allow_html=True)
 
 
 st.title("🎈 מחשבון פנסיה")
@@ -44,19 +44,6 @@ class StreamlitHelper:
             if not salary or not current_balance:
                 st.warning("יש למלא את כל הפרטים המסומנים בכוכבית לפני השליחה")
                 return None
-    
-        if submitted and campaign_name:
-            return {
-                "salary": salary.strip(),
-                "current_balance": float(current_balance.strip()),
-                "expected_annual_yield": float(expected_annual_yield.strip())
-                "current_age": int(current_age.strip() if current_age.strip()) else None,
-                "retirement_age": int(retirement_age.strip() if retirement_age.strip()) else None,
-                "employee_deposit": float(employee_deposit.strip() if employee_deposit.strip()) else 6.0,
-                "employer_deposit": float(employer_deposit.strip() if employer_deposit.strip()) else 6.5,
-                "expected_annual_yield": float(expected_annual_yield.strip() if expected_annual_yield.strip()) else 6.5                                         
-               
-            }
             
             try:
                 # Convert input values and set defaults if necessary
@@ -67,6 +54,7 @@ class StreamlitHelper:
                     "retirement_age": int(retirement_age.strip()) if retirement_age.strip() else None,
                     "employee_deposit": float(employee_deposit.strip()) if employee_deposit.strip() else 6.0,
                     "employer_deposit": float(employer_deposit.strip()) if employer_deposit.strip() else 6.5,
+                    "expected_annual_yield": float(expected_annual_yield.strip() if expected_annual_yield.strip()) else 6.5   
                 }
             except ValueError:
                 st.error("נא לוודא שהזנתם מספרים תקינים")
