@@ -67,6 +67,10 @@ from dateutil.relativedelta import relativedelta
 st.title("💰🧮 מחשבון פנסיה לשכיר 💰🧮")
 st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
 
+import streamlit as st
+import pandas as pd
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 class PensionCalculator:
     """
@@ -185,52 +189,14 @@ class PensionApp:
         user_inputs = StreamlitUI.get_user_inputs()
 
         if user_inputs:
-            # Create an instance of PensionCalculator
-            pension_calculator = PensionCalculator(
-                salary=user_inputs["salary"],
-                current_balance=user_inputs["current_balance"],
-                expected_annual_yield=user_inputs["expected_annual_yield"],
-                current_age=user_inputs["current_age"],
-                retirement_age=user_inputs["retirement_age"],
-                employee_deposit=user_inputs["employee_deposit"],
-                employer_deposit=user_inputs["employer_deposit"],
-            )
-
+            pension_calculator = PensionCalculator(**user_inputs)
             forecast_df = pension_calculator.generate_pension_forecast()
-
-            # Get multiple offers from user
-            offers = {}
-            st.write("הוסף תוכניות פנסיה עם עמלות שונות")
-            add_offer = st.checkbox("הוסף תוכנית פנסיה חדשה")
-
-            while add_offer:
-                offer_name = st.text_input("שם התוכנית:")
-                fee_from_deposit = st.number_input("עמלה מהפקדה (%):", min_value=0.0, max_value=100.0, value=0.5)
-                fee_from_balance = st.number_input("עמלה מהיתרה (%):", min_value=0.0, max_value=100.0, value=0.2)
-
-                if st.button("הוסף תוכנית"):
-                    df_with_fees = pension_calculator.apply_fees(forecast_df.copy(), fee_from_deposit, fee_from_balance)
-                    offers[offer_name] = df_with_fees[['date', 'fee_from_balance', 'fee_from_deposit', 'total_fee']]
-                    st.success(f"תוכנית {offer_name} נוספה בהצלחה!")
-            
-            # Merge all offers into a single DataFrame
-            if offers:
-                offer_dfs = [df.set_index('date') for df in offers.values()]
-                merged_df = pd.concat([forecast_df.set_index('date')] + offer_dfs, axis=1)
-                merged_df.reset_index(inplace=True)
-            else:
-                merged_df = forecast_df
-
+            fee_columns = forecast_df.filter(like='total_fee').columns
+            forecast_df[fee_columns] = forecast_df[fee_columns].apply(pd.to_numeric, errors='coerce').fillna(float('inf'))
+            forecast_df['Lowest Total Fee'] = forecast_df[fee_columns].min(axis=1)
+            forecast_df['Best Offer'] = forecast_df[fee_columns].idxmin(axis=1)
             st.write("תוצאות הסימולציה")
-            st.dataframe(merged_df)
-
-            # Show lowest fee
-            merged_df['Lowest Total Fee'] = merged_df.filter(like='total_fee').min(axis=1)
-            merged_df['Best Offer'] = merged_df.filter(like='total_fee').idxmin(axis=1)
-
-            st.write("השוואת עמלות בין התוכניות השונות")
-            st.dataframe(merged_df[['date', 'Lowest Total Fee', 'Best Offer']])
-
+            st.dataframe(forecast_df[['date', 'Lowest Total Fee', 'Best Offer']])
 
 if __name__ == "__main__":
     app = PensionApp()
