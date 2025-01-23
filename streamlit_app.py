@@ -246,6 +246,15 @@ class PensionCalculator:
         df['date'] = df['date'].dt.strftime('%Y-%m-%d')
         return df
 
+    def apply_fees(self, df, fee_from_deposit, fee_from_balance):
+        """
+        Apply deposit and balance fees to the forecast.
+        """
+        df['fee_from_deposit'] = df['monthly_deposit'] * (fee_from_deposit / 100)
+        df['fee_from_balance'] = df['balance'] * (fee_from_balance / 100 / 12)
+        df['total_fee'] = df['fee_from_deposit'] + df['fee_from_balance']
+        return df
+
 
 class StreamlitUI:
     """
@@ -307,18 +316,44 @@ class PensionApp:
 
             forecast_df = pension_calculator.generate_pension_forecast()
 
-            # Display forecast data
-            st.write("תחזית חיסכון פנסיוני")
-            st.dataframe(forecast_df)
+            # Get multiple offers from user
+            offers = {}
+            st.write("הוסף תוכניות פנסיה עם עמלות שונות")
+            add_offer = st.checkbox("הוסף תוכנית פנסיה חדשה")
 
-            # Display summary metrics
-            final_balance = forecast_df['balance'].iloc[-1]
-            total_contributions = forecast_df['monthly_deposit'].sum()
-            st.metric("יתרה צפויה בעת הפרישה", f"₪{final_balance:,.2f}")
-            st.metric("סה״כ הפקדות", f"₪{total_contributions:,.2f}")
+            while add_offer:
+                offer_name = st.text_input("שם התוכנית:")
+                fee_from_deposit = st.number_input("עמלה מהפקדה (%):", min_value=0.0, max_value=100.0, value=0.5)
+                fee_from_balance = st.number_input("עמלה מהיתרה (%):", min_value=0.0, max_value=100.0, value=0.2)
 
-            # Graph
-            st.line_chart(forecast_df.set_index('date')['balance'])
+                if st.button("הוסף תוכנית"):
+                    df_with_fees = pension_calculator.apply_fees(forecast_df.copy(), fee_from_deposit, fee_from_balance)
+                    offers[offer_name] = df_with_fees[['date', 'fee_from_balance', 'fee_from_deposit', 'total_fee']]
+                    st.success(f"תוכנית {offer_name} נוספה בהצלחה!")
+            
+            # Merge all offers into a single DataFrame
+            if offers:
+                offer_dfs = [df.set_index('date') for df in offers.values()]
+                merged_df = pd.concat([forecast_df.set_index('date')] + offer_dfs, axis=1)
+                merged_df.reset_index(inplace=True)
+            else:
+                merged_df = forecast_df
+
+            st.write("תוצאות הסימולציה")
+            st.dataframe(merged_df)
+
+            # Show lowest fee
+            merged_df['Lowest Total Fee'] = merged_df.filter(like='total_fee').min(axis=1)
+            merged_df['Best Offer'] = merged_df.filter(like='total_fee').idxmin(axis=1)
+
+            st.write("השוואת עמלות בין התוכניות השונות")
+            st.dataframe(merged_df[['date', 'Lowest Total Fee', 'Best Offer']])
+
+
+if __name__ == "__main__":
+    app = PensionApp()
+    app.run()
+
 
 if __name__ == "__main__":
     app = PensionApp()
