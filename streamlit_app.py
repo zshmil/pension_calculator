@@ -36,7 +36,7 @@ class StreamlitHelper:
             retirement_age = st.text_input("*גיל פרישה", placeholder=" נשים 64, גברים 67 ")
             employee_deposit = st.text_input("אחוז הפקדה של העובד",placeholder=" בדרך כלל 6% (אפשר ואפילו מומלץ להגדיל ל-7%) ")
             employer_deposit = st.text_input("אחוז הפקדה של המעסיק",placeholder=" בדרך כלל 6.5% ")
-            expected_annual_yield = st.text_input("תשואה שנתית צפויה", placeholder="לדוגמה: 4.5%")
+            expected_annual_yield = st.text_input("תשואה שנתית צפויה", placeholder=" לדוגמה: 4.5% ")
             submitted = st.form_submit_button("חשב פנסיה")
 
         if submitted:
