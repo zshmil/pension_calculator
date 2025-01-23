@@ -1,21 +1,4 @@
 
-# st.markdown("""
-# <style>
-# body, html {
-#     direction: RTL;
-#     unicode-bidi: bidi-override;
-#     text-align: right;
-# }
-# p, div, input, label, h1, h2, h3, h4, h5, h6 {
-#     direction: RTL;
-#     unicode-bidi: bidi-override;
-#     text-align: right;
-# }
-# </style>
-# """, unsafe_allow_html=True)
-
-
-
 import streamlit as st
 import pandas as pd
 from datetime import datetime
@@ -121,7 +104,8 @@ class StreamlitUI:
             submitted = st.form_submit_button("Submit")
 
         if submitted:
-            if all([salary, current_balance, expected_annual_yield, current_age, retirement_age, employee_deposit, employer_deposit]):
+            # if all([salary, current_balance, expected_annual_yield, current_age, retirement_age, employee_deposit, employer_deposit]):
+            if all([salary, current_balance, current_age, retirement_age]):
                 return {
                     "salary": float(salary.strip().replace(",", "")),
                     "current_balance": float(current_balance.strip().replace(",", "")),
