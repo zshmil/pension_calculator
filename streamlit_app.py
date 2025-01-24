@@ -60,25 +60,33 @@ class StreamlitUI:
 
     @staticmethod
     def get_offer_inputs():
+        if "offer_counter" not in st.session_state:
+            st.session_state.offer_counter = 0  # Initialize the counter in session state
+    
         offers = []
-        offer_counter = 0  # Counter to ensure unique keys for forms
         while True:
-            with st.form(f"Offer Input Form {len(offers) + 1}", clear_on_submit=True):
-                offer_name = st.text_input("Offer Name")
-                fee_from_deposit = st.text_input("(%) דמי ניהול מהפקדה )", placeholder="לדוגמה: 1.5%")
-                fee_from_balance = st.text_input("(%) דמי ניהול מצבירה", placeholder="לדוגמה: 0.5%")             
-                offer_submitted = st.form_submit_button("Add Offer")
+            form_key = f"Offer_Input_Form_{st.session_state.offer_counter}"
+            with st.form(form_key, clear_on_submit=True):
+                offer_name = st.text_input("שם הצעה", key=f"offer_name_{st.session_state.offer_counter}")
+                fee_from_deposit = st.text_input("(%) דמי ניהול מהפקדה )", placeholder="לדוגמה: 1.5%", key=f"fee_deposit_{st.session_state.offer_counter}")
+                fee_from_balance = st.text_input("(%) דמי ניהול מצבירה", placeholder="לדוגמה: 0.5%", key=f"fee_deposit_{st.session_state.offer_counter}")                
+                offer_submitted = st.form_submit_button("הוסף הצעה")
+                
                 if offer_submitted and offer_name:
                     offers.append({
                         "offer_name": offer_name,
                         "fee_from_deposit": float(fee_from_deposit.strip().replace("%", ""))/ 100 if employee_deposit.strip() else 0.06, 
-                        "fee_from_balance": float(fee_from_deposit.strip().replace("%", ""))/100/12 if employee_deposit.strip() else 0.005
+                        "fee_from_balance": float(fee_from_balance.strip().replace("%", ""))/100/12 if employee_deposit.strip() else 0.005
                     })
-                    offer_counter += 1 
-            more_offers = st.radio("Add another offer?", ["Yes", "No"], key=f"add_offer_{offer_counter}")
+                    st.session_state.offer_counter += 1  # Increment the counter for the next form
+            
+            # Ask if the user wants to add another offer
+            more_offers = st.radio("Add another offer?", ["Yes", "No"], key=f"add_offer_{st.session_state.offer_counter}")
             if more_offers == "No":
                 break
+    
         return offers
+
 
 
 class PensionCalculator:
