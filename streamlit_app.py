@@ -32,7 +32,6 @@ class StreamlitUI:
         """
         Collects user input via Streamlit UI and returns a dictionary.
         """
-        user_data = None
 
         with st.form("חישוב פנסיה לשכיר", clear_on_submit=True):
             salary = st.text_input(" שכר חודשי (ברוטו) *", placeholder="לדוגמה: 15,000")
@@ -45,46 +44,42 @@ class StreamlitUI:
             expected_annual_yield = st.text_input("תשואה שנתית צפויה", placeholder="לדוגמה: 4.5%")
             submitted = st.form_submit_button("חשב")
 
-        if submitted:
-            if all([salary, current_balance, current_age, retirement_age]):
-                user_data = {
-                    "salary": float(salary.strip().replace(",", "")),
+        if submitted and all([salary, current_balance, current_age, retirement_age]):
+            return {"salary": float(salary.strip().replace(",", "")),
                     "current_balance": float(current_balance.strip().replace(",", "")),
                     "expected_annual_yield": float(expected_annual_yield.strip().replace("%", "")) if expected_annual_yield.strip() else 4.5,
                     "current_age": int(current_age.strip()),
                     "retirement_age": int(retirement_age.strip()),
                     "employee_deposit": float(employee_deposit.strip().replace("%", "")) if employee_deposit.strip() else 6.0,
                     "employer_deposit": float(employer_deposit.strip().replace("%", "")) if employer_deposit.strip() else 6.5,
-                    "severance_pay": float(employer_deposit.strip().replace("%", "")) if employer_deposit.strip() else 8.33,
-                    "offers": []
-                }
-
-        if user_data:
-            offer_count = 0
-            while True:
-                form_key = f"offer_form_{offer_count}_{st.session_state.get('offer_counter', 0) + offer_count}"
-                with st.form(form_key):
-                    offer_name = st.text_input("שם ההצעה", key=f"offer_name_{offer_count}")
-                    fee_from_deposit = st.text_input("דמי ניהול מהפקדה (%)", key=f"fee_from_deposit_{offer_count}")
-                    fee_from_balance = st.text_input("דמי ניהול מצבירה (%)", key=f"fee_from_balance_{offer_count}")
-                    offer_submitted = st.form_submit_button("הוסף הצעה")
-
-                if offer_submitted and offer_name and fee_from_deposit and fee_from_balance:
-                    user_data["offers"].append({
-                        "offer_name": offer_name,
-                        "fee_from_deposit": float(fee_from_deposit.strip().replace("%", "")),
-                        "fee_from_balance": float(fee_from_balance.strip().replace("%", ""))
-                    })
-                    if st.radio("האם יש הצעה נוספת?", ("כן", "לא"), key=f"more_offers_{offer_count}") == "לא":
-                        break
-                    offer_count += 1
-                    st.session_state['offer_counter'] = st.session_state.get('offer_counter', 0) + 1
-
-            return user_data
+                    "severance_pay": float(employer_deposit.strip().replace("%", "")) if employer_deposit.strip() else 8.33
+                   }
         else:
             st.warning("יש למלא את כל הפרטים לפני השליחה")
             return None
 
+    @staticmethod
+    def get_offer_inputs():
+        offers = []
+        while True:
+            with st.form(f"Offer Input Form {len(offers) + 1}", clear_on_submit=True):
+                offer_name = st.text_input("Offer Name")
+                fee_from_deposit = st.number_input("Management Fee from Deposit (%)", min_value=0.0, step=0.1)
+                fee_from_balance = st.number_input("Management Fee from Balance (%)", min_value=0.0, step=0.1)
+                
+                offer_submitted = st.form_submit_button("Add Offer")
+
+                if offer_submitted and offer_name:
+                    offers.append({
+                        "offer_name": offer_name,
+                        "fee_from_deposit": fee_from_deposit / 100,
+                        "fee_from_balance": fee_from_balance / 100 / 12
+                    })
+
+            if not st.radio("Add another offer?", ("Yes", "No"), index=1):
+                break
+
+        return offers
 
 
 class PensionCalculator:
