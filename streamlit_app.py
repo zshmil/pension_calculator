@@ -70,8 +70,8 @@ class StreamlitUI:
                 if offer_submitted and offer_name:
                     offers.append({
                         "offer_name": offer_name,
-                        "fee_from_deposit": float(fee_from_deposit.strip().replace("%", ""))/ 100 if employee_deposit.strip(),
-                        "fee_from_balance": float(fee_from_deposit.strip().replace("%", ""))/100/12 if employee_deposit.strip() 
+                        "fee_from_deposit": float(fee_from_deposit.strip().replace("%", ""))/ 100 if employee_deposit.strip() else 0.06, 
+                        "fee_from_balance": float(fee_from_deposit.strip().replace("%", ""))/100/12 if employee_deposit.strip() else 0.005
                     })
             if not st.radio("Add another offer?", ("Yes", "No"), index=1):
                 break
