@@ -64,94 +64,52 @@ class StreamlitUI:
         while True:
             with st.form(f"Offer Input Form {len(offers) + 1}", clear_on_submit=True):
                 offer_name = st.text_input("Offer Name")
-                fee_from_deposit = st.number_input("Management Fee from Deposit (%)", min_value=0.0, step=0.1)
-                fee_from_balance = st.number_input("Management Fee from Balance (%)", min_value=0.0, step=0.1)
-                
+                fee_from_deposit = st.text_input("(%) דמי ניהול מהפקדה )", placeholder="לדוגמה: 1.5%")
+                fee_from_balance = st.text_input("(%) דמי ניהול מצבירה", placeholder="לדוגמה: 0.5%")             
                 offer_submitted = st.form_submit_button("Add Offer")
-
                 if offer_submitted and offer_name:
                     offers.append({
                         "offer_name": offer_name,
-                        "fee_from_deposit": fee_from_deposit / 100,
-                        "fee_from_balance": fee_from_balance / 100 / 12
+                        "fee_from_deposit": float(fee_from_deposit.strip().replace("%", ""))/ 100 if employee_deposit.strip(),
+                        "fee_from_balance": float(fee_from_deposit.strip().replace("%", ""))/100/12 if employee_deposit.strip() 
                     })
-
             if not st.radio("Add another offer?", ("Yes", "No"), index=1):
                 break
-
         return offers
 
 
 class PensionCalculator:
-    """
-    Handles all calculations related to the pension savings plan.
-    """
-
-    def __init__(self, salary, current_balance, expected_annual_yield, 
-                 current_age, retirement_age, employee_deposit, employer_deposit, severance_pay):
-        self.salary = salary
-        self.current_balance = current_balance
-        self.expected_annual_yield = expected_annual_yield / 100  # Convert to decimal
-        self.current_age = current_age
-        self.retirement_age = retirement_age
-        self.employee_deposit = employee_deposit / 100  # Convert to decimal
-        self.employer_deposit = employer_deposit / 100  # Convert to decimal
-        self.severance_pay = severance_pay / 100  # Convert to decimal 
-        self.start_date = datetime.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-
-    def get_months_until_retirement(self):
-        """
-        Calculate the number of months until retirement.
-        """
-        years_until_retirement = self.retirement_age - self.current_age
+    @staticmethod
+    def get_months_until_retirement(current_age, retirement_age):
+        years_until_retirement = int(retirement_age) - int(current_age)
         if years_until_retirement < 0:
             raise ValueError("Retirement age must be greater than current age.")
         return years_until_retirement * 12
 
-    def get_dates(self):
-        """
-        Generate a list of dates until retirement.
-        """
-        months = self.get_months_until_retirement()
-        return [self.start_date + relativedelta(months=+m) for m in range(months)]
+    @staticmethod
+    def get_dates(start_date, months):
+        return [start_date + relativedelta(months=+m) for m in range(months)]
 
-    def calculate_monthly_deposit(self):
-        """
-        Calculate the monthly deposit based on salary and contributions.
-        """
-        return (self.salary * self.severance_pay) + (self.salary * self.employee_deposit) + (self.salary * self.employer_deposit)
+    @staticmethod
+    def calculate_monthly_deposit(salary, employee_deposit, employer_deposit):
+        return salary * (0.0833 + employee_deposit / 100 + employer_deposit / 100)
 
-    def generate_pension_forecast(self):
-        """
-        Generate a forecast dataframe with future balances.
-        """
-        dates = self.get_dates()
-        df = pd.DataFrame({'date': dates})
-        
-        monthly_deposit = self.calculate_monthly_deposit()
-        df['monthly_deposit'] = monthly_deposit
-
-        monthly_yield = self.expected_annual_yield / 12
-        balance = self.current_balance
-
+    @staticmethod
+    def calculate_balance(df, current_balance, expected_annual_yield):
+        monthly_yield = (expected_annual_yield / 100) / 12
         balances = []
-        for _ in range(len(df)):
-            balance = balance * (1 + monthly_yield) + monthly_deposit
-            balances.append(balance)
-
+        for _, row in df.iterrows():
+            current_balance = current_balance * (1 + monthly_yield) + row['monthly_deposit']
+            balances.append(current_balance)
         df['balance'] = balances
-        df['date'] = df['date'].dt.strftime('%Y-%m-%d')
         return df
 
-    def apply_fees(self, df, fee_from_deposit, fee_from_balance):
-        """
-        Apply deposit and balance fees to the forecast.
-        """
-        df['fee_from_deposit'] = df['monthly_deposit'] * (fee_from_deposit / 100)
-        df['fee_from_balance'] = df['balance'] * (fee_from_balance / 100 / 12)
+    @staticmethod
+    def calculate_fees(df, fee_from_deposit, fee_from_balance):
+        df['fee_from_deposit'] = df['monthly_deposit'] * fee_from_deposit
+        df['fee_from_balance'] = df['balance'] * fee_from_balance
         df['total_fee'] = df['fee_from_deposit'] + df['fee_from_balance']
         return df
-
 
 class PensionApp:
     """
