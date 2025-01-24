@@ -22,11 +22,41 @@ from dateutil.relativedelta import relativedelta
 # st.title("💰🧮 מחשבון פנסיה לשכירים 🧮💰")
 # st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
 
-class StreamlitUI:
-    """
-    Handles the Streamlit interface for user interaction.
-    """
 
+class PensionCalculator:
+    @staticmethod
+    def get_months_until_retirement(current_age, retirement_age):
+        years_until_retirement = int(retirement_age) - int(current_age)
+        if years_until_retirement < 0:
+            raise ValueError("Retirement age must be greater than current age.")
+        return years_until_retirement * 12
+
+    @staticmethod
+    def get_dates(start_date, months):
+        return [start_date + relativedelta(months=+m) for m in range(months)]
+
+    @staticmethod
+    def calculate_monthly_deposit(salary, employee_deposit, employer_deposit):
+        return salary * ((severance_pay/100) + (employee_deposit/100) + (employer_deposit/100))
+
+    @staticmethod
+    def calculate_balance(df, current_balance, expected_annual_yield):
+        monthly_yield = (expected_annual_yield / 100) / 12
+        balances = []
+        for _, row in df.iterrows():
+            current_balance = current_balance * (1 + monthly_yield) + row['monthly_deposit']
+            balances.append(current_balance)
+        df['balance'] = balances
+        return df
+
+    @staticmethod
+    def calculate_fees(df, fee_from_deposit, fee_from_balance):
+        df['fee_from_deposit'] = df['monthly_deposit'] * fee_from_deposit
+        df['fee_from_balance'] = df['balance'] * fee_from_balance
+        df['total_fee'] = df['fee_from_deposit'] + df['fee_from_balance']
+        return df
+
+class StreamlitUI:
     @staticmethod
     def get_user_inputs():
         """
@@ -47,12 +77,12 @@ class StreamlitUI:
         if submitted and all([salary, current_balance, current_age, retirement_age]):
             return {"salary": float(salary.strip().replace(",", "")),
                     "current_balance": float(current_balance.strip().replace(",", "")),
-                    "expected_annual_yield": float(expected_annual_yield.strip().replace("%", "")) if expected_annual_yield.strip() else 4.5,
                     "current_age": int(current_age.strip()),
                     "retirement_age": int(retirement_age.strip()),
                     "employee_deposit": float(employee_deposit.strip().replace("%", "")) if employee_deposit.strip() else 6.0,
                     "employer_deposit": float(employer_deposit.strip().replace("%", "")) if employer_deposit.strip() else 6.5,
-                    "severance_pay": float(employer_deposit.strip().replace("%", "")) if employer_deposit.strip() else 8.33
+                    "severance_pay": float(employer_deposit.strip().replace("%", "")) if employer_deposit.strip() else 8.33,
+                    "expected_annual_yield": float(expected_annual_yield.strip().replace("%", "")) if expected_annual_yield.strip() else 4.5,
                    }
         else:
             st.warning("יש למלא את כל הפרטים לפני השליחה")
@@ -62,73 +92,39 @@ class StreamlitUI:
     def get_offer_inputs():
         if "offer_counter" not in st.session_state:
             st.session_state.offer_counter = 0  # Initialize the counter in session state
-    
+
         offers = []
         while True:
             form_key = f"Offer_Input_Form_{st.session_state.offer_counter}"
             with st.form(form_key, clear_on_submit=True):
                 offer_name = st.text_input("שם הצעה", key=f"offer_name_{st.session_state.offer_counter}")
                 fee_from_deposit = st.text_input("(%) דמי ניהול מהפקדה )", placeholder="לדוגמה: 1.5%", key=f"fee_deposit_{st.session_state.offer_counter}")
-                fee_from_balance = st.text_input("(%) דמי ניהול מצבירה", placeholder="לדוגמה: 0.5%", key=f"fee_deposit_{st.session_state.offer_counter}")                
+                fee_from_balance = st.text_input("(%) דמי ניהול מצבירה", placeholder="לדוגמה: 0.5%", key=f"fee_balance_{st.session_state.offer_counter}")                
                 offer_submitted = st.form_submit_button("הוסף הצעה")
-                
+
                 if offer_submitted and offer_name:
                     offers.append({
                         "offer_name": offer_name,
-                        "fee_from_deposit": float(fee_from_deposit.strip().replace("%", ""))/ 100 if employee_deposit.strip() else 0.06, 
-                        "fee_from_balance": float(fee_from_balance.strip().replace("%", ""))/100/12 if employee_deposit.strip() else 0.005
+                        "fee_from_deposit": float(fee_from_deposit.strip().replace("%", "")) / 100 if fee_from_deposit.strip() else 0.06, 
+                        "fee_from_balance": float(fee_from_balance.strip().replace("%", "")) / 100 / 12 if fee_from_balance.strip() else 0.005
                     })
                     st.session_state.offer_counter += 1  # Increment the counter for the next form
-            
-            # Ask if the user wants to add another offer
-            more_offers = st.radio("Add another offer?", ["Yes", "No"], key=f"add_offer_{st.session_state.offer_counter}")
+                    st.success(f"הצעה '{offer_name}' נוספה בהצלחה!")
+
+            more_offers = st.radio(
+                "האם יש לך הצעה נוספת?", ["Yes", "No"], key=f"add_offer_{st.session_state.offer_counter}"
+            )
             if more_offers == "No":
                 break
-    
+
         return offers
 
-
-
-class PensionCalculator:
-    @staticmethod
-    def get_months_until_retirement(current_age, retirement_age):
-        years_until_retirement = int(retirement_age) - int(current_age)
-        if years_until_retirement < 0:
-            raise ValueError("Retirement age must be greater than current age.")
-        return years_until_retirement * 12
-
-    @staticmethod
-    def get_dates(start_date, months):
-        return [start_date + relativedelta(months=+m) for m in range(months)]
-
-    @staticmethod
-    def calculate_monthly_deposit(salary, employee_deposit, employer_deposit):
-        return salary * (0.0833 + employee_deposit / 100 + employer_deposit / 100)
-
-    @staticmethod
-    def calculate_balance(df, current_balance, expected_annual_yield):
-        monthly_yield = (expected_annual_yield / 100) / 12
-        balances = []
-        for _, row in df.iterrows():
-            current_balance = current_balance * (1 + monthly_yield) + row['monthly_deposit']
-            balances.append(current_balance)
-        df['balance'] = balances
-        return df
-
-    @staticmethod
-    def calculate_fees(df, fee_from_deposit, fee_from_balance):
-        df['fee_from_deposit'] = df['monthly_deposit'] * fee_from_deposit
-        df['fee_from_balance'] = df['balance'] * fee_from_balance
-        df['total_fee'] = df['fee_from_deposit'] + df['fee_from_balance']
-        return df
-
-
-# Main Streamlit App
 def main():
-    # st.title("חישוב פנסיה לשכיר")
+    # st.title("Pension Calculator")
     st.title("💰🧮 מחשבון פנסיה לשכירים 🧮💰")
     st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
-
+    
+    # Get user inputs
     user_inputs = StreamlitUI.get_user_inputs()
     if not user_inputs:
         return
