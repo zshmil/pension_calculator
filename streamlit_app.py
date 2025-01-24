@@ -93,7 +93,7 @@ class PensionCalculator:
     """
 
     def __init__(self, salary, current_balance, expected_annual_yield, 
-                 current_age, retirement_age, employee_deposit, employer_deposit):
+                 current_age, retirement_age, employee_deposit, employer_deposit, severance_pay):
         self.salary = salary
         self.current_balance = current_balance
         self.expected_annual_yield = expected_annual_yield / 100  # Convert to decimal
@@ -101,6 +101,7 @@ class PensionCalculator:
         self.retirement_age = retirement_age
         self.employee_deposit = employee_deposit / 100  # Convert to decimal
         self.employer_deposit = employer_deposit / 100  # Convert to decimal
+        self.severance_pay = severance_pay / 100  # Convert to decimal 
         self.start_date = datetime.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
 
     def get_months_until_retirement(self):
@@ -123,7 +124,7 @@ class PensionCalculator:
         """
         Calculate the monthly deposit based on salary and contributions.
         """
-        return (self.salary * 0.0833) + (self.salary * self.employee_deposit) + (self.salary * self.employer_deposit)
+        return (self.salary * self.severance_pay) + (self.salary * self.employee_deposit) + (self.salary * self.employer_deposit)
 
     def generate_pension_forecast(self):
         """
