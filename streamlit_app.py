@@ -42,7 +42,7 @@ class StreamlitUI:
             employer_deposit = st.text_input("אחוז הפקדה של המעסיק", placeholder="בדרך כלל 6.5%")
             severance_pay = st.text_input("רכיב פיצויים", placeholder="לדוגמה: 8.33%")
             expected_annual_yield = st.text_input("תשואה שנתית צפויה", placeholder="לדוגמה: 4.5%")
-            submitted = st.form_submit_button("חשב")
+            submitted = st.form_submit_button("הוסף")
 
         if submitted and all([salary, current_balance, current_age, retirement_age]):
             return {"salary": float(salary.strip().replace(",", "")),
