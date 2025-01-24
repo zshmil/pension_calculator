@@ -41,6 +41,7 @@ class StreamlitUI:
             retirement_age = st.text_input("גיל פרישה *", placeholder="נשים 64, גברים 67")
             employee_deposit = st.text_input("אחוז הפקדה של העובד", placeholder="בדרך כלל 6% (אפשר להגדיל עד ל-7%)")
             employer_deposit = st.text_input("אחוז הפקדה של המעסיק", placeholder="בדרך כלל 6.5%")
+            severance_pay = st.text_input("רכיב פיצויים", placeholder="לדוגמה: 8.33%")
             expected_annual_yield = st.text_input("תשואה שנתית צפויה", placeholder="לדוגמה: 4.5%")
             submitted = st.form_submit_button("חשב")
 
@@ -54,6 +55,7 @@ class StreamlitUI:
                     "retirement_age": int(retirement_age.strip()),
                     "employee_deposit": float(employee_deposit.strip().replace("%", "")) if employee_deposit.strip() else 6.0,
                     "employer_deposit": float(employer_deposit.strip().replace("%", "")) if employer_deposit.strip() else 6.5,
+                    "severance_pay" = float(employer_deposit.strip().replace("%", "")) if employer_deposit.strip() else 8.33,
                     "offers": []
                 }
 
