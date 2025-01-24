@@ -88,43 +88,43 @@ class StreamlitUI:
             st.warning("יש למלא את כל הפרטים לפני השליחה")
             return None
 
-@staticmethod
-def get_offer_inputs():
-    if "offer_counter" not in st.session_state:
-        st.session_state.offer_counter = 0  # Initialize the counter in session state
-
-    offers = []
-    while True:
-        # Generate unique keys for each form and its elements
-        form_key = f"Offer_Input_Form_{st.session_state.offer_counter}"
-        name_key = f"offer_name_{st.session_state.offer_counter}"
-        fee_deposit_key = f"fee_deposit_{st.session_state.offer_counter}"
-        fee_balance_key = f"fee_balance_{st.session_state.offer_counter}"
-        more_offers_key = f"add_offer_{st.session_state.offer_counter}"
-
-        with st.form(form_key, clear_on_submit=True):
-            offer_name = st.text_input("שם הצעה", key=name_key)
-            fee_from_deposit = st.text_input("(%) דמי ניהול מהפקדה )", placeholder="לדוגמה: 1.5%", key=fee_deposit_key)
-            fee_from_balance = st.text_input("(%) דמי ניהול מצבירה", placeholder="לדוגמה: 0.5%", key=fee_balance_key)
-            offer_submitted = st.form_submit_button("הוסף הצעה")
-
-            if offer_submitted and offer_name:
-                offers.append({
-                    "offer_name": offer_name,
-                    "fee_from_deposit": float(fee_from_deposit.strip().replace("%", "")) / 100
-                    if fee_from_deposit.strip() else 0.06,
-                    "fee_from_balance": float(fee_from_balance.strip().replace("%", "")) / 100 / 12
-                    if fee_from_balance.strip() else 0.005,
-                })
-                st.session_state.offer_counter += 1  # Increment after successful submission
-                st.success(f"הצעה '{offer_name}' נוספה בהצלחה!")
-                continue  # Restart the loop for the next offer
-
-        # Radio button to check if the user wants to add more offers
-        more_offers = st.radio("האם יש לך הצעה נוספת?", ["Yes", "No"], key=more_offers_key)
-        if more_offers == "No":
-            break
-    return offers
+    @staticmethod
+    def get_offer_inputs():
+        if "offer_counter" not in st.session_state:
+            st.session_state.offer_counter = 0  # Initialize the counter in session state
+    
+        offers = []
+        while True:
+            # Generate unique keys for each form and its elements
+            form_key = f"Offer_Input_Form_{st.session_state.offer_counter}"
+            name_key = f"offer_name_{st.session_state.offer_counter}"
+            fee_deposit_key = f"fee_deposit_{st.session_state.offer_counter}"
+            fee_balance_key = f"fee_balance_{st.session_state.offer_counter}"
+            more_offers_key = f"add_offer_{st.session_state.offer_counter}"
+    
+            with st.form(form_key, clear_on_submit=True):
+                offer_name = st.text_input("שם הצעה", key=name_key)
+                fee_from_deposit = st.text_input("(%) דמי ניהול מהפקדה )", placeholder="לדוגמה: 1.5%", key=fee_deposit_key)
+                fee_from_balance = st.text_input("(%) דמי ניהול מצבירה", placeholder="לדוגמה: 0.5%", key=fee_balance_key)
+                offer_submitted = st.form_submit_button("הוסף הצעה")
+    
+                if offer_submitted and offer_name:
+                    offers.append({
+                        "offer_name": offer_name,
+                        "fee_from_deposit": float(fee_from_deposit.strip().replace("%", "")) / 100
+                        if fee_from_deposit.strip() else 0.06,
+                        "fee_from_balance": float(fee_from_balance.strip().replace("%", "")) / 100 / 12
+                        if fee_from_balance.strip() else 0.005,
+                    })
+                    st.session_state.offer_counter += 1  # Increment after successful submission
+                    st.success(f"הצעה '{offer_name}' נוספה בהצלחה!")
+                    continue  # Restart the loop for the next offer
+    
+            # Radio button to check if the user wants to add more offers
+            more_offers = st.radio("האם יש לך הצעה נוספת?", ["Yes", "No"], key=more_offers_key)
+            if more_offers == "No":
+                break
+        return offers
 
 
 def main():
