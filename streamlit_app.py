@@ -61,6 +61,7 @@ class StreamlitUI:
     @staticmethod
     def get_offer_inputs():
         offers = []
+        offer_counter = 0  # Counter to ensure unique keys for forms
         while True:
             with st.form(f"Offer Input Form {len(offers) + 1}", clear_on_submit=True):
                 offer_name = st.text_input("Offer Name")
@@ -73,7 +74,9 @@ class StreamlitUI:
                         "fee_from_deposit": float(fee_from_deposit.strip().replace("%", ""))/ 100 if employee_deposit.strip() else 0.06, 
                         "fee_from_balance": float(fee_from_deposit.strip().replace("%", ""))/100/12 if employee_deposit.strip() else 0.005
                     })
-            if not st.radio("Add another offer?", ("Yes", "No"), index=1):
+                    offer_counter += 1 
+            more_offers = st.radio("Add another offer?", ["Yes", "No"], key=f"add_offer_{offer_counter}")
+            if more_offers == "No":
                 break
         return offers
 
