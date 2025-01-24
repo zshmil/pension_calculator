@@ -209,6 +209,7 @@ def add_fee_columns(df, fee_from_deposit, fee_from_balance):
     df['total_fee'] = df['fee_from_deposit'] + df['fee_from_balance']
     return df
 
+
 # Streamlit UI for Inputs
 def get_user_inputs():
     with st.form("Pension Inputs", clear_on_submit=True):
@@ -240,7 +241,15 @@ def get_user_inputs():
 
 def get_offer_inputs():
     offers = []
+    counter = 0 
     while True:
+        # Use unique keys for each input element
+        form_key = f"offer_form_{counter}"
+        offer_name_key = f"offer_name_{counter}"
+        fee_deposit_key = f"fee_deposit_{counter}"
+        fee_balance_key = f"fee_balance_{counter}"
+        more_offers_key = f"more_offers_{counter}"
+        
         with st.form(f"Offer Input {len(offers) + 1}", clear_on_submit=True):
             offer_name = st.text_input("שם הצעה", key=f"offer_name_{len(offers)}")
             fee_from_deposit = st.text_input("(%) דמי ניהול מהפקדה )", placeholder="לדוגמה: 1.5%", key=fee_deposit_key)
@@ -255,8 +264,10 @@ def get_offer_inputs():
                     "fee_from_balance": float(fee_from_balance.strip().replace("%", ""))/100/12 if fee_from_balance.strip() else 0.005,
                 })
                 st.success(f"Offer '{offer_name}' added!")
+                counter += 1  # Increment the counter for the next form
             except ValueError:
-                st.error("Please fill out all fields correctly.")
+                st.error("Please enter valid numbers for fees.")
+                continue  # Skip to the next iteration if there's an error
         
         more_offers = st.radio("הוסף עוד הצעה?", ["כן", "לא"], key=f"more_offers_{len(offers)}")
         if more_offers == "לא":
