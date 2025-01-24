@@ -111,31 +111,47 @@ class PensionCalculator:
         df['total_fee'] = df['fee_from_deposit'] + df['fee_from_balance']
         return df
 
-class PensionApp:
-    """
-    The main application class that integrates UI and calculations.
-    """
 
-    def run(self):
-        # st.title("חישוב פנסיה לשכיר")
-        st.title("💰🧮 מחשבון פנסיה לשכירים 🧮💰")
-        st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
-        user_inputs = StreamlitUI.get_user_inputs()
+# Main Streamlit App
+def main():
+    # st.title("חישוב פנסיה לשכיר")
+    st.title("💰🧮 מחשבון פנסיה לשכירים 🧮💰")
+    st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
 
-        if user_inputs:
-            pension_calculator = PensionCalculator(**user_inputs)
-            forecast_df = pension_calculator.generate_pension_forecast()
-            fee_columns = forecast_df.filter(like='total_fee').columns
-            if not fee_columns.empty:
-                forecast_df[fee_columns] = forecast_df[fee_columns].apply(pd.to_numeric, errors='coerce').fillna(float('inf'))
-                forecast_df['Lowest Total Fee'] = forecast_df[fee_columns].min(axis=1)
-                forecast_df['Best Offer'] = forecast_df[fee_columns].idxmin(axis=1)
-                st.write("תוצאות הסימולציה")
-                st.dataframe(forecast_df[['date', 'Lowest Total Fee', 'Best Offer']])
-            else:
-                st.write("אין נתוני עמלות להצגה")
-                st.dataframe(forecast_df[['date', 'balance', 'monthly_deposit']])
+    user_inputs = StreamlitUI.get_user_inputs()
+    if not user_inputs:
+        return
+
+    # Get offer inputs
+    st.subheader("Enter Offers")
+    offers = StreamlitUI.get_offer_inputs()
+    if not offers:
+        st.warning("Please add at least one offer.")
+        return
+
+    # Calculate results
+    months_until_retirement = PensionCalculator.get_months_until_retirement(user_inputs['current_age'], user_inputs['retirement_age'])
+    dates = PensionCalculator.get_dates(datetime.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0), months_until_retirement)
+
+    base_df = pd.DataFrame({"date": dates})
+    base_df['monthly_deposit'] = PensionCalculator.calculate_monthly_deposit(
+        user_inputs['salary'], user_inputs['employee_deposit'], user_inputs['employer_deposit']
+    )
+
+    base_df = PensionCalculator.calculate_balance(base_df, user_inputs['current_balance'], user_inputs['expected_annual_yield'])
+
+    # Calculate fees for each offer
+    results = []
+    for offer in offers:
+        df = base_df.copy()
+        df = PensionCalculator.calculate_fees(df, offer['fee_from_deposit'], offer['fee_from_balance'])
+        df['offer_name'] = offer['offer_name']
+        results.append(df)
+
+    # Display results
+    for result in results:
+        st.subheader(f"Results for {result['offer_name'].iloc[0]}")
+        st.dataframe(result)
 
 if __name__ == "__main__":
-    app = PensionApp()
-    app.run()
+    main()
