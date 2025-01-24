@@ -104,12 +104,8 @@ def get_offer_inputs():
 
         with st.form(form_key, clear_on_submit=True):
             offer_name = st.text_input("שם הצעה", key=name_key)
-            fee_from_deposit = st.text_input(
-                "(%) דמי ניהול מהפקדה )", placeholder="לדוגמה: 1.5%", key=fee_deposit_key
-            )
-            fee_from_balance = st.text_input(
-                "(%) דמי ניהול מצבירה", placeholder="לדוגמה: 0.5%", key=fee_balance_key
-            )
+            fee_from_deposit = st.text_input("(%) דמי ניהול מהפקדה )", placeholder="לדוגמה: 1.5%", key=fee_deposit_key)
+            fee_from_balance = st.text_input("(%) דמי ניהול מצבירה", placeholder="לדוגמה: 0.5%", key=fee_balance_key)
             offer_submitted = st.form_submit_button("הוסף הצעה")
 
             if offer_submitted and offer_name:
