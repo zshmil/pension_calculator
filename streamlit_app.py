@@ -245,8 +245,8 @@ def get_offer_inputs():
     for i in range(num_offers):
         st.subheader(f"Offer {i + 1}")
         offer_name = st.text_input(f"Offer Name {i + 1}", key=f"offer_name_{i}")
-        fee_from_deposit = st.text_input("(%) דמי ניהול מהפקדה )", placeholder="לדוגמה: 1.5%", key=fee_deposit_key)
-        fee_from_balance = st.text_input("(%) דמי ניהול מצבירה", placeholder="לדוגמה: 0.5%", key=fee_balance_key)
+        fee_from_deposit = st.text_input("(%) דמי ניהול מהפקדה )", placeholder="לדוגמה: 1.5%") #, key=fee_deposit_key)
+        fee_from_balance = st.text_input("(%) דמי ניהול מצבירה", placeholder="לדוגמה: 0.5%") #, key=fee_balance_key)
 
         if offer_name and fee_from_deposit and fee_from_balance:
             try:
