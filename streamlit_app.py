@@ -176,7 +176,7 @@ def expected_annual_yield(expected_rate):
 
 def get_fees(fee_from_deposit, fee_from_balance):
     try:
-        return float(fee_from_deposit)/100, float(fee_from_balance)/100/12
+        return float(fee_from_deposit) / 100, float(fee_from_balance) / 100 / 12
     except ValueError:
         raise ValueError("Invalid input for fees. Please enter numeric values.")
 
@@ -190,7 +190,7 @@ def get_dates(start_date, months):
     return [start_date + relativedelta(months=+m) for m in range(months)]
 
 def add_monthly_deposit_column(df, salary, employee_deposit, employer_deposit, severance_pay):
-    monthly_deposit = (salary *severance_pay) + (salary * (employee_deposit / 100)) + (salary * (employer_deposit / 100))
+    monthly_deposit = (salary * (severance_pay/100)) + (salary * (employee_deposit/100)) + (salary * (employer_deposit/100))
     df['monthly_deposit'] = monthly_deposit
     return df
 
@@ -208,7 +208,6 @@ def add_fee_columns(df, fee_from_deposit, fee_from_balance):
     df['fee_from_balance'] = df['balance'] * fee_from_balance
     df['total_fee'] = df['fee_from_deposit'] + df['fee_from_balance']
     return df
-
 
 # Streamlit UI for Inputs
 def get_user_inputs():
@@ -240,55 +239,38 @@ def get_user_inputs():
 
 
 def get_offer_inputs():
+    num_offers = st.number_input("כמה הצעות תרצה להשוות?", min_value=1, step=1, value=1)
     offers = []
-    counter = 0 
-    while True:
-        # Use unique keys for each input element
-        form_key = f"offer_form_{counter}"
-        offer_name_key = f"offer_name_{counter}"
-        fee_deposit_key = f"fee_deposit_{counter}"
-        fee_balance_key = f"fee_balance_{counter}"
-        more_offers_key = f"more_offers_{counter}"
-        
-        with st.form(f"Offer Input {len(offers) + 1}", clear_on_submit=True):
-            offer_name = st.text_input("שם הצעה", key=f"offer_name_{len(offers)}")
-            fee_from_deposit = st.text_input("(%) דמי ניהול מהפקדה )", placeholder="לדוגמה: 1.5%", key=fee_deposit_key)
-            fee_from_balance = st.text_input("(%) דמי ניהול מצבירה", placeholder="לדוגמה: 0.5%", key=fee_balance_key)
-            submitted = st.form_submit_button("הוסף הצעה")
-        
-        if submitted:
+
+    for i in range(num_offers):
+        st.subheader(f"Offer {i + 1}")
+        offer_name = st.text_input(f"Offer Name {i + 1}", key=f"offer_name_{i}")
+        fee_from_deposit = st.text_input("(%) דמי ניהול מהפקדה )", placeholder="לדוגמה: 1.5%", key=fee_deposit_key)
+        fee_from_balance = st.text_input("(%) דמי ניהול מצבירה", placeholder="לדוגמה: 0.5%", key=fee_balance_key)
+
+        if offer_name and fee_from_deposit and fee_from_balance:
             try:
                 offers.append({
                     "offer_name": offer_name,
-                    "fee_from_deposit": float(fee_from_deposit.strip().replace("%", ""))/100 if fee_from_deposit.strip() else 0.06,
-                    "fee_from_balance": float(fee_from_balance.strip().replace("%", ""))/100/12 if fee_from_balance.strip() else 0.005,
+                    "fee_from_deposit": float(fee_from_deposit)/ 100,
+                    "fee_from_balance": float(fee_from_balance)/100/12
                 })
-                st.success(f"Offer '{offer_name}' added!")
-                counter += 1  # Increment the counter for the next form
             except ValueError:
-                st.error("Please enter valid numbers for fees.")
-                continue  # Skip to the next iteration if there's an error
-        
-        more_offers = st.radio("הוסף עוד הצעה?", ["כן", "לא"], key=f"more_offers_{len(offers)}")
-        if more_offers == "לא":
-            break
+                st.error(f"Invalid input for fees in Offer {i + 1}. Please enter numeric values.")
     return offers
-
-
 
 # Main Streamlit App Logic
 def main():
     # st.title("Pension Calculator")
     st.title("💰🧮 מחשבון פנסיה לשכירים 🧮💰")
     st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
-    
     user_inputs = get_user_inputs()
     if not user_inputs:
         return
 
     offers = get_offer_inputs()
     if not offers:
-        st.warning("Please add at least one offer.")
+        st.warning("יש להוסיף לפחות הצעה אחת.")
         return
 
     # Perform calculations
@@ -299,17 +281,19 @@ def main():
     base_df = add_monthly_deposit_column(base_df, user_inputs["salary"], user_inputs["employee_deposit"], user_inputs["employer_deposit"])
     base_df = add_future_value_column(base_df, user_inputs["current_balance"], user_inputs["expected_yield"])
 
-    results = []
+    dfs = []
     for offer in offers:
         df = base_df.copy()
         df = add_fee_columns(df, offer["fee_from_deposit"], offer["fee_from_balance"])
         df["offer_name"] = offer["offer_name"]
-        results.append(df)
+        dfs.append(df.set_index("date"))
+
+    # Combine all DataFrames
+    final_df = pd.concat(dfs, axis=1, keys=[offer["offer_name"] for offer in offers])
 
     # Display results
-    for result in results:
-        st.subheader(f"Results for {result['offer_name'].iloc[0]}")
-        st.dataframe(result)
+    st.subheader("פנסיה צפויה")
+    st.dataframe(final_df)
 
 if __name__ == "__main__":
     main()
