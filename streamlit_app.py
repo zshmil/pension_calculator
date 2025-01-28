@@ -161,41 +161,32 @@ import pandas as pd
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-# 
-# import streamlit as st
-# from IPython.display import IFrame
-
-# # Assuming your Streamlit app is running on the default port 8501
-# IFrame(src="http://localhost:8888", width=1000, height=700)
+start_date = datetime.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
 
 
-# Helper Functions
-def get_initial_amount(initial_amount):
-    try:
-        return float(initial_amount)
-    except ValueError:
-        raise ValueError("Invalid input for initial amount. Please enter a numeric value.")
-
-def expected_annual_yield(expected_rate):
-    try:
-        return float(expected_rate)
-    except ValueError:
-        raise ValueError("Invalid input for expected yield. Please enter a numeric value.")
-
-def get_fees(fee_from_deposit, fee_from_balance):
-    try:
-        return float(fee_from_deposit) / 100, float(fee_from_balance) / 100 / 12
-    except ValueError:
-        raise ValueError("Invalid input for fees. Please enter numeric values.")
 
 def get_months_until_retirement(current_age, retirement_age):
-    years_until_retirement = int(retirement_age) - int(current_age)
-    if years_until_retirement < 0:
-        raise ValueError("Retirement age must be greater than current age.")
-    return years_until_retirement * 12
+    """
+    Calculates the number of months until retirement.
+    """
+    try:
+        years_until_retirement = int(retirement_age) - int(current_age)
+        if years_until_retirement < 0:
+            raise ValueError("Retirement age must be greater than current age.")
+        months = years_until_retirement * 12
+        return months
+    except ValueError:
+        raise ValueError("Invalid input for ages. Please enter integer values.")
+
 
 def get_dates(start_date, months):
-    return [start_date + relativedelta(months=+m) for m in range(months)]
+    """
+    Generates a list of dates from the start date spanning the number of months.
+    """
+    dates = [start_date + relativedelta(months=+m) for m in range(months)]
+    return dates
+
+    
 
 def add_monthly_deposit_column(df, salary, employee_deposit, employer_deposit, severance_pay):
     monthly_deposit = (salary * (severance_pay/100)) + (salary * (employee_deposit/100)) + (salary * (employer_deposit/100))
@@ -218,13 +209,12 @@ def add_fee_columns(df, fee_from_deposit, fee_from_balance):
     return df
 
 # Streamlit UI for Inputs
-
-if 'clicked' not in st.session_state:
-    st.session_state.clicked = False
+# if 'clicked' not in st.session_state:
+#     st.session_state.clicked = False
     
 
-def click_button():
-    st.session_state.clicked = True
+# def click_button():
+#     st.session_state.clicked = True
     
 def get_user_inputs():
     with st.form("Pension Inputs", clear_on_submit=True):
@@ -305,7 +295,7 @@ def main():
 
     base_df = pd.DataFrame({"date": dates})
     base_df = add_monthly_deposit_column(base_df, user_inputs["salary"], user_inputs["employee_deposit"], user_inputs["employer_deposit"])
-    base_df = add_future_value_column(base_df, user_inputs["current_balance"], user_inputs["expected_yield"])
+    base_df = add_future_value_column(base_df, user_inputs["current_balance"], user_inputs["expected_annual_yield"])
 
     dfs = []
     for offer in offers:
