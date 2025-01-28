@@ -238,7 +238,7 @@ def get_user_inputs():
             st.warning("יש למלא את כל הפרטים לפני השליחה")
             return None
 
-
+@staticmethod
 def get_offer_inputs():
     num_offers = st.number_input("כמה הצעות תרצה להשוות?", min_value=1, step=1, value=1)
     offers = []
