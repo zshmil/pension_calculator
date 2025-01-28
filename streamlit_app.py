@@ -258,6 +258,18 @@ def get_offer_inputs():
                 st.error(f"Invalid input for fees in Offer {i + 1}. Please enter numeric values.")
     return offers
 
+# def stream_data():
+
+#     yield pd.DataFrame(
+#         np.random.randn(5, 10),
+#         columns=["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"],
+#     )
+
+
+# if st.button("Stream data"):
+#     st.write_stream(stream_data)
+
+
 # Main Streamlit App Logic
 def main():
     # st.title("Pension Calculator")
@@ -291,6 +303,7 @@ def main():
     final_df = pd.concat(dfs, axis=1, keys=[offer["offer_name"] for offer in offers])
 
     # Display results
+    # st.write_stream(stream_data)    
     st.subheader("פנסיה צפויה")
     st.dataframe(final_df)
 
