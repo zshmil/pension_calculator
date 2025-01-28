@@ -84,7 +84,7 @@ def get_user_inputs():
             return None
 
 def get_offer_inputs():
-    num_offers = st.number_input("כמה הצעות תרצה להשוות?", min_value=1, step=1, value=1, on_change=click_button)
+    num_offers = st.number_input("כמה הצעות תרצה להשוות?", min_value=1, step=1, value=1) #, on_change=click_button)
     offers = []
 
     for i in range(num_offers):
