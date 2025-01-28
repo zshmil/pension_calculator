@@ -210,6 +210,14 @@ def add_fee_columns(df, fee_from_deposit, fee_from_balance):
     return df
 
 # Streamlit UI for Inputs
+
+if 'clicked' not in st.session_state:
+    st.session_state.clicked = False
+    
+
+def click_button():
+    st.session_state.clicked = True
+    
 def get_user_inputs():
     with st.form("Pension Inputs", clear_on_submit=True):
         salary = st.text_input(" שכר חודשי (ברוטו) *", placeholder="לדוגמה: 15,000")
@@ -220,8 +228,7 @@ def get_user_inputs():
         employer_deposit = st.text_input("אחוז הפקדה של המעסיק", placeholder="בדרך כלל 6.5%")
         severance_pay = st.text_input("רכיב פיצויים", placeholder="לדוגמה: 8.33%")
         expected_annual_yield = st.text_input("תשואה שנתית צפויה", placeholder="לדוגמה: 4.5%")
-        submitted = st.form_submit_button("שלח",icon=":material/send:")
-
+        submitted = st.form_submit_button("שלח",icon=":material/send:",on_click=click_button)
 
         if submitted and all([salary, current_balance, current_age, retirement_age]):
             return {"salary": float(salary.strip().replace(",", "")),
