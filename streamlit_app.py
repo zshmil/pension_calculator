@@ -161,6 +161,14 @@ import pandas as pd
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
+# 
+# import streamlit as st
+# from IPython.display import IFrame
+
+# # Assuming your Streamlit app is running on the default port 8501
+# IFrame(src="http://localhost:8888", width=1000, height=700)
+
+
 # Helper Functions
 def get_initial_amount(initial_amount):
     try:
