@@ -74,10 +74,10 @@ def get_user_inputs():
                     "current_balance": float(current_balance.strip().replace(",", "")),
                     "current_age": int(current_age.strip()),
                     "retirement_age": int(retirement_age.strip()),
-                    "employee_deposit": float(employee_deposit.strip().replace("%", "")) if employee_deposit.strip() else 6.0,
-                    "employer_deposit": float(employer_deposit.strip().replace("%", "")) if employer_deposit.strip() else 6.5,
-                    "severance_pay": float(employer_deposit.strip().replace("%", "")) if employer_deposit.strip() else 8.33,
-                    "expected_annual_yield": float(expected_annual_yield.strip().replace("%", "")) if expected_annual_yield.strip() else 4.5,
+                    "employee_deposit": float(employee_deposit.strip().replace("%", ""))/100 if employee_deposit.strip() else 0.06,
+                    "employer_deposit": float(employer_deposit.strip().replace("%", ""))/100 if employer_deposit.strip() else 0.065,
+                    "severance_pay": float(employer_deposit.strip().replace("%", ""))/100 if employer_deposit.strip() else 0.0833,
+                    "expected_annual_yield": float(expected_annual_yield.strip().replace("%", ""))/100 if expected_annual_yield.strip() else 0.045,
                    }
         else:
             st.warning("יש למלא את כל הפרטים לפני השליחה")
