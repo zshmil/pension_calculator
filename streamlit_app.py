@@ -210,6 +210,7 @@ def add_fee_columns(df, fee_from_deposit, fee_from_balance):
     return df
 
 # Streamlit UI for Inputs
+@staticmethod
 def get_user_inputs():
     with st.form("Pension Inputs", clear_on_submit=True):
         salary = st.text_input(" שכר חודשי (ברוטו) *", placeholder="לדוגמה: 15,000")
