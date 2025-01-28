@@ -30,7 +30,7 @@ def get_dates(start_date, months):
     
 
 def add_monthly_deposit_column(df, salary, employee_deposit, employer_deposit, severance_pay):
-    monthly_deposit = (salary * (severance_pay/100)) + (salary * (employee_deposit/100)) + (salary * (employer_deposit/100))
+    monthly_deposit = (salary * severance_pay) + (salary * employee_deposit) + (salary * employer_deposit)
     df['monthly_deposit'] = monthly_deposit
     return df
 
@@ -97,9 +97,10 @@ def get_offer_inputs():
             try:
                 offers.append({
                     "offer_name": offer_name,
-                    "fee_from_deposit": float(fee_from_deposit)/ 100,
-                    "fee_from_balance": float(fee_from_balance)/100/12
+                    "fee_from_deposit": float(fee_from_deposit.strip().replace("%", ""))/100 if float(fee_from_deposit.strip()) >=1 else fee_from_deposit,
+                    "fee_from_balance": float(fee_from_balance.strip().replace("%", ""))/100/12 if float(fee_from_balance.strip()) >=1 else fee_from_balance/12
                 })
+
             except ValueError:
                 st.error(f"Invalid input for fees in Offer {i + 1}. Please enter numeric values.")
     return offers
