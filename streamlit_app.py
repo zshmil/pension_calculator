@@ -35,7 +35,8 @@ def add_monthly_deposit_column(df, salary, employee_deposit, employer_deposit, s
     return df
 
 def add_future_value_column(df, present_value, expected_annual_yield):
-    monthly_yield = (expected_annual_yield/100)/12
+    # monthly_yield = (expected_annual_yield/100)/12
+    monthly_yield = expected_annual_yield
     future_values = []
     for monthly_deposit in df['monthly_deposit']:
         present_value = round(present_value * (1 + monthly_yield) + monthly_deposit,2)
