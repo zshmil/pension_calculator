@@ -31,7 +31,7 @@ def get_dates(start_date, months):
 
 def add_monthly_deposit_column(df, salary, employee_deposit, employer_deposit, severance_pay):
     # monthly_deposit = (salary * severance_pay) + (salary * employee_deposit) + (salary * employer_deposit)
-    monthly_deposit = salary * (severance_pay + employee_deposit + employer_deposit)
+    monthly_deposit = salary * (employee_deposit + employer_deposit + severance_pay)
     df['monthly_deposit'] = monthly_deposit
     return df
 
