@@ -155,6 +155,7 @@ def main():
     # # Combine all DataFrames
     # final_df = pd.concat(dfs, axis=1, keys=[offer["offer_name"] for offer in offers])
 
+    # Display Progress Bar
     progress_text = ".מבצע חישוב, אנא המתן"
     my_bar = st.progress(0, text=progress_text)
     for percent_complete in range(100):
@@ -165,7 +166,6 @@ def main():
 
     
     # Display results
-    # st.write_stream(base_df)    
     st.subheader("🤑 פנסיה צפויה 🤑")
     st.dataframe(base_df)
 
