@@ -30,9 +30,15 @@ def get_dates(start_date, months):
    
 
 def add_monthly_deposit_column(df, salary, employee_deposit, employer_deposit, severance_pay):
-    monthly_deposit = salary * (employee_deposit + employer_deposit + severance_pay)
-    df['monthly_deposit'] = monthly_deposit
-    return df
+    """
+    Adds a 'monthly_deposit' column based on the salary.
+    """
+    try:
+        monthly_deposit = salary * (employee_deposit + employer_deposit + severance_pay)
+        df['monthly_deposit'] = monthly_deposit
+        return df
+    except ValueError:
+        raise ValueError("Invalid input for salary. Please enter a numeric value.")   
 
 
 def add_future_value_column(df, present_value, expected_annual_yield):
