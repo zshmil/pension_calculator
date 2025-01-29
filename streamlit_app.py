@@ -107,6 +107,17 @@ def get_offer_inputs():
                 st.error(f"Invalid input for fees in Offer {i + 1}. Please enter numeric values.")
     return offers
 
+# def format_date_column(df):
+#     """
+#     Format the 'date' column to YYYY-MM-DD format.
+#     Parameters:
+#     - df (pd.DataFrame): The input DataFrame.
+#     Returns:
+#     - pd.DataFrame: The DataFrame with the formatted 'date' column.
+#     """
+#     df['date'] = pd.to_datetime(df['date']).dt.strftime('%Y-%m-%d')
+#     return df
+    
 # def stream_data():
 #     yield base_df
 
@@ -136,6 +147,7 @@ def main():
     base_df = pd.DataFrame({"date": dates})
     base_df = add_monthly_deposit_column(base_df, user_inputs["salary"], user_inputs["employee_deposit"], user_inputs["employer_deposit"], user_inputs["severance_pay"])
     base_df = add_future_value_column(base_df, user_inputs["current_balance"], user_inputs["expected_annual_yield"])
+    base_df['date'] = pd.to_datetime(df['date']).dt.strftime('%Y-%m-%d')
 
     # dfs = []
     # for offer in offers:
