@@ -26,14 +26,14 @@ def get_dates(start_date, months):
     """
     dates = [start_date + relativedelta(months=+m) for m in range(months)]
     return dates
-
-    
+   
 
 def add_monthly_deposit_column(df, salary, employee_deposit, employer_deposit, severance_pay):
     # monthly_deposit = (salary * severance_pay) + (salary * employee_deposit) + (salary * employer_deposit)
     monthly_deposit = salary * (employee_deposit + employer_deposit + severance_pay)
     df['monthly_deposit'] = monthly_deposit
     return df
+
 
 def add_future_value_column(df, present_value, expected_annual_yield):
     # monthly_yield = (expected_annual_yield/100)/12
@@ -44,6 +44,7 @@ def add_future_value_column(df, present_value, expected_annual_yield):
         future_values.append(present_value)
     df['balance'] = future_values
     return df
+
 
 def add_fee_columns(df, fee_from_deposit, fee_from_balance):
     df['fee_from_deposit'] = df['monthly_deposit'] * fee_from_deposit
@@ -58,7 +59,8 @@ def add_fee_columns(df, fee_from_deposit, fee_from_balance):
 
 # def click_button():
 #     st.session_state.clicked = True
-    
+
+
 def get_user_inputs():
     with st.form("Pension Inputs", clear_on_submit=True):
         salary = st.text_input(" שכר חודשי (ברוטו) *", placeholder="לדוגמה: 15,000")
