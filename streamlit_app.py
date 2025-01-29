@@ -105,8 +105,8 @@ def get_offer_inputs():
                 st.error(f"Invalid input for fees in Offer {i + 1}. Please enter numeric values.")
     return offers
 
-def stream_data():
-    yield base_df
+# def stream_data():
+#     yield base_df
 
 
 # if st.button("Stream data"):
@@ -146,7 +146,7 @@ def main():
     # final_df = pd.concat(dfs, axis=1, keys=[offer["offer_name"] for offer in offers])
 
     # Display results
-    st.write_stream(stream_data)    
+    st.write_stream(base_df)    
     st.subheader("פנסיה צפויה")
     # st.dataframe(final_df)
     # st.dataframe(base_df)
