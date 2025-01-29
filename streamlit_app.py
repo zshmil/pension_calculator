@@ -162,7 +162,8 @@ def main():
     # # Combine all DataFrames
     # final_df = pd.concat(dfs, axis=1, keys=[offer["offer_name"] for offer in offers])
 
-    progress_text = "Operation in progress. Please wait."
+    # progress_text = "Operation in progress. Please wait."
+    progress_text = ".מבצע חישוב, אנא המתן"
     my_bar = st.progress(0, text=progress_text)
     
     for percent_complete in range(100):
