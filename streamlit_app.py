@@ -113,10 +113,10 @@ def get_base_df():
     months = get_months_until_retirement(user_inputs["current_age"], user_inputs["retirement_age"])
     dates = get_dates(datetime.now().replace(day=1), months)
 
-    base_df = pd.DataFrame({"date": dates})
-    base_df = add_monthly_deposit_column(base_df, user_inputs["salary"], user_inputs["employee_deposit"], user_inputs["employer_deposit"], user_inputs["severance_pay"])
-    base_df = add_future_value_column(base_df, user_inputs["current_balance"], user_inputs["expected_annual_yield"])
-    base_df['date'] = pd.to_datetime(base_df['date']).dt.strftime('%Y-%m-%d')
+    df = pd.DataFrame({"date": dates})
+    df = add_monthly_deposit_column(df, user_inputs["salary"], user_inputs["employee_deposit"], user_inputs["employer_deposit"], user_inputs["severance_pay"])
+    df = add_future_value_column(df, user_inputs["current_balance"], user_inputs["expected_annual_yield"])
+    df['date'] = pd.to_datetime(df['date']).dt.strftime('%Y-%m-%d')
     return df
 
 
@@ -137,6 +137,7 @@ def main():
     # st.title("Pension Calculator")
     st.title("💰🧮 מחשבון פנסיה לשכירים 🧮💰")
     st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
+    
     user_inputs = get_user_inputs()
     if not user_inputs:
         return
@@ -147,16 +148,6 @@ def main():
     #     return
 
     base_df = get_base_df()
-
-    # dfs = []
-    # for offer in offers:
-    #     df = base_df.copy()
-    #     df = add_fee_columns(df, offer["fee_from_deposit"], offer["fee_from_balance"])
-    #     df["offer_name"] = offer["offer_name"]
-    #     dfs.append(df.set_index("date"))
-
-    # # Combine all DataFrames
-    # final_df = pd.concat(dfs, axis=1, keys=[offer["offer_name"] for offer in offers])
 
     # Display Progress Bar
     progress_text = ".מבצע חישוב, אנא המתן"
