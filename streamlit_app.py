@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+import time
 
 start_date = datetime.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
 
@@ -161,10 +162,17 @@ def main():
     # # Combine all DataFrames
     # final_df = pd.concat(dfs, axis=1, keys=[offer["offer_name"] for offer in offers])
 
+    progress_text = "Operation in progress. Please wait."
+    my_bar = st.progress(0, text=progress_text)
+    
+    for percent_complete in range(100):
+        time.sleep(0.01)
+        my_bar.progress(percent_complete + 1, text=progress_text)
+    time.sleep(1)
+    my_bar.empty()
     # Display results
     # st.write_stream(base_df)    
     st.subheader("🤑 פנסיה צפויה 🤑")
-    # st.dataframe(final_df)
     st.dataframe(base_df)
 
 if __name__ == "__main__":
