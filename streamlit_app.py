@@ -146,10 +146,10 @@ def main():
     # final_df = pd.concat(dfs, axis=1, keys=[offer["offer_name"] for offer in offers])
 
     # Display results
-    st.write_stream(base_df)    
+    # st.write_stream(base_df)    
     st.subheader("פנסיה צפויה")
     # st.dataframe(final_df)
-    # st.dataframe(base_df)
+    st.dataframe(base_df)
 
 if __name__ == "__main__":
     main()
