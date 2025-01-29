@@ -109,7 +109,7 @@ def get_offer_inputs():
                 st.error(f"Invalid input for fees in Offer {i + 1}. Please enter numeric values.")
     return offers
 
-def get_base_df():
+def get_base_df(user_inputs):
     months = get_months_until_retirement(user_inputs["current_age"], user_inputs["retirement_age"])
     dates = get_dates(datetime.now().replace(day=1), months)
 
@@ -147,7 +147,7 @@ def main():
     #     st.warning("יש להוסיף לפחות הצעה אחת.")
     #     return
 
-    base_df = get_base_df()
+    base_df = get_base_df(user_inputs)
 
     # Display Progress Bar
     progress_text = ".מבצע חישוב, אנא המתן"
