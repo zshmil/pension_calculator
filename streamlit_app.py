@@ -161,7 +161,7 @@ def main():
 
     # Display results
     # st.write_stream(base_df)    
-    st.subheader("פנסיה צפויה")
+    st.subheader("🤑 פנסיה צפויה 🤑")
     # st.dataframe(final_df)
     st.dataframe(base_df)
 
