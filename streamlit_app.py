@@ -38,7 +38,7 @@ def add_future_value_column(df, present_value, expected_annual_yield):
     monthly_yield = (expected_annual_yield/100)/12
     future_values = []
     for monthly_deposit in df['monthly_deposit']:
-        present_value = present_value * (1 + monthly_yield) + monthly_deposit
+        present_value = round(present_value * (1 + monthly_yield) + monthly_deposit,2)
         future_values.append(present_value)
     df['balance'] = future_values
     return df
@@ -77,7 +77,7 @@ def get_user_inputs():
                     "employee_deposit": float(employee_deposit.strip().replace("%", ""))/100 if employee_deposit.strip() else 0.06,
                     "employer_deposit": float(employer_deposit.strip().replace("%", ""))/100 if employer_deposit.strip() else 0.065,
                     "severance_pay": float(employer_deposit.strip().replace("%", ""))/100 if employer_deposit.strip() else 0.0833,
-                    "expected_annual_yield": float(expected_annual_yield.strip().replace("%", ""))/100 if expected_annual_yield.strip() else 0.045,
+                    "expected_annual_yield": float(expected_annual_yield.strip().replace("%", ""))/100/12 if expected_annual_yield.strip() else 0.045/12,
                    }
         else:
             st.warning("יש למלא את כל הפרטים לפני השליחה")
@@ -98,19 +98,15 @@ def get_offer_inputs():
                 offers.append({
                     "offer_name": offer_name,
                     "fee_from_deposit": float(fee_from_deposit.strip().replace("%", ""))/100 if float(fee_from_deposit.strip()) >=1 else fee_from_deposit,
-                    "fee_from_balance": float(fee_from_balance.strip().replace("%", ""))/100/12 if float(fee_from_balance.strip()) >=1 else fee_from_balance/12
+                    "fee_from_balance": float(fee_from_balance.strip().replace("%", ""))/12 if float(fee_from_balance.strip()) else 0
                 })
 
             except ValueError:
                 st.error(f"Invalid input for fees in Offer {i + 1}. Please enter numeric values.")
     return offers
 
-# def stream_data():
-
-#     yield pd.DataFrame(
-#         np.random.randn(5, 10),
-#         columns=["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"],
-#     )
+def stream_data():
+    yield base_df
 
 
 # if st.button("Stream data"):
@@ -126,10 +122,10 @@ def main():
     if not user_inputs:
         return
 
-    offers = get_offer_inputs()
-    if not offers:
-        st.warning("יש להוסיף לפחות הצעה אחת.")
-        return
+    # offers = get_offer_inputs()
+    # if not offers:
+    #     st.warning("יש להוסיף לפחות הצעה אחת.")
+    #     return
 
     # Perform calculations
     months = get_months_until_retirement(user_inputs["current_age"], user_inputs["retirement_age"])
@@ -139,20 +135,21 @@ def main():
     base_df = add_monthly_deposit_column(base_df, user_inputs["salary"], user_inputs["employee_deposit"], user_inputs["employer_deposit"])
     base_df = add_future_value_column(base_df, user_inputs["current_balance"], user_inputs["expected_annual_yield"])
 
-    dfs = []
-    for offer in offers:
-        df = base_df.copy()
-        df = add_fee_columns(df, offer["fee_from_deposit"], offer["fee_from_balance"])
-        df["offer_name"] = offer["offer_name"]
-        dfs.append(df.set_index("date"))
+    # dfs = []
+    # for offer in offers:
+    #     df = base_df.copy()
+    #     df = add_fee_columns(df, offer["fee_from_deposit"], offer["fee_from_balance"])
+    #     df["offer_name"] = offer["offer_name"]
+    #     dfs.append(df.set_index("date"))
 
-    # Combine all DataFrames
-    final_df = pd.concat(dfs, axis=1, keys=[offer["offer_name"] for offer in offers])
+    # # Combine all DataFrames
+    # final_df = pd.concat(dfs, axis=1, keys=[offer["offer_name"] for offer in offers])
 
     # Display results
-    # st.write_stream(stream_data)    
+    st.write_stream(stream_data)    
     st.subheader("פנסיה צפויה")
-    st.dataframe(final_df)
+    # st.dataframe(final_df)
+    # st.dataframe(base_df)
 
 if __name__ == "__main__":
     main()
