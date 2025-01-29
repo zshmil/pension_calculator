@@ -120,7 +120,16 @@ def get_offer_inputs():
 #     """
 #     df['date'] = pd.to_datetime(df['date']).dt.strftime('%Y-%m-%d')
 #     return df
+
+def show_progress_bar():
+    progress_text = ".מבצע חישוב, אנא המתן"
+    my_bar = st.progress(0, text=progress_text)  
     
+    for percent_complete in range(100):
+        time.sleep(0.03)
+        my_bar.progress(percent_complete + 1, text=progress_text)
+    time.sleep(1)
+    my_bar.empty()
 
 # Main Streamlit App Logic
 def main():
@@ -155,14 +164,17 @@ def main():
     # # Combine all DataFrames
     # final_df = pd.concat(dfs, axis=1, keys=[offer["offer_name"] for offer in offers])
 
-    progress_text = ".מבצע חישוב, אנא המתן"
-    my_bar = st.progress(0, text=progress_text)
+    # progress_text = ".מבצע חישוב, אנא המתן"
+    # my_bar = st.progress(0, text=progress_text)
     
-    for percent_complete in range(100):
-        time.sleep(0.03)
-        my_bar.progress(percent_complete + 1, text=progress_text)
-    time.sleep(1)
-    my_bar.empty()
+    # for percent_complete in range(100):
+    #     time.sleep(0.03)
+    #     my_bar.progress(percent_complete + 1, text=progress_text)
+    # time.sleep(1)
+    # my_bar.empty()
+
+    show_progress_bar()
+    
     # Display results
     # st.write_stream(base_df)    
     st.subheader("🤑 פנסיה צפויה 🤑")
