@@ -121,13 +121,6 @@ def get_offer_inputs():
 #     df['date'] = pd.to_datetime(df['date']).dt.strftime('%Y-%m-%d')
 #     return df
     
-# def stream_data():
-#     yield base_df
-
-
-# if st.button("Stream data"):
-#     st.write_stream(stream_data)
-
 
 # Main Streamlit App Logic
 def main():
@@ -162,7 +155,6 @@ def main():
     # # Combine all DataFrames
     # final_df = pd.concat(dfs, axis=1, keys=[offer["offer_name"] for offer in offers])
 
-    # progress_text = "Operation in progress. Please wait."
     progress_text = ".מבצע חישוב, אנא המתן"
     my_bar = st.progress(0, text=progress_text)
     
