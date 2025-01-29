@@ -78,7 +78,7 @@ def get_user_inputs():
                     "retirement_age": int(retirement_age.strip()),
                     "employee_deposit": float(employee_deposit.strip().replace("%", ""))/100 if employee_deposit.strip() else 0.06,
                     "employer_deposit": float(employer_deposit.strip().replace("%", ""))/100 if employer_deposit.strip() else 0.065,
-                    "severance_pay": float(employer_deposit.strip().replace("%", ""))/100 if employer_deposit.strip() else 0.0833,
+                    "severance_pay": float(severance_pay.strip().replace("%", ""))/100 if severance_pay.strip() else 0.0833,
                     "expected_annual_yield": float(expected_annual_yield.strip().replace("%", ""))/100/12 if expected_annual_yield.strip() else 0.045/12,
                    }
         else:
