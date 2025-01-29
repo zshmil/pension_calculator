@@ -110,6 +110,17 @@ def get_offer_inputs():
                 st.error(f"Invalid input for fees in Offer {i + 1}. Please enter numeric values.")
     return offers
 
+def get_base_df():
+    months = get_months_until_retirement(user_inputs["current_age"], user_inputs["retirement_age"])
+    dates = get_dates(datetime.now().replace(day=1), months)
+
+    base_df = pd.DataFrame({"date": dates})
+    base_df = add_monthly_deposit_column(base_df, user_inputs["salary"], user_inputs["employee_deposit"], user_inputs["employer_deposit"], user_inputs["severance_pay"])
+    base_df = add_future_value_column(base_df, user_inputs["current_balance"], user_inputs["expected_annual_yield"])
+    base_df['date'] = pd.to_datetime(base_df['date']).dt.strftime('%Y-%m-%d')
+    return df
+
+
 # def format_date_column(df):
 #     """
 #     Format the 'date' column to YYYY-MM-DD format.
@@ -136,14 +147,7 @@ def main():
     #     st.warning("יש להוסיף לפחות הצעה אחת.")
     #     return
 
-    # Perform calculations
-    months = get_months_until_retirement(user_inputs["current_age"], user_inputs["retirement_age"])
-    dates = get_dates(datetime.now().replace(day=1), months)
-
-    base_df = pd.DataFrame({"date": dates})
-    base_df = add_monthly_deposit_column(base_df, user_inputs["salary"], user_inputs["employee_deposit"], user_inputs["employer_deposit"], user_inputs["severance_pay"])
-    base_df = add_future_value_column(base_df, user_inputs["current_balance"], user_inputs["expected_annual_yield"])
-    base_df['date'] = pd.to_datetime(base_df['date']).dt.strftime('%Y-%m-%d')
+    base_df = get_base_df()
 
     # dfs = []
     # for offer in offers:
