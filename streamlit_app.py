@@ -147,7 +147,7 @@ def main():
     base_df = pd.DataFrame({"date": dates})
     base_df = add_monthly_deposit_column(base_df, user_inputs["salary"], user_inputs["employee_deposit"], user_inputs["employer_deposit"], user_inputs["severance_pay"])
     base_df = add_future_value_column(base_df, user_inputs["current_balance"], user_inputs["expected_annual_yield"])
-    base_df['date'] = pd.to_datetime(df['date']).dt.strftime('%Y-%m-%d')
+    base_df['date'] = pd.to_datetime(base_df['date']).dt.strftime('%Y-%m-%d')
 
     # dfs = []
     # for offer in offers:
