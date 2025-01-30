@@ -321,18 +321,6 @@ def get_offer_inputs():
     return None
 
 
-
-def get_base_df(user_inputs):
-    months = get_months_until_retirement(user_inputs["current_age"], user_inputs["retirement_age"])
-    dates = get_dates(datetime.now().replace(day=1), months)
-    df = pd.DataFrame({"date": dates})
-    df = add_monthly_deposit_column(df, user_inputs["salary"], user_inputs["employee_deposit"], user_inputs["employer_deposit"], user_inputs["severance_pay"])
-    df = add_future_value_column(df, user_inputs["current_balance"], user_inputs["expected_annual_yield"])
-    df['date'] = pd.to_datetime(df['date']).dt.strftime('%Y-%m-%d')
-    df = df[['date','balance','monthly_deposit']]
-    return df
-
-
 def get_base_df(user_inputs):
     months = get_months_until_retirement(user_inputs["current_age"], user_inputs["retirement_age"])
     # months = get_months_until_retirement(43,67)
