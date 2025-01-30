@@ -285,40 +285,62 @@ def get_user_inputs():
 #                 st.error(f"Invalid input for fees in Offer {i + 1}. Please enter numeric values.")
 #     return offers
 
+import streamlit as st
+
 def get_offer_inputs():
+    if "offers" not in st.session_state:
+        st.session_state.offers = []
+    
+    # Maintain num_offers in session state
+    if "num_offers" not in st.session_state:
+        st.session_state.num_offers = 1
+
+    # Input: Number of offers
+    num_offers = st.number_input("כמה הצעות תרצה להשוות?", min_value=1, step=1, value=st.session_state.num_offers, key="num_offers")
+
+    # Store the updated number of offers in session state
+    st.session_state.num_offers = num_offers
+
     with st.form("Offer Comparison"):
-        num_offers = st.number_input("כמה הצעות תרצה להשוות?", min_value=1, step=1, value=st.session_state.get("num_offers", 1))
-
-        # Store in session state if needed
-        st.session_state.num_offers = num_offers
-
-        offers = []
         for i in range(num_offers):
             st.subheader(f"Offer {i + 1}")
+
+            # Store and retrieve input values from session state
             offer_name = st.text_input(f"Offer Name {i + 1}", key=f"offer_name_{i}")
             fee_from_deposit = st.text_input("(%) דמי ניהול מהפקדה", key=f"fee_deposit_{i}")
             fee_from_balance = st.text_input("(%) דמי ניהול מצבירה", key=f"fee_balance_{i}")
 
-        # Single submit at bottom
+        # Submit button
         submitted = st.form_submit_button("השווה הצעות")
 
-    # After submitting, parse the data
+    # Handle form submission
     if submitted:
         offers = []
         for i in range(num_offers):
-            offer_name = st.session_state.get(f"offer_name_{i}")
-            fee_deposit = st.session_state.get(f"fee_deposit_{i}")
-            fee_balance = st.session_state.get(f"fee_balance_{i}")
-            # do parsing and error handling
+            offer_name = st.session_state.get(f"offer_name_{i}", "").strip()
+            fee_deposit = st.session_state.get(f"fee_deposit_{i}", "").strip()
+            fee_balance = st.session_state.get(f"fee_balance_{i}", "").strip()
+
+            # Convert fee inputs to float, handling errors safely
+            try:
+                fee_deposit = float(fee_deposit.replace("%", ""))/100 if fee_deposit else None
+            except ValueError:
+                fee_deposit = None
+            try:
+                fee_balance = float(fee_balance.replace("%", ""))/100/12 if fee_balance else None
+            except ValueError:
+                fee_balance = None
 
             offers.append({
-               "offer_name": offer_name,
-               "fee_from_deposit": float(fee_from_deposit.strip().replace("%", ""))/100 if float(fee_from_deposit.strip()) else None,
-               "fee_from_balance": float(fee_from_balance.strip().replace("%", ""))/100/12 if float(fee_from_balance.strip()) else None
-                })
-        
-        return offers
-    return None
+                "offer_name": offer_name,
+                "fee_from_deposit": fee_deposit,
+                "fee_from_balance": fee_balance
+            })
+
+        # Store results in session state
+        st.session_state.offers = offers
+    return st.session_state.get("offers", None)
+
 
 
 def get_base_df(user_inputs):
