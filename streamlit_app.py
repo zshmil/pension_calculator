@@ -164,61 +164,66 @@ def get_user_inputs():
 #                 st.error(f"Invalid input for fees in Offer {i + 1}. Please enter numeric values.")
 #     return offers
 
-@st.fragment
 def get_offer_inputs():
     """
-    Display a user interface to input multiple pension 'offers' in Streamlit.
-    Each 'offer' contains:
-        - 'offer_name'
-        - 'fee_from_deposit'
-        - 'fee_from_balance'
-    The function returns a list of dictionaries, one per offer.
+    Display a user interface to input multiple pension 'offers' in Streamlit
+    with a two-step approach:
+      1. The user specifies a desired number of offers but must click
+         "Confirm number of offers" to apply the change.
+      2. A form with stable keys is generated for each offer, so typed values
+         persist across script reruns.
     Returns:
-        list of dict: Each dict represents one offer, with keys:
-            - "offer_name" (str): A label or name for the offer.
-            - "fee_from_deposit" (float): Percentage (as decimal) taken from the monthly deposit.
-            - "fee_from_balance" (float): Percentage (as decimal) taken from the balance.
+        list of dict or None:
+            A list of offers if the user submits the form, otherwise None.
+            Each offer is a dict with:
+                - "offer_name" (str)
+                - "fee_from_deposit" (float)
+                - "fee_from_balance" (float)
     """
-    
+
     if "num_offers" not in st.session_state:
-        st.session_state.num_offers = 1  # Start with 1
+        st.session_state.num_offers = 1  # default value
 
-    desired_num = st.number_input( "How many offers do you want?", min_value=1, value=st.session_state.num_offers, step=1)
+    desired_num_offers = st.number_input("כמה הצעות תרצה להשוות?", min_value=1, step=1, value=st.session_state.num_offers,)
 
-    if st.button("Update number of offers"):
-        st.session_state.num_offers = desired_num
+    if st.button("Confirm number of offers"):
+        st.session_state.num_offers = desired_num_offers
 
+    offers = []
     with st.form("my_offers_form"):
         for i in range(st.session_state.num_offers):
-            st.text_input(label=f"הצעה {i + 1}", key=f"offer_name_{i}",)
-            st.text_input(label="(%) דמי ניהול מהפקדה", key=f"fee_deposit_{i}", )
-            st.text_input(label="(%) דמי ניהול מצבירה", key=f"fee_balance_{i}",)
-
+            st.subheader(f"הצעה {i + 1}")
+            st.text_input(f"Offer Name {i + 1}", key=f"offer_name_{i}")
+            st.text_input("(%) דמי ניהול מהפקדה", placeholder="לדוגמה: 1.5%", key=f"fee_deposit_{i}")
+            st.text_input("(%) דמי ניהול מצבירה", placeholder="לדוגמה: 0.5%", key=f"fee_balance_{i}")
+        
+        # One submit button for all offers
         submitted = st.form_submit_button("הוסף הצעה")
 
     if submitted:
-        offers = []
         for i in range(st.session_state.num_offers):
             offer_name = st.session_state.get(f"offer_name_{i}", "").strip()
             deposit_raw = st.session_state.get(f"fee_deposit_{i}", "").strip()
             balance_raw = st.session_state.get(f"fee_balance_{i}", "").strip()
+
+            # Convert deposit fee
             try:
-                deposit_fee = float(deposit_raw.replace("%", ""))/100 if deposit_raw else None
+                deposit_fee = float(deposit_raw.replace("%", "")) / 100 if deposit_raw else None
             except ValueError:
                 deposit_fee = None
+            # Convert balance fee (assumed monthly if you do `/100/12`)
             try:
-                balance_fee = float(balance_raw.replace("%", ""))/100/12 if balance_raw else None
+                balance_fee = float(balance_raw.replace("%", "")) / 100 / 12 if balance_raw else None
             except ValueError:
                 balance_fee = None
-
             offers.append({
                 "offer_name": offer_name,
                 "fee_from_deposit": deposit_fee,
                 "fee_from_balance": balance_fee
             })
-        st.rerun(scope="fragment")
-        return offers
-    return None
+        return offers  # Return the collected offers if submitted
+    return None  # If not submitted yet, return None
+
 
 
 
@@ -460,22 +465,59 @@ def get_final_df(user_inputs):
 
 
 # Main Streamlit App Logic
+# def main():
+#     # st.title("Pension Calculator")
+#     st.title("💰🧮 מחשבון פנסיה לשכירים 🧮💰")
+#     st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
+#     user_inputs = get_user_inputs()
+#     if not user_inputs:
+#         return
+
+#     offers = get_offer_inputs()
+#     if not offers:
+#         st.warning("יש להוסיף לפחות הצעה אחת.")
+#         return
+    
+#     df = get_final_df(user_inputs)
+
+#     # Display Progress Bar
+#     progress_text = ".מבצע חישוב, אנא המתן"
+#     my_bar = st.progress(0, text=progress_text)
+#     for percent_complete in range(100):
+#         time.sleep(0.03)
+#         my_bar.progress(percent_complete + 1, text=progress_text)
+#     time.sleep(1)
+#     my_bar.empty()
+    
+#     # Display results
+#     # st.write_stream(stream_data)    
+#     st.subheader("פנסיה צפויה")
+#     st.dataframe(df)
+
+
 def main():
-    # st.title("Pension Calculator")
     st.title("💰🧮 מחשבון פנסיה לשכירים 🧮💰")
     st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
+
+    # 1. Gather user inputs
     user_inputs = get_user_inputs()
     if not user_inputs:
-        return
+        return  # If no user inputs yet, stop here
 
-    offers = get_offer_inputs()
-    if not offers:
+    # 2. Gather offers with the new two-step function
+    offer_list = get_offer_inputs()
+    if not offer_list:
         st.warning("יש להוסיף לפחות הצעה אחת.")
         return
-    
+
+    # 3. Once we have user_inputs + offer_list, proceed
+    #    (Same as your old logic)
+    global offers
+    offers = offer_list  # So your get_final_df() can see them, if needed
+
     df = get_final_df(user_inputs)
 
-    # Display Progress Bar
+    # Display progress bar (as in your code)
     progress_text = ".מבצע חישוב, אנא המתן"
     my_bar = st.progress(0, text=progress_text)
     for percent_complete in range(100):
@@ -485,7 +527,6 @@ def main():
     my_bar.empty()
     
     # Display results
-    # st.write_stream(stream_data)    
     st.subheader("פנסיה צפויה")
     st.dataframe(df)
 
