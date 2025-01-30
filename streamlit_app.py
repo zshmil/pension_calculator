@@ -209,10 +209,6 @@ def add_monthly_deposit_column(df, salary, employee_deposit, employer_deposit, s
     Adds a 'monthly_deposit' column based on the salary.
     """
     try:
-        salary = float(salary)
-        employee_deposit = float(employee_deposit)
-        employer_deposit = float(employer_deposit)
-        severance_pay = float(severance_pay)
         monthly_deposit = salary * (employee_deposit + employer_deposit + severance_pay)
         df['monthly_deposit'] = monthly_deposit
         return df
