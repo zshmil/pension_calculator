@@ -68,7 +68,7 @@ def add_fee_columns(df, fee_from_deposit, fee_from_balance):
 
 
 def get_user_inputs():
-    with st.form("Pension Inputs", clear_on_submit=True):
+    with st.form("Pension Inputs", clear_on_submit=False, enter_to_submit=True):
         salary = st.text_input(" שכר חודשי (ברוטו) *", placeholder="לדוגמה: 15,000")
         current_balance = st.text_input("צבירה נוכחית *", placeholder="לדוגמה: 300,000")
         current_age = st.text_input("גיל *", placeholder="לדוגמא: 30")
