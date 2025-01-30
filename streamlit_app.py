@@ -397,11 +397,9 @@ def reorganize_and_split_final_df(df):
 def unify_total_fee_columns(df, unified_header='Total_Fee_by_company'):
     """
     Unify all columns with 'total_fee' in their name under a single column index.
-
     Parameters:
     - df (pd.DataFrame): The input DataFrame with MultiIndex columns.
     - unified_header (str): The new top-level index for the unified columns.
-
     Returns:
     - pd.DataFrame: The modified DataFrame with unified total_fee columns.
     """
@@ -422,11 +420,9 @@ def format_currency_columns(df):
     """
     Formats all numeric columns in a DataFrame, except the first column (assumed to be a date column),
     by adding a currency symbol and formatting numbers with commas and two decimal places.
-
     Parameters:
         df (pd.DataFrame): The input DataFrame.
         currency_symbol (str): The currency symbol to prepend to the formatted values.
-
     Returns:
         pd.DataFrame: The DataFrame with formatted numeric columns.
     """
