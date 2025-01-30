@@ -58,13 +58,52 @@ def add_future_value_column(df, present_value, expected_annual_yield):
 
 
 def add_fee_columns(df, fee_from_deposit, fee_from_balance):
+    """
+    Add fee calculations to the given DataFrame.
+    This function calculates the fee from monthly deposits and the fee from 
+    the current balance, then sums them into a total fee column.
+    Args:
+        df (pd.DataFrame): The input DataFrame, expected to contain at least:
+            - 'monthly_deposit' (float): The monthly deposit amount.
+            - 'balance' (float): The current balance of the pension.
+        fee_from_deposit (float): Percentage (as a decimal) of the monthly deposit 
+            that will be charged as a fee. For example, 0.015 for 1.5%.
+        fee_from_balance (float): Percentage (as a decimal) of the balance 
+            that will be charged as a fee. For example, 0.005 for 0.5%.
+            This value is assumed to be the monthly rate (or already converted 
+            to monthly), not annual.
+    Returns:
+        pd.DataFrame: The same DataFrame with three new columns added:
+            - 'fee_from_deposit' (float): Fee charged from the monthly deposit.
+            - 'fee_from_balance' (float): Fee charged from the balance.
+            - 'total_fee' (float): The sum of the above two fees.
+    """
+    
     df['fee_from_deposit'] = df['monthly_deposit'] * fee_from_deposit
     df['fee_from_balance'] = df['balance'] * fee_from_balance
     df['total_fee'] = df['fee_from_deposit'] + df['fee_from_balance']
     return df
 
-
 def get_user_inputs():
+    """
+    Create and display a form in Streamlit for user pension inputs.
+    The form collects various financial and personal details like monthly salary, 
+    current balance, age, and deposit percentages. When the user clicks "שלח", 
+    it validates required inputs before returning them as a dictionary.
+    Returns:
+        dict or None: A dictionary of user inputs if the form is submitted and 
+        required fields are filled. The dictionary contains:
+            - "salary" (float): Monthly gross salary.
+            - "current_balance" (float): Current total balance in pension.
+            - "current_age" (int): The user's current age.
+            - "retirement_age" (int): The user's desired retirement age.
+            - "employee_deposit" (float): Percentage of salary the employee contributes.
+            - "employer_deposit" (float): Percentage of salary the employer contributes.
+            - "severance_pay" (float): Percentage of salary for severance pay.
+            - "expected_annual_yield" (float): Expected annual yield, converted to monthly.       
+        If not submitted or if required fields are missing, returns None.
+    """
+    
     with st.form("Pension Inputs", clear_on_submit=False, enter_to_submit=True):
         salary = st.text_input(" שכר חודשי (ברוטו) *", placeholder="לדוגמה: 15,000")
         current_balance = st.text_input("צבירה נוכחית *", placeholder="לדוגמה: 300,000")
@@ -92,6 +131,20 @@ def get_user_inputs():
 
 
 # def get_offer_inputs():
+    # """
+    # Display a user interface to input multiple pension 'offers' in Streamlit.
+    # Each 'offer' contains:
+    #     - 'offer_name'
+    #     - 'fee_from_deposit'
+    #     - 'fee_from_balance'
+    # The function returns a list of dictionaries, one per offer.
+    # Returns:
+    #     list of dict: Each dict represents one offer, with keys:
+    #         - "offer_name" (str): A label or name for the offer.
+    #         - "fee_from_deposit" (float): Percentage (as decimal) taken from the monthly deposit.
+    #         - "fee_from_balance" (float): Percentage (as decimal) taken from the balance.
+    # """
+
 #     num_offers = st.number_input("כמה הצעות תרצה להשוות?", min_value=1, step=1, value=1) #, on_change=click_button)
 #     offers = []
 #     for i in range(num_offers):
@@ -113,6 +166,20 @@ def get_user_inputs():
 
 
 def get_offer_inputs():
+    """
+    Display a user interface to input multiple pension 'offers' in Streamlit.
+    Each 'offer' contains:
+        - 'offer_name'
+        - 'fee_from_deposit'
+        - 'fee_from_balance'
+    The function returns a list of dictionaries, one per offer.
+    Returns:
+        list of dict: Each dict represents one offer, with keys:
+            - "offer_name" (str): A label or name for the offer.
+            - "fee_from_deposit" (float): Percentage (as decimal) taken from the monthly deposit.
+            - "fee_from_balance" (float): Percentage (as decimal) taken from the balance.
+    """
+    
     if "num_offers" not in st.session_state:
         st.session_state.num_offers = 1  # Start with 1
 
@@ -156,6 +223,30 @@ def get_offer_inputs():
 
 
 def get_base_df(user_inputs):
+    """
+    Create a base DataFrame for pension calculations.
+    This function:
+        1. Calculates the number of months from current age to retirement.
+        2. Generates a date range for those months.
+        3. Adds a 'monthly_deposit' column based on user salary and deposit percentages.
+        4. Adds a 'balance' column showing the future value growth each month.
+    Args:
+        user_inputs (dict): A dictionary of user inputs. Must include:
+            - "current_age" (int)
+            - "retirement_age" (int)
+            - "salary" (float)
+            - "employee_deposit" (float)
+            - "employer_deposit" (float)
+            - "severance_pay" (float)
+            - "current_balance" (float)
+            - "expected_annual_yield" (float) (monthly yield)
+    Returns:
+        pd.DataFrame: A DataFrame with at least these columns:
+            - 'date' (datetime): The monthly timeline from now to retirement.
+            - 'balance' (float): The calculated pension balance for each month.
+            - 'monthly_deposit' (float): The deposit added each month.
+    """
+    
     months = get_months_until_retirement(user_inputs["current_age"], user_inputs["retirement_age"])
     # months = get_months_until_retirement(43,67)
     dates = get_dates(start_date, months)
@@ -175,6 +266,28 @@ def get_base_df(user_inputs):
 
 
 def get_offers_lists(offers, base_df):
+    """
+    Build one DataFrame per offer, appending fee columns to each.
+    For each offer, this function makes a copy of `base_df`, calculates fees 
+    by calling `add_fee_columns()`, then renames and organizes columns.
+    Args:
+        offers (list of dict): A list of offers from `get_offer_inputs()`. 
+            Each offer must include:
+              - "offer_name" (str)
+              - "fee_from_deposit" (float)
+              - "fee_from_balance" (float)
+        base_df (pd.DataFrame): A DataFrame with columns at least:
+            - 'date'
+            - 'balance'
+            - 'monthly_deposit'
+    Returns:
+        tuple: (dfs, offer_names)
+            - dfs (list of pd.DataFrame): One DataFrame per offer, each with 
+              'fee_from_balance', 'fee_from_deposit', 'total_fee', plus a 
+              MultiIndex column for the offer name.
+            - offer_names (list of str): A simple list of offer names.
+    """
+    
     offer_names = []
     dfs = []
     for offer in offers:
