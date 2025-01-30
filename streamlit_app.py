@@ -278,8 +278,8 @@ def get_user_inputs():
 #             try:
 #                 offers.append({
 #                     "offer_name": offer_name,
-#                     "fee_from_deposit": float(fee_from_deposit.strip().replace("%", ""))/100 if float(fee_from_deposit.strip()) >=1 else fee_from_deposit,
-#                     "fee_from_balance": float(fee_from_balance.strip().replace("%", ""))/100/12 if float(fee_from_balance.strip()) else 0
+#                     "fee_from_deposit": float(fee_from_deposit.strip().replace("%", ""))/100 if float(fee_from_deposit.strip()) else None,
+#                     "fee_from_balance": float(fee_from_balance.strip().replace("%", ""))/100/12 if float(fee_from_balance.strip()) else None
 #                 })
 #             except ValueError:
 #                 st.error(f"Invalid input for fees in Offer {i + 1}. Please enter numeric values.")
@@ -313,8 +313,8 @@ def get_offer_inputs():
 
             offers.append({
                "offer_name": offer_name,
-               "fee_from_deposit": float(fee_from_deposit.strip().replace("%", ""))/100 if float(fee_from_deposit.strip()) else 0,
-               "fee_from_balance": float(fee_from_balance.strip().replace("%", ""))/100/12 if float(fee_from_balance.strip()) else 0
+               "fee_from_deposit": float(fee_from_deposit.strip().replace("%", ""))/100 if float(fee_from_deposit.strip()) else None,
+               "fee_from_balance": float(fee_from_balance.strip().replace("%", ""))/100/12 if float(fee_from_balance.strip()) else None
                 })
         
         return offers
