@@ -216,6 +216,7 @@ def get_offer_inputs():
                 "fee_from_deposit": deposit_fee,
                 "fee_from_balance": balance_fee
             })
+        st.rerun(scope="fragment")
         return offers
     return None
 
