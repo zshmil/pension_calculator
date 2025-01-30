@@ -269,14 +269,46 @@ def get_user_inputs():
             return None
 
 
+# def get_offer_inputs():
+#     num_offers = st.number_input("כמה הצעות תרצה להשוות?", min_value=1, step=1, value=1) #, on_change=click_button)
+#     offers = []
+#     for i in range(num_offers):
+#         st.subheader(f"Offer {i + 1}")
+#         offer_name = st.text_input(f"Offer Name {i + 1}", key=f"offer_name_{i}")
+#         fee_from_deposit = st.text_input("(%) דמי ניהול מהפקדה )", placeholder="לדוגמה: 1.5%") #, key=fee_deposit_key)
+#         fee_from_balance = st.text_input("(%) דמי ניהול מצבירה", placeholder="לדוגמה: 0.5%") #, key=fee_balance_key)
+
+#         if offer_name and fee_from_deposit and fee_from_balance:
+#             try:
+#                 offers.append({
+#                     "offer_name": offer_name,
+#                     "fee_from_deposit": float(fee_from_deposit.strip().replace("%", ""))/100 if float(fee_from_deposit.strip()) >=1 else fee_from_deposit,
+#                     "fee_from_balance": float(fee_from_balance.strip().replace("%", ""))/100/12 if float(fee_from_balance.strip()) else 0
+#                 })
+#             except ValueError:
+#                 st.error(f"Invalid input for fees in Offer {i + 1}. Please enter numeric values.")
+#     return offers
+
 def get_offer_inputs():
-    num_offers = st.number_input("כמה הצעות תרצה להשוות?", min_value=1, step=1, value=1) #, on_change=click_button)
+    # Initialize session state for num_offers
+    if "num_offers" not in st.session_state:
+        st.session_state.num_offers = 1  # Default value
+
+    # Update session state on change
+    def update_num_offers():
+        st.session_state.num_offers = st.session_state.input_num_offers
+
+    # Number input with session state
+    st.session_state.input_num_offers = st.number_input("כמה הצעות תרצה להשוות?", min_value=1, step=1, value=st.session_state.num_offers, key="input_num_offers", on_change=update_num_offers)
+
     offers = []
-    for i in range(num_offers):
+    for i in range(st.session_state.num_offers):
         st.subheader(f"Offer {i + 1}")
+
+        # Use session state keys for persistence
         offer_name = st.text_input(f"Offer Name {i + 1}", key=f"offer_name_{i}")
-        fee_from_deposit = st.text_input("(%) דמי ניהול מהפקדה )", placeholder="לדוגמה: 1.5%") #, key=fee_deposit_key)
-        fee_from_balance = st.text_input("(%) דמי ניהול מצבירה", placeholder="לדוגמה: 0.5%") #, key=fee_balance_key)
+        fee_from_deposit = st.text_input("(%) דמי ניהול מהפקדה )", placeholder="לדוגמה: 1.5%", key=f"fee_deposit_{i}")
+        fee_from_balance = st.text_input("(%) דמי ניהול מצבירה", placeholder="לדוגמה: 0.5%", key=f"fee_balance_{i}")
 
         if offer_name and fee_from_deposit and fee_from_balance:
             try:
