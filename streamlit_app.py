@@ -164,7 +164,7 @@ def get_user_inputs():
 #                 st.error(f"Invalid input for fees in Offer {i + 1}. Please enter numeric values.")
 #     return offers
 
-
+@st.fragment
 def get_offer_inputs():
     """
     Display a user interface to input multiple pension 'offers' in Streamlit.
