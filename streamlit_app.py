@@ -184,7 +184,7 @@ def get_offer_inputs():
     if "num_offers" not in st.session_state:
         st.session_state.num_offers = 1  # default value
 
-    desired_num_offers = st.number_input("כמה הצעות תרצה להשוות?", min_value=1, step=1, value=st.session_state.num_offers,)
+    desired_num_offers = st.number_input("כמה הצעות תרצה להשוות?", min_value=1, step=1, key="num_offers) #value=st.session_state.num_offers,)
 
     if st.button("Confirm number of offers"):
         st.session_state.num_offers = desired_num_offers
