@@ -516,10 +516,14 @@ def main():
         return
 
     offers = get_offer_inputs()
-    if not offers:
+    # if not offers:
+    if offers is not None:
+        st.write("### Offers Entered:")
+        st.json(offers)
+    else:
         st.warning("יש להוסיף לפחות הצעה אחת.")
         return
-
+    
     df = get_final_df(user_inputs)
 
     # Display Progress Bar
@@ -534,7 +538,7 @@ def main():
     # Display results
     # st.write_stream(stream_data)    
     st.subheader("פנסיה צפויה")
-    st.dataframe(user_inputs)
+    st.dataframe(df)
 
 if __name__ == "__main__":
     main()
