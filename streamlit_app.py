@@ -305,6 +305,22 @@ def get_offers_lists(offers, base_df):
 
 
 def concat_base_and_offers_df(offers, base_df):
+    """
+    Concatenate fee DataFrames from multiple offers onto the base DataFrame.
+    This function calls `get_offers_lists()`, then merges each offer's fee data
+    with the original pension data. It returns a combined DataFrame with all 
+    relevant columns under a MultiIndex.
+    Args:
+        offers (list of dict): The list of offer dictionaries.
+        base_df (pd.DataFrame): The DataFrame containing base pension info.
+    Returns:
+        pd.DataFrame: A DataFrame combining the base pension columns and each
+        offer’s fee columns side by side, structured with a MultiIndex:
+            - The top-level index is the offer name (empty string for the base).
+            - The second level are column names ('date', 'balance', 'monthly_deposit', 
+              'fee_from_balance', 'fee_from_deposit', 'total_fee', etc.).
+    """
+    
     dfs, offer_names = get_offers_lists(offers, base_df)
     if dfs:
         offers_df = pd.concat(dfs, axis=1)
@@ -423,6 +439,20 @@ def format_currency_columns(df):
 
 
 def get_final_df(user_inputs):
+    """
+    Generate the final DataFrame after combining base pension data with 
+    multiple offers and formatting the result.
+    Internally, this function:
+        1. Builds the base pension DataFrame using user inputs (via `get_base_df()`).
+        2. Concatenates fee data for each offer (via `concat_base_and_offers_df()`).
+        3. Splits or reorganizes columns (`reorganize_and_split_final_df()`).
+        4. Formats currency columns (`format_currency_columns()`).
+        5. Unifies total fee columns under a single header (`unify_total_fee_columns()`).
+    Returns:
+        pd.DataFrame: The final, formatted DataFrame containing all 
+        necessary columns for display or further analysis.
+    """
+    
     base_df = get_base_df(user_inputs)
     # base_df = get_base_df()
     full_df = concat_base_and_offers_df(offers, base_df)
