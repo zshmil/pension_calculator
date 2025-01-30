@@ -294,12 +294,12 @@ def get_offer_inputs():
     if "num_offers" not in st.session_state:
         st.session_state.num_offers = 1  # Default value
 
-    # Update session state on change
-    def update_num_offers():
-        st.session_state.num_offers = st.session_state.input_num_offers
+    # Number input directly updates session state
+    num_offers = st.number_input("כמה הצעות תרצה להשוות?", min_value=1, step=1, value=st.session_state.num_offers, key="num_offers")
 
-    # Number input with session state
-    st.session_state.input_num_offers = st.number_input("כמה הצעות תרצה להשוות?", min_value=1, step=1, value=st.session_state.num_offers, key="input_num_offers", on_change=update_num_offers)
+    # Update session state only if changed
+    if num_offers != st.session_state.num_offers:
+        st.session_state.num_offers = num_offers
 
     offers = []
     for i in range(st.session_state.num_offers):
