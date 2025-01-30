@@ -113,58 +113,45 @@ def get_user_inputs():
 
 
 def get_offer_inputs():
-    # 1. Initialize session state variables if they don't exist
     if "num_offers" not in st.session_state:
-        st.session_state.num_offers = 1  # Actual number of offers used to build the form
+        st.session_state.num_offers = 1  # Start with 1
 
-    if "temp_num_offers" not in st.session_state:
-        # Temporary number for user to play with before "locking it in"
-        st.session_state.temp_num_offers = st.session_state.num_offers
+    desired_num = st.number_input( "How many offers do you want?", min_value=1, value=st.session_state.num_offers, step=1)
 
-    # 2. Let user select how many offers they want to compare
-    st.session_state.temp_num_offers = st.number_input("כמה הצעות תרצה להשוות?", min_value=1, step=1, value=st.session_state.temp_num_offers)
+    if st.button("Update number of offers"):
+        st.session_state.num_offers = desired_num
 
-    # 3. A button to confirm changing num_offers
-    if st.button("Update Number of Offers"):
-        st.session_state.num_offers = st.session_state.temp_num_offers
-
-    # 4. Now create the form with the (confirmed) number of offers
-    with st.form("Offer Comparison"):
+    with st.form("my_offers_form"):
         for i in range(st.session_state.num_offers):
-            st.subheader(f"Offer {i + 1}")
-            # text_input automatically ties itself to session_state by key
-            st.text_input(f"Offer Name {i + 1}", key=f"offer_name_{i}")
-            st.text_input("(%) דמי ניהול מהפקדה", key=f"fee_deposit_{i}")
-            st.text_input("(%) דמי ניהול מצבירה", key=f"fee_balance_{i}")
+            st.text_input(label=f"הצעה {i + 1}", key=f"offer_name_{i}",)
+            st.text_input(label="(%) דמי ניהול מהפקדה", key=f"fee_deposit_{i}", )
+            st.text_input(label="(%) דמי ניהול מצבירה", key=f"fee_balance_{i}",)
 
-        submitted = st.form_submit_button("השווה הצעות")
+        submitted = st.form_submit_button("הוסף הצעה")
 
-    # 5. Handle submission
     if submitted:
         offers = []
         for i in range(st.session_state.num_offers):
-            offer_name = st.session_state.get(f"offer_name_{i}", "")
-            fee_deposit = st.session_state.get(f"fee_deposit_{i}", "")
-            fee_balance = st.session_state.get(f"fee_balance_{i}", "")
-
-            # Parse deposit fee
+            offer_name = st.session_state.get(f"offer_name_{i}", "").strip()
+            deposit_raw = st.session_state.get(f"fee_deposit_{i}", "").strip()
+            balance_raw = st.session_state.get(f"fee_balance_{i}", "").strip()
             try:
-                fee_deposit_val = float(fee_deposit.replace("%", "")) / 100 if fee_deposit else None
+                deposit_fee = float(deposit_raw.replace("%", ""))/100 if deposit_raw else None
             except ValueError:
-                fee_deposit_val = None
+                deposit_fee = None
             try:
-                fee_balance_val = float(fee_balance.replace("%", "")) / 100 / 12 if fee_balance else None
+                balance_fee = float(balance_raw.replace("%", ""))/100/12 if balance_raw else None
             except ValueError:
-                fee_balance_val = None
+                balance_fee = None
 
             offers.append({
-                "offer_name": offer_name.strip(),
-                "fee_from_deposit": fee_deposit_val,
-                "fee_from_balance": fee_balance_val
+                "offer_name": offer_name,
+                "fee_from_deposit": deposit_fee,
+                "fee_from_balance": balance_fee
             })
-
         return offers
     return None
+
 
 
 
