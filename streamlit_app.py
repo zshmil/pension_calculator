@@ -164,86 +164,37 @@ def get_user_inputs():
 #                 st.error(f"Invalid input for fees in Offer {i + 1}. Please enter numeric values.")
 #     return offers
 
-# @st.fragment
-# def get_offer_inputs():
-#     """
-#     Display a user interface to input multiple pension 'offers' in Streamlit.
-#     Each 'offer' contains:
-#         - 'offer_name'
-#         - 'fee_from_deposit'
-#         - 'fee_from_balance'
-#     The function returns a list of dictionaries, one per offer.
-#     Returns:
-#         list of dict: Each dict represents one offer, with keys:
-#             - "offer_name" (str): A label or name for the offer.
-#             - "fee_from_deposit" (float): Percentage (as decimal) taken from the monthly deposit.
-#             - "fee_from_balance" (float): Percentage (as decimal) taken from the balance.
-#     """
-    
-#     if "num_offers" not in st.session_state:
-#         st.session_state.num_offers = 1  # Start with 1
-
-#     desired_num = st.number_input( "How many offers do you want?", min_value=1, value=st.session_state.num_offers, step=1)
-
-#     if st.button("Update number of offers"):
-#         st.session_state.num_offers = desired_num
-
-#     with st.form("my_offers_form"):
-#         for i in range(st.session_state.num_offers):
-#             st.text_input(label=f"הצעה {i + 1}", key=f"offer_name_{i}",)
-#             st.text_input(label="(%) דמי ניהול מהפקדה", key=f"fee_deposit_{i}", )
-#             st.text_input(label="(%) דמי ניהול מצבירה", key=f"fee_balance_{i}",)
-
-#         submitted = st.form_submit_button("הוסף הצעה")
-
-#     if submitted:
-#         offers = []
-#         for i in range(st.session_state.num_offers):
-#             offer_name = st.session_state.get(f"offer_name_{i}", "").strip()
-#             deposit_raw = st.session_state.get(f"fee_deposit_{i}", "").strip()
-#             balance_raw = st.session_state.get(f"fee_balance_{i}", "").strip()
-#             try:
-#                 deposit_fee = float(deposit_raw.replace("%", ""))/100 if deposit_raw else None
-#             except ValueError:
-#                 deposit_fee = None
-#             try:
-#                 balance_fee = float(balance_raw.replace("%", ""))/100/12 if balance_raw else None
-#             except ValueError:
-#                 balance_fee = None
-
-#             offers.append({
-#                 "offer_name": offer_name,
-#                 "fee_from_deposit": deposit_fee,
-#                 "fee_from_balance": balance_fee
-#             })
-#         return offers
-#     return None
-
-
+@st.fragment
 def get_offer_inputs():
     """
-    A two-step approach to set the number of offers and confirm before showing the form.
-    Returns a list of offers once the form is submitted, otherwise None.
+    Display a user interface to input multiple pension 'offers' in Streamlit.
+    Each 'offer' contains:
+        - 'offer_name'
+        - 'fee_from_deposit'
+        - 'fee_from_balance'
+    The function returns a list of dictionaries, one per offer.
+    Returns:
+        list of dict: Each dict represents one offer, with keys:
+            - "offer_name" (str): A label or name for the offer.
+            - "fee_from_deposit" (float): Percentage (as decimal) taken from the monthly deposit.
+            - "fee_from_balance" (float): Percentage (as decimal) taken from the balance.
     """
-
+    
     if "num_offers" not in st.session_state:
-        st.session_state.num_offers = 1  # default
+        st.session_state.num_offers = 1  # Start with 1
 
-    desired_num = st.number_input("How many offers do you want?",
-                                  min_value=1,
-                                  step=1,
-                                  value=st.session_state.num_offers)
+    desired_num = st.number_input( "How many offers do you want?", min_value=1, value=st.session_state.num_offers, step=1)
 
-    if st.button("Confirm # of offers"):
+    if st.button("Update number of offers"):
         st.session_state.num_offers = desired_num
 
     with st.form("my_offers_form"):
         for i in range(st.session_state.num_offers):
-            st.subheader(f"Offer {i + 1}")
-            st.text_input(label="Offer name", key=f"offer_name_{i}")
-            st.text_input(label="(%) דמי ניהול מהפקדה", key=f"fee_deposit_{i}")
-            st.text_input(label="(%) דמי ניהול מצבירה", key=f"fee_balance_{i}")
-        submitted = st.form_submit_button("Submit all offers")
+            st.text_input(label=f"הצעה {i + 1}", key=f"offer_name_{i}",)
+            st.text_input(label="(%) דמי ניהול מהפקדה", key=f"fee_deposit_{i}", )
+            st.text_input(label="(%) דמי ניהול מצבירה", key=f"fee_balance_{i}",)
+
+        submitted = st.form_submit_button("הוסף הצעה")
 
     if submitted:
         offers = []
@@ -251,15 +202,15 @@ def get_offer_inputs():
             offer_name = st.session_state.get(f"offer_name_{i}", "").strip()
             deposit_raw = st.session_state.get(f"fee_deposit_{i}", "").strip()
             balance_raw = st.session_state.get(f"fee_balance_{i}", "").strip()
-
             try:
-                deposit_fee = float(deposit_raw.replace("%", "")) / 100 if deposit_raw else None
+                deposit_fee = float(deposit_raw.replace("%", ""))/100 if deposit_raw else None
             except ValueError:
                 deposit_fee = None
             try:
-                balance_fee = float(balance_raw.replace("%", "")) / 100 / 12 if balance_raw else None
+                balance_fee = float(balance_raw.replace("%", ""))/100/12 if balance_raw else None
             except ValueError:
                 balance_fee = None
+
             offers.append({
                 "offer_name": offer_name,
                 "fee_from_deposit": deposit_fee,
@@ -267,6 +218,7 @@ def get_offer_inputs():
             })
         return offers
     return None
+
 
 
 
@@ -516,11 +468,7 @@ def main():
         return
 
     offers = get_offer_inputs()
-    # if not offers:
-    if offers is not None:
-        st.write("### Offers Entered:")
-        st.json(offers)
-    else:
+    if not offers:
         st.warning("יש להוסיף לפחות הצעה אחת.")
         return
     
