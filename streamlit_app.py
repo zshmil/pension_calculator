@@ -225,9 +225,6 @@ def get_offer_inputs():
     return None  # If not submitted yet, return None
 
 
-
-
-
 def get_base_df(user_inputs):
     """
     Create a base DataFrame for pension calculations.
@@ -465,59 +462,22 @@ def get_final_df(user_inputs):
 
 
 # Main Streamlit App Logic
-# def main():
-#     # st.title("Pension Calculator")
-#     st.title("💰🧮 מחשבון פנסיה לשכירים 🧮💰")
-#     st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
-#     user_inputs = get_user_inputs()
-#     if not user_inputs:
-#         return
-
-#     offers = get_offer_inputs()
-#     if not offers:
-#         st.warning("יש להוסיף לפחות הצעה אחת.")
-#         return
-    
-#     df = get_final_df(user_inputs)
-
-#     # Display Progress Bar
-#     progress_text = ".מבצע חישוב, אנא המתן"
-#     my_bar = st.progress(0, text=progress_text)
-#     for percent_complete in range(100):
-#         time.sleep(0.03)
-#         my_bar.progress(percent_complete + 1, text=progress_text)
-#     time.sleep(1)
-#     my_bar.empty()
-    
-#     # Display results
-#     # st.write_stream(stream_data)    
-#     st.subheader("פנסיה צפויה")
-#     st.dataframe(df)
-
-
 def main():
+    # st.title("Pension Calculator")
     st.title("💰🧮 מחשבון פנסיה לשכירים 🧮💰")
     st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
-
-    # 1. Gather user inputs
     user_inputs = get_user_inputs()
     if not user_inputs:
-        return  # If no user inputs yet, stop here
-
-    # 2. Gather offers with the new two-step function
-    offer_list = get_offer_inputs()
-    if not offer_list:
-        st.warning("יש להוסיף לפחות הצעה אחת.")
         return
 
-    # 3. Once we have user_inputs + offer_list, proceed
-    #    (Same as your old logic)
-    global offers
-    offers = offer_list  # So your get_final_df() can see them, if needed
-
+    offers = get_offer_inputs()
+    if not offers:
+        st.warning("יש להוסיף לפחות הצעה אחת.")
+        return
+    
     df = get_final_df(user_inputs)
 
-    # Display progress bar (as in your code)
+    # Display Progress Bar
     progress_text = ".מבצע חישוב, אנא המתן"
     my_bar = st.progress(0, text=progress_text)
     for percent_complete in range(100):
@@ -527,9 +487,8 @@ def main():
     my_bar.empty()
     
     # Display results
+    # st.write_stream(stream_data)    
     st.subheader("פנסיה צפויה")
     st.dataframe(df)
 
-if __name__ == "__main__":
-    main()
-    
+
