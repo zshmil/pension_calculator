@@ -108,7 +108,7 @@ def get_offer_inputs():
                 offers.append({
                     "offer_name": offer_name,
                     "fee_from_deposit": float(fee_from_deposit.strip().replace("%", ""))/100 if float(fee_from_deposit.strip()) >=1 else fee_from_deposit,
-                    "fee_from_balance": float(fee_from_balance.strip().replace("%", ""))/12 if float(fee_from_balance.strip()) else 0
+                    "fee_from_balance": float(fee_from_balance.strip().replace("%", ""))/100/12 if float(fee_from_balance.strip()) else 0
                 })
 
             except ValueError:
