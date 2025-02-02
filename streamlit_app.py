@@ -164,48 +164,45 @@ def get_user_inputs():
 #                 st.error(f"Invalid input for fees in Offer {i + 1}. Please enter numeric values.")
 #     return offers
 
+
 def get_offer_inputs():
     """
     Display a user interface to input multiple pension 'offers' in Streamlit
     with a two-step approach:
-      1. The user specifies a desired number of offers but must click
+      1. The user specifies a desired number of offers (inside a form) and must click
          "Confirm number of offers" to apply the change.
-      2. A form with stable keys is generated for each offer, so typed values
-         persist across script reruns.
+      2. A separate form is generated for each offer, so typed values persist across script reruns.
     Returns:
         list of dict or None:
             A list of offers if the user submits the form, otherwise None.
-            Each offer is a dict with:
-                - "offer_name" (str)
-                - "fee_from_deposit" (float)
-                - "fee_from_balance" (float)
     """
-
+    # Initialize session state for number of offers if not set
     if "num_offers" not in st.session_state:
-        st.session_state.num_offers = 1  # default value
+        st.session_state.num_offers = 1
 
-    desired_num_offers = st.number_input("כמה הצעות תרצה להשוות?", min_value=1, step=1, key="num_offers") #value=st.session_state.num_offers,)
+    # --- Step 1: Confirm the Number of Offers in a Form ---
+    with st.form(key="offer_number_form", clear_on_submit=False):
+        # Use a separate key for the temporary value
+        desired_num_offers = st.number_input( "כמה הצעות תרצה להשוות?", min_value=1, step=1, key="desired_num_offers", value=st.session_state.num_offers)
+        confirm = st.form_submit_button("Confirm number of offers")
+        if confirm:
+            st.session_state.num_offers = desired_num_offers
+            st.success(f"Number of offers set to {st.session_state.num_offers}")
 
-    if st.button("Confirm number of offers"):
-        st.session_state.num_offers = desired_num_offers
-
+    # --- Step 2: Input the Offer Details in a Separate Form ---
     offers = []
     with st.form("my_offers_form"):
         for i in range(st.session_state.num_offers):
             st.subheader(f"הצעה {i + 1}")
             st.text_input(f"Offer Name {i + 1}", key=f"offer_name_{i}")
             st.text_input("(%) דמי ניהול מהפקדה", placeholder="לדוגמה: 1.5%", key=f"fee_deposit_{i}")
-            st.text_input("(%) דמי ניהול מצבירה", placeholder="לדוגמה: 0.5%", key=f"fee_balance_{i}")
-        
-        # One submit button for all offers
+            st.text_input("(%) דמי ניהול מצבירה", placeholder="לדוגמה: 0.5%", key=f"fee_balance_{i}")        
         submitted = st.form_submit_button("הוסף הצעה")
-
     if submitted:
         for i in range(st.session_state.num_offers):
             offer_name = st.session_state.get(f"offer_name_{i}", "").strip()
             deposit_raw = st.session_state.get(f"fee_deposit_{i}", "").strip()
             balance_raw = st.session_state.get(f"fee_balance_{i}", "").strip()
-
             # Convert deposit fee
             try:
                 deposit_fee = float(deposit_raw.replace("%", "")) / 100 if deposit_raw else None
@@ -223,6 +220,7 @@ def get_offer_inputs():
             })
         return offers  # Return the collected offers if submitted
     return None  # If not submitted yet, return None
+
 
 
 def get_base_df(user_inputs):
