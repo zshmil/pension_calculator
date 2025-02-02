@@ -104,7 +104,7 @@ def get_user_inputs():
         If not submitted or if required fields are missing, returns None.
     """
     
-    with st.form("Pension Inputs", clear_on_submit=False, enter_to_submit=True):
+    with st.form("Pension Inputs", clear_on_submit=True, enter_to_submit=True):
         salary = st.text_input(" שכר חודשי (ברוטו) *", placeholder="לדוגמה: 15,000")
         current_balance = st.text_input("צבירה נוכחית *", placeholder="לדוגמה: 300,000")
         current_age = st.text_input("גיל *", placeholder="לדוגמא: 30")
@@ -165,61 +165,59 @@ def get_user_inputs():
 #     return offers
 
 
-def get_offer_inputs():
-    """
-    Display a user interface to input multiple pension 'offers' in Streamlit
-    with a two-step approach:
-      1. The user specifies a desired number of offers (inside a form) and must click
-         "Confirm number of offers" to apply the change.
-      2. A separate form is generated for each offer, so typed values persist across script reruns.
-    Returns:
-        list of dict or None:
-            A list of offers if the user submits the form, otherwise None.
-    """
+def confirm_num_offers():
     # Initialize session state for number of offers if not set
     if "num_offers" not in st.session_state:
         st.session_state.num_offers = 1
 
-    # --- Step 1: Confirm the Number of Offers in a Form ---
     with st.form(key="offer_number_form", clear_on_submit=False):
-        # Use a separate key for the temporary value
-        desired_num_offers = st.number_input( "כמה הצעות תרצה להשוות?", min_value=1, step=1, key="desired_num_offers", value=st.session_state.num_offers)
+        # Use a temporary key for the number input
+        desired_num_offers = st.number_input(
+            "כמה הצעות תרצה להשוות?",
+            min_value=1,
+            step=1,
+            key="desired_num_offers",
+            value=st.session_state.num_offers
+        )
         confirm = st.form_submit_button("Confirm number of offers")
         if confirm:
             st.session_state.num_offers = desired_num_offers
             st.success(f"Number of offers set to {st.session_state.num_offers}")
+    return st.session_state.num_offers
 
-    # --- Step 2: Input the Offer Details in a Separate Form ---
+
+def get_offer_details(num_offers):
     offers = []
-    with st.form("my_offers_form"):
-        for i in range(st.session_state.num_offers):
+    with st.form("offer_details_form"):
+        for i in range(num_offers):
             st.subheader(f"הצעה {i + 1}")
-            st.text_input(f"Offer Name {i + 1}", key=f"offer_name_{i}")
-            st.text_input("(%) דמי ניהול מהפקדה", placeholder="לדוגמה: 1.5%", key=f"fee_deposit_{i}")
-            st.text_input("(%) דמי ניהול מצבירה", placeholder="לדוגמה: 0.5%", key=f"fee_balance_{i}")        
+            offer_name = st.text_input(f"Offer Name {i + 1}", key=f"offer_name_{i}")
+            fee_deposit = st.text_input("(%) דמי ניהול מהפקדה", placeholder="לדוגמה: 1.5%", key=f"fee_deposit_{i}")
+            fee_balance = st.text_input("(%) דמי ניהול מצבירה", placeholder="לדוגמה: 0.5%", key=f"fee_balance_{i}")
         submitted = st.form_submit_button("הוסף הצעה")
+    
     if submitted:
-        for i in range(st.session_state.num_offers):
-            offer_name = st.session_state.get(f"offer_name_{i}", "").strip()
+        for i in range(num_offers):
+            name = st.session_state.get(f"offer_name_{i}", "").strip()
             deposit_raw = st.session_state.get(f"fee_deposit_{i}", "").strip()
             balance_raw = st.session_state.get(f"fee_balance_{i}", "").strip()
-            # Convert deposit fee
             try:
                 deposit_fee = float(deposit_raw.replace("%", "")) / 100 if deposit_raw else None
             except ValueError:
                 deposit_fee = None
-            # Convert balance fee (assumed monthly if you do `/100/12`)
             try:
                 balance_fee = float(balance_raw.replace("%", "")) / 100 / 12 if balance_raw else None
             except ValueError:
                 balance_fee = None
+
             offers.append({
-                "offer_name": offer_name,
+                "offer_name": name,
                 "fee_from_deposit": deposit_fee,
                 "fee_from_balance": balance_fee
             })
-        return offers  # Return the collected offers if submitted
-    return None  # If not submitted yet, return None
+        return offers
+    return None
+
 
 
 
@@ -459,36 +457,58 @@ def get_final_df(user_inputs):
     return final_df
 
 
-# Main Streamlit App Logic
+# # Main Streamlit App Logic
+# def main():
+#     # st.title("Pension Calculator")
+#     st.title("💰🧮 מחשבון פנסיה לשכירים 🧮💰")
+#     st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
+#     user_inputs = get_user_inputs()
+#     if not user_inputs:
+#         return
+
+#     offers = get_offer_inputs()
+#     if not offers:
+#         st.warning("יש להוסיף לפחות הצעה אחת.")
+#         return
+    
+#     df = get_final_df(user_inputs)
+
+#     # Display Progress Bar
+#     progress_text = ".מבצע חישוב, אנא המתן"
+#     my_bar = st.progress(0, text=progress_text)
+#     for percent_complete in range(100):
+#         time.sleep(0.03)
+#         my_bar.progress(percent_complete + 1, text=progress_text)
+#     time.sleep(1)
+#     my_bar.empty()
+    
+#     # Display results
+#     # st.write_stream(stream_data)    
+#     st.subheader("פנסיה צפויה")
+#     st.dataframe(df)
+
+
 def main():
-    # st.title("Pension Calculator")
     st.title("💰🧮 מחשבון פנסיה לשכירים 🧮💰")
     st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
+
     user_inputs = get_user_inputs()
     if not user_inputs:
         return
 
-    offers = get_offer_inputs()
+    # First, confirm the number of offers
+    num_offers = confirm_num_offers()
+
+    # Then, get offer details based on the confirmed number
+    offers = get_offer_details(num_offers)
     if not offers:
         st.warning("יש להוסיף לפחות הצעה אחת.")
         return
-    
-    df = get_final_df(user_inputs)
 
-    # Display Progress Bar
-    progress_text = ".מבצע חישוב, אנא המתן"
-    my_bar = st.progress(0, text=progress_text)
-    for percent_complete in range(100):
-        time.sleep(0.03)
-        my_bar.progress(percent_complete + 1, text=progress_text)
-    time.sleep(1)
-    my_bar.empty()
-    
-    # Display results
-    # st.write_stream(stream_data)    
+    # Proceed with further calculations using the offers and user_inputs
+    df = get_final_df(user_inputs)
     st.subheader("פנסיה צפויה")
     st.dataframe(df)
-
 
 if __name__ == "__main__":
     main()
