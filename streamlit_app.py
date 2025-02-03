@@ -172,13 +172,12 @@ def confirm_num_offers():
 
     with st.form(key="offer_number_form", clear_on_submit=False):
         # Use a temporary key for the number input
-        desired_num_offers = st.number_input(
-            "כמה הצעות תרצה להשוות?",
-            min_value=1,
-            step=1,
-            key="desired_num_offers",
-            value=st.session_state.num_offers
-        )
+        desired_num_offers = st.number_input("כמה הצעות תרצה להשוות?",
+                                             min_value=1,
+                                             step=1,
+                                             key="desired_num_offers",
+                                             value=st.session_state.num_offers
+                                            )
         confirm = st.form_submit_button("Confirm number of offers")
         if confirm:
             st.session_state.num_offers = desired_num_offers
@@ -202,11 +201,11 @@ def get_offer_details(num_offers):
             deposit_raw = st.session_state.get(f"fee_deposit_{i}", "").strip()
             balance_raw = st.session_state.get(f"fee_balance_{i}", "").strip()
             try:
-                deposit_fee = float(deposit_raw.replace("%", "")) / 100 if deposit_raw else None
+                deposit_fee = float(deposit_raw.replace("%", ""))/100 if deposit_raw else None
             except ValueError:
                 deposit_fee = None
             try:
-                balance_fee = float(balance_raw.replace("%", "")) / 100 / 12 if balance_raw else None
+                balance_fee = float(balance_raw.replace("%", ""))/100/12 if balance_raw else None
             except ValueError:
                 balance_fee = None
 
