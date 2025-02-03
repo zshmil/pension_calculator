@@ -491,15 +491,34 @@ def get_final_df(user_inputs):
 
 def main():
     st.title("💰🧮 מחשבון פנסיה לשכירים 🧮💰")
-    
-    # Step 1: Confirm the number of offers.
+    st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
+
+    # Step 1: Get user inputs.
+    user_inputs = get_user_inputs()
+    if not user_inputs:
+        st.info("נא להזין פרטי משתמש")
+        return
+
+    # Step 2: Confirm the number of offers.
     confirm_num_offers()
-    
-    # Step 2: Only show the offer details form if the number is confirmed.
+
+    # Step 3: Display the offer details form only if the number is confirmed.
     if st.session_state.get("num_offers_confirmed"):
         st.write("אנא הזן את פרטי ההצעות:")
         offers = get_offer_details()
-        # Proceed with further logic if offers are collected
+        if offers is not None:
+            # (Optional) Simulate some processing with a progress bar.
+            progress_text = "מבצע חישוב, אנא המתן..."
+            my_bar = st.progress(0, text=progress_text)
+            for percent in range(100):
+                time.sleep(0.01)
+                my_bar.progress(percent + 1, text=progress_text)
+            my_bar.empty()
+
+            # Step 4: Generate and display the final DataFrame using user inputs.
+            df = get_final_df(user_inputs)
+            st.subheader("פנסיה צפויה")
+            st.dataframe(df)
     else:
         st.info("נא לאשר את מספר ההצעות כדי להמשיך.")
 
