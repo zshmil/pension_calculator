@@ -176,7 +176,7 @@ def confirm_num_offers():
     if "num_offers" not in st.session_state:
         st.session_state.num_offers = 1
     if "num_offers_confirmed" not in st.session_state:
-        st.session_state.num_offers_confirmed = False
+        st.session_state.num_offers_confirmed = Falsec
 
     with st.form(key="num_offers_form", clear_on_submit=False):
         desired_num_offers = st.number_input(
