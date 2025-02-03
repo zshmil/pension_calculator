@@ -472,35 +472,37 @@ def get_final_df(user_inputs, offers):
     return final_df
 
 
-# # Main Streamlit App Logic
-# def main():
-#     # st.title("Pension Calculator")
-#     st.title("💰🧮 מחשבון פנסיה לשכירים 🧮💰")
-#     st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
-#     user_inputs = get_user_inputs()
-#     if not user_inputs:
-#         return
+def convert_df_to_excel(df):
+    """
+    Convert a DataFrame to an Excel file stored in a BytesIO buffer.
+    This function writes the DataFrame to an Excel file with merged headers (if needed)
+    and returns the bytes content.
+    """
+    output = io.BytesIO()
+    # Create an ExcelWriter object using openpyxl
+    with pd.ExcelWriter(output, engine="openpyxl") as writer:
+        # Write the DataFrame to Excel.
+        # You can adjust the options here (like index, sheet name, merge_cells, etc.)
+        df.to_excel(writer, sheet_name="Sheet1", index=False, merge_cells=True)
+    # Get the Excel file content from the BytesIO object.
+    processed_data = output.getvalue()
+    return processed_data
 
-#     offers = get_offer_inputs()
-#     if not offers:
-#         st.warning("יש להוסיף לפחות הצעה אחת.")
-#         return
-    
-#     df = get_final_df(user_inputs)
-
-#     # Display Progress Bar
-#     progress_text = ".מבצע חישוב, אנא המתן"
-#     my_bar = st.progress(0, text=progress_text)
-#     for percent_complete in range(100):
-#         time.sleep(0.03)
-#         my_bar.progress(percent_complete + 1, text=progress_text)
-#     time.sleep(1)
-#     my_bar.empty()
-    
-#     # Display results
-#     # st.write_stream(stream_data)    
-#     st.subheader("פנסיה צפויה")
-#     st.dataframe(df)
+def show_download_button(df):
+    """
+    Displays a download button if the predictions (or final DataFrame) are ready.
+    """
+    # Check if the predictions are done. Adjust the condition as needed.
+    if st.session_state.get("predictions_done", False):
+        st.write("Download your results below:")
+        # Convert the DataFrame to Excel format.
+        excel_data = convert_df_to_excel(df)
+        st.download_button(
+            label='שמור תוצאות באקסל', 
+            data=excel_data,
+            file_name="pension_calculator.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
 
 
 
@@ -538,6 +540,7 @@ def main():
                 my_bar.empty()
                 st.subheader("פנסיה צפויה")
                 st.dataframe(df)
+                show_download_button(df)
 
 if __name__ == "__main__":
     main()
