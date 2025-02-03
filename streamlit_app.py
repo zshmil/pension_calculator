@@ -166,58 +166,71 @@ def get_user_inputs():
 
 
 def confirm_num_offers():
-    # Initialize session state for number of offers if not set
+    """
+    Create a form for confirming the number of offers.
+    Saves the confirmed number in st.session_state.
+    """
+    # Initialize st.session_state for num_offers if not already set
     if "num_offers" not in st.session_state:
         st.session_state.num_offers = 1
 
-    with st.form(key="offer_number_form", clear_on_submit=False):
-        # Use a temporary key for the number input
-        desired_num_offers = st.number_input("כמה הצעות תרצה להשוות?",
-                                             min_value=1,
-                                             step=1,
-                                             key="desired_num_offers",
-                                             value=st.session_state.num_offers
-                                            )
+    # Use a form to capture the desired number of offers
+    with st.form(key="num_offers_form", clear_on_submit=False):
+        desired_num_offers = st.number_input(
+            "כמה הצעות תרצה להשוות?",
+            min_value=1,
+            step=1,
+            key="desired_num_offers",
+            value=st.session_state.num_offers
+        )
         confirm = st.form_submit_button("Confirm number of offers")
         if confirm:
             st.session_state.num_offers = desired_num_offers
             st.success(f"Number of offers set to {st.session_state.num_offers}")
+
     return st.session_state.num_offers
 
 
 def get_offer_details(num_offers):
+    """
+    Create a form for entering the offer details based on the confirmed number of offers.
+    Returns a list of offer dictionaries if submitted, else None.
+    """
     offers = []
-    with st.form("offer_details_form"):
+    with st.form(key="offer_details_form"):
         for i in range(num_offers):
             st.subheader(f"הצעה {i + 1}")
-            offer_name = st.text_input(f"Offer Name {i + 1}", key=f"offer_name_{i}")
-            fee_deposit = st.text_input("(%) דמי ניהול מהפקדה", placeholder="לדוגמה: 1.5%", key=f"fee_deposit_{i}")
-            fee_balance = st.text_input("(%) דמי ניהול מצבירה", placeholder="לדוגמה: 0.5%", key=f"fee_balance_{i}")
+            st.text_input(f"Offer Name {i + 1}", key=f"offer_name_{i}")
+            st.text_input("(%) דמי ניהול מהפקדה", placeholder="לדוגמה: 1.5%", key=f"fee_deposit_{i}")
+            st.text_input("(%) דמי ניהול מצבירה", placeholder="לדוגמה: 0.5%", key=f"fee_balance_{i}")
+        
         submitted = st.form_submit_button("הוסף הצעה")
-    
+
     if submitted:
         for i in range(num_offers):
-            name = st.session_state.get(f"offer_name_{i}", "").strip()
+            # Retrieve values from session state
+            offer_name = st.session_state.get(f"offer_name_{i}", "").strip()
             deposit_raw = st.session_state.get(f"fee_deposit_{i}", "").strip()
             balance_raw = st.session_state.get(f"fee_balance_{i}", "").strip()
+
+            # Convert the fee inputs; handle potential conversion errors gracefully
             try:
-                deposit_fee = float(deposit_raw.replace("%", ""))/100 if deposit_raw else None
+                fee_from_deposit = float(deposit_raw.replace("%", "")) / 100 if deposit_raw else None
             except ValueError:
-                deposit_fee = None
+                fee_from_deposit = None
+
             try:
-                balance_fee = float(balance_raw.replace("%", ""))/100/12 if balance_raw else None
+                fee_from_balance = float(balance_raw.replace("%", "")) / 100 / 12 if balance_raw else None
             except ValueError:
-                balance_fee = None
+                fee_from_balance = None
 
             offers.append({
-                "offer_name": name,
-                "fee_from_deposit": deposit_fee,
-                "fee_from_balance": balance_fee
+                "offer_name": offer_name,
+                "fee_from_deposit": fee_from_deposit,
+                "fee_from_balance": fee_from_balance
             })
         return offers
     return None
-
-
 
 
 def get_base_df(user_inputs):
@@ -491,20 +504,21 @@ def main():
     st.title("💰🧮 מחשבון פנסיה לשכירים 🧮💰")
     st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
 
+    # First, get user inputs (assuming you already have a function for that)
     user_inputs = get_user_inputs()
     if not user_inputs:
         return
 
-    # First, confirm the number of offers
+    # Step 1: Confirm the number of offers
     num_offers = confirm_num_offers()
 
-    # Then, get offer details based on the confirmed number
+    # Step 2: Once the number is set, gather the offer details
     offers = get_offer_details(num_offers)
     if not offers:
         st.warning("יש להוסיף לפחות הצעה אחת.")
         return
 
-    # Proceed with further calculations using the offers and user_inputs
+    # Proceed with your calculations using the offers and user_inputs
     df = get_final_df(user_inputs)
     st.subheader("פנסיה צפויה")
     st.dataframe(df)
