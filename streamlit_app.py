@@ -116,17 +116,25 @@ def get_user_inputs():
         submitted = st.form_submit_button("שלח",icon=":material/send:") #,on_click=click_button)
 
         if submitted and all([salary, current_balance, current_age, retirement_age]):
-            return {"salary": float(salary.strip().replace(",", "")),
-                    "current_balance": float(current_balance.strip().replace(",", "")),
-                    "current_age": int(current_age.strip()),
-                    "retirement_age": int(retirement_age.strip()),
-                    "employee_deposit": float(employee_deposit.strip().replace("%", ""))/100 if employee_deposit.strip() else 0.06,
-                    "employer_deposit": float(employer_deposit.strip().replace("%", ""))/100 if employer_deposit.strip() else 0.065,
-                    "severance_pay": float(severance_pay.strip().replace("%", ""))/100 if severance_pay.strip() else 0.0833,
-                    "expected_annual_yield": float(expected_annual_yield.strip().replace("%", ""))/100/12 if expected_annual_yield.strip() else 0.045/12,
-                   }
+            try:
+                return st.session_state.user_inputs = {"salary": float(salary.strip().replace(",", "")),
+                                                       "current_balance": float(current_balance.strip().replace(",", "")),
+                                                       "current_age": int(current_age.strip()),
+                                                       "retirement_age": int(retirement_age.strip()),
+                                                       "employee_deposit": float(employee_deposit.strip().replace("%", ""))/100 if employee_deposit.strip() else 0.06,
+                                                       "employer_deposit": float(employer_deposit.strip().replace("%", ""))/100 if employer_deposit.strip() else 0.065,
+                                                       "severance_pay": float(severance_pay.strip().replace("%", ""))/100 if severance_pay.strip() else 0.0833,
+                                                       "expected_annual_yield": float(expected_annual_yield.strip().replace("%", ""))/100/12 if expected_annual_yield.strip() else 0.045/12,
+                                                      }
+                st.success(" נתונים לחישוב נקלטו!")
+                st.session_state.get("user_inputs")
+            except ValueError:
+                st.error("נא להזין ערכים מספריים תקינים.")              
         else:
             st.warning("יש למלא את כל הפרטים לפני השליחה")
+        else:
+            st.info("פרטי המשתמש כבר נשמרו:")
+            st.write(st.session_state.user_inputs)
             return None
 
 
@@ -166,61 +174,68 @@ def get_user_inputs():
 
 
 def confirm_num_offers():
-    # Initialize the state if not already set
+    """
+    Displays a form to confirm the number of offers.
+    On submission, saves the number and a confirmation flag in st.session_state.
+    """
     if "num_offers" not in st.session_state:
         st.session_state.num_offers = 1
     if "num_offers_confirmed" not in st.session_state:
         st.session_state.num_offers_confirmed = False
 
-    with st.form(key="num_offers_form", clear_on_submit=False):
+    with st.form("num_offers_form"):
+        st.header("מספר הצעות")
         desired_num_offers = st.number_input(
             "כמה הצעות תרצה להשוות?",
             min_value=1,
             step=1,
-            key="desired_num_offers",
             value=st.session_state.num_offers
         )
-        confirm = st.form_submit_button("Confirm number of offers")
-        if confirm:
+        submitted = st.form_submit_button("אשר מספר הצעות")
+        if submitted:
             st.session_state.num_offers = desired_num_offers
             st.session_state.num_offers_confirmed = True
-            st.success(f"Number of offers set to {st.session_state.num_offers}")
+            st.success(f"מספר ההצעות הוגדר ל- {st.session_state.num_offers}")
 
 def get_offer_details():
-    num_offers = st.session_state.get("num_offers", 1)
-    offers = []
-    with st.form(key="offer_details_form"):
-        for i in range(num_offers):
-            st.subheader(f"הצעה {i + 1}")
-            st.text_input(f"Offer Name {i + 1}", key=f"offer_name_{i}")
-            st.text_input("(%) דמי ניהול מהפקדה", placeholder="לדוגמה: 1.5%", key=f"fee_deposit_{i}")
-            st.text_input("(%) דמי ניהול מצבירה", placeholder="לדוגמה: 0.5%", key=f"fee_balance_{i}")
-        submitted = st.form_submit_button("הוסף הצעה")
+    """
+    Displays a form for entering offer details based on the confirmed number of offers.
+    On submission, saves the offers to st.session_state["offers"].
+    """
+    if st.session_state.get("num_offers_confirmed"):
+        with st.form("offer_details_form"):
+            st.header("פרטי הצעות")
+            for i in range(st.session_state.num_offers):
+                st.markdown(f"### הצעה {i + 1}")
+                st.text_input(f"שם ההצעה {i + 1}", key=f"offer_name_{i}")
+                st.text_input(f"(%) דמי ניהול מהפקדה {i + 1}", placeholder="לדוגמה: 1.5%", key=f"fee_deposit_{i}")
+                st.text_input(f"(%) דמי ניהול מצבירה {i + 1}", placeholder="לדוגמה: 0.5%", key=f"fee_balance_{i}")
+            submitted = st.form_submit_button("שמור פרטי הצעות")
+            
+        if submitted:
+            offers = []
+            for i in range(st.session_state.num_offers):
+                offer_name = st.session_state.get(f"offer_name_{i}", "").strip()
+                deposit_raw = st.session_state.get(f"fee_deposit_{i}", "").strip()
+                balance_raw = st.session_state.get(f"fee_balance_{i}", "").strip()
 
-    if submitted:
-        for i in range(num_offers):
-            offer_name = st.session_state.get(f"offer_name_{i}", "").strip()
-            deposit_raw = st.session_state.get(f"fee_deposit_{i}", "").strip()
-            balance_raw = st.session_state.get(f"fee_balance_{i}", "").strip()
+                try:
+                    fee_from_deposit = float(deposit_raw.replace("%", "")) / 100 if deposit_raw else None
+                except ValueError:
+                    fee_from_deposit = None
+                try:
+                    fee_from_balance = float(balance_raw.replace("%", "")) / 100 / 12 if balance_raw else None
+                except ValueError:
+                    fee_from_balance = None
+                offers.append({
+                    "offer_name": offer_name,
+                    "fee_from_deposit": fee_from_deposit,
+                    "fee_from_balance": fee_from_balance
+                })
+            st.session_state.offers = offers
+            st.success("פרטי ההצעות נשמרו!")
+    return st.session_state.get("offers")
 
-            try:
-                fee_from_deposit = float(deposit_raw.replace("%", "")) / 100 if deposit_raw else None
-            except ValueError:
-                fee_from_deposit = None
-
-            try:
-                fee_from_balance = float(balance_raw.replace("%", "")) / 100 / 12 if balance_raw else None
-            except ValueError:
-                fee_from_balance = None
-
-            offers.append({
-                "offer_name": offer_name,
-                "fee_from_deposit": fee_from_deposit,
-                "fee_from_balance": fee_from_balance
-            })
-        st.write("Collected Offers:", offers)
-        return offers
-    return None
 
 def get_base_df(user_inputs):
     """
@@ -493,15 +508,22 @@ def main():
     st.title("💰🧮 מחשבון פנסיה לשכירים 🧮💰")
     st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
 
-    # Step 1: Get user inputs.
-    user_inputs = get_user_inputs()
     if not user_inputs:
         st.info("נא להזין פרטי משתמש")
         return
 
-    # Step 2: Confirm the number of offers.
-    confirm_num_offers()
-
+        
+    user_inputs = get_user_inputs()
+    if "user_inputs" in st.session_state:
+        user_inputs = st.session_state.user_inputs
+        confirm_num_offers()
+        if st.session_state.get("num_offers_confirmed"):
+             st.write("אנא הזן את פרטי ההצעות:")
+             offers = get_offer_details()
+             offers = st.session_state.offers
+            df = get_final_df(user_inputs)
+            
+ 
     # Step 3: Display the offer details form only if the number is confirmed.
     if st.session_state.get("num_offers_confirmed"):
         st.write("אנא הזן את פרטי ההצעות:")
@@ -521,6 +543,41 @@ def main():
             st.dataframe(df)
     else:
         st.info("נא לאשר את מספר ההצעות כדי להמשיך.")
+
+def main():
+    st.title("💰🧮 מחשבון פנסיה לשכירים 🧮💰")
+    # st.write("תהליך: 1. הזנת פרטי משתמש → שמירת סטייט → 2. מספר הצעות → שמירת סטייט → 3. פרטי הצעות → 4. חישוב")
+    st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
+    
+    # Step 1: Get and save user inputs.
+    user_inputs = get_user_inputs()
+    
+    # Once user inputs are saved, proceed.
+    if "user_inputs" in st.session_state:
+        user_inputs = st.session_state.user_inputs
+        
+        # Step 2: Confirm the number of offers.
+        confirm_num_offers()
+        
+        # Step 3: If the number of offers is confirmed, show the offer details form.
+        if st.session_state.get("num_offers_confirmed"):
+            st.write("אנא הזן את פרטי ההצעות:")
+            offers = get_offer_details()
+            
+            # Step 4: If offers are saved, calculate and display the result.
+            if "offers" in st.session_state:
+                offers = st.session_state.offers
+                df = get_final_df(user_inputs)
+                #     # Display Progress Bar
+                progress_text = ".מבצע חישוב, אנא המתן"
+                my_bar = st.progress(0, text=progress_text)
+                for percent_complete in range(100):
+                    time.sleep(0.03)
+                    my_bar.progress(percent_complete + 1, text=progress_text)
+                time.sleep(1)
+                my_bar.empty()
+                st.subheader("פנסיה צפויה")
+                st.dataframe(df)
 
 if __name__ == "__main__":
     main()
