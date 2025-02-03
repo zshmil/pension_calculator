@@ -139,41 +139,6 @@ def get_user_inputs():
             return None
 
 
-# def get_offer_inputs():
-    # """
-    # Display a user interface to input multiple pension 'offers' in Streamlit.
-    # Each 'offer' contains:
-    #     - 'offer_name'
-    #     - 'fee_from_deposit'
-    #     - 'fee_from_balance'
-    # The function returns a list of dictionaries, one per offer.
-    # Returns:
-    #     list of dict: Each dict represents one offer, with keys:
-    #         - "offer_name" (str): A label or name for the offer.
-    #         - "fee_from_deposit" (float): Percentage (as decimal) taken from the monthly deposit.
-    #         - "fee_from_balance" (float): Percentage (as decimal) taken from the balance.
-    # """
-
-#     num_offers = st.number_input("כמה הצעות תרצה להשוות?", min_value=1, step=1, value=1) #, on_change=click_button)
-#     offers = []
-#     for i in range(num_offers):
-#         st.subheader(f"Offer {i + 1}")
-#         offer_name = st.text_input(f"Offer Name {i + 1}", key=f"offer_name_{i}")
-#         fee_from_deposit = st.text_input("(%) דמי ניהול מהפקדה )", placeholder="לדוגמה: 1.5%") #, key=fee_deposit_key)
-#         fee_from_balance = st.text_input("(%) דמי ניהול מצבירה", placeholder="לדוגמה: 0.5%") #, key=fee_balance_key)
-
-#         if offer_name and fee_from_deposit and fee_from_balance:
-#             try:
-#                 offers.append({
-#                     "offer_name": offer_name,
-#                     "fee_from_deposit": float(fee_from_deposit.strip().replace("%", ""))/100 if float(fee_from_deposit.strip()) else None,
-#                     "fee_from_balance": float(fee_from_balance.strip().replace("%", ""))/100/12 if float(fee_from_balance.strip()) else None
-#                 })
-#             except ValueError:
-#                 st.error(f"Invalid input for fees in Offer {i + 1}. Please enter numeric values.")
-#     return offers
-
-
 def confirm_num_offers():
     """
     Displays a form to confirm the number of offers.
@@ -195,6 +160,7 @@ def confirm_num_offers():
             st.session_state.num_offers = desired_num_offers
             st.session_state.num_offers_confirmed = True
             st.success(f"מספר ההצעות הוגדר ל- {st.session_state.num_offers}")
+
 
 def get_offer_details():
     """
@@ -472,37 +438,37 @@ def get_final_df(user_inputs, offers):
     return final_df
 
 
-def convert_df_to_excel(df):
-    """
-    Convert a DataFrame to an Excel file stored in a BytesIO buffer.
-    This function writes the DataFrame to an Excel file with merged headers (if needed)
-    and returns the bytes content.
-    """
-    output = io.BytesIO()
-    # Create an ExcelWriter object using openpyxl
-    with pd.ExcelWriter(output, engine="openpyxl") as writer:
-        # Write the DataFrame to Excel.
-        # You can adjust the options here (like index, sheet name, merge_cells, etc.)
-        df.to_excel(writer, sheet_name="Sheet1", index=False, merge_cells=True)
-    # Get the Excel file content from the BytesIO object.
-    processed_data = output.getvalue()
-    return processed_data
+# def convert_df_to_excel(df):
+#     """
+#     Convert a DataFrame to an Excel file stored in a BytesIO buffer.
+#     This function writes the DataFrame to an Excel file with merged headers (if needed)
+#     and returns the bytes content.
+#     """
+#     output = io.BytesIO()
+#     # Create an ExcelWriter object using openpyxl
+#     with pd.ExcelWriter(output, engine="openpyxl") as writer:
+#         # Write the DataFrame to Excel.
+#         # You can adjust the options here (like index, sheet name, merge_cells, etc.)
+#         df.to_excel(writer, sheet_name="Sheet1", index=False, merge_cells=True)
+#     # Get the Excel file content from the BytesIO object.
+#     processed_data = output.getvalue()
+#     return processed_data
 
-def show_download_button(df):
-    """
-    Displays a download button if the predictions (or final DataFrame) are ready.
-    """
-    # Check if the predictions are done. Adjust the condition as needed.
-    if st.session_state.get("predictions_done", False):
-        st.write("Download your results below:")
-        # Convert the DataFrame to Excel format.
-        excel_data = convert_df_to_excel(df)
-        st.download_button(
-            label='שמור תוצאות באקסל', 
-            data=excel_data,
-            file_name="pension_calculator.xlsx",
-            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        )
+# def show_download_button(df):
+#     """
+#     Displays a download button if the predictions (or final DataFrame) are ready.
+#     """
+#     # Check if the predictions are done. Adjust the condition as needed.
+#     if st.session_state.get("predictions_done", False):
+#         st.write("Download your results below:")
+#         # Convert the DataFrame to Excel format.
+#         excel_data = convert_df_to_excel(df)
+#         st.download_button(
+#             label='שמור תוצאות באקסל', 
+#             data=excel_data,
+#             file_name="pension_calculator.xlsx",
+#             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+#         )
 
 
 
