@@ -166,17 +166,11 @@ def get_user_inputs():
 
 
 def confirm_num_offers():
-    """
-    Creates a form for confirming the number of offers.
-    Saves the confirmed number and a confirmation flag in st.session_state.
-    Returns:
-        tuple: (num_offers_confirmed (bool), num_offers (int))
-    """
-    # Initialize session state variables if they don't exist yet
+    # Initialize the state if not already set
     if "num_offers" not in st.session_state:
         st.session_state.num_offers = 1
     if "num_offers_confirmed" not in st.session_state:
-        st.session_state.num_offers_confirmed = Falsec
+        st.session_state.num_offers_confirmed = False
 
     with st.form(key="num_offers_form", clear_on_submit=False):
         desired_num_offers = st.number_input(
@@ -192,14 +186,8 @@ def confirm_num_offers():
             st.session_state.num_offers_confirmed = True
             st.success(f"Number of offers set to {st.session_state.num_offers}")
 
-    return st.session_state.num_offers_confirmed, st.session_state.num_offers
-
-def get_offer_details(num_offers):
-    """
-    Creates a form for entering offer details based on the confirmed number of offers.
-    Returns:
-        list: A list of dictionaries containing offer details if the form is submitted, otherwise None.
-    """
+def get_offer_details():
+    num_offers = st.session_state.get("num_offers", 1)
     offers = []
     with st.form(key="offer_details_form"):
         for i in range(num_offers):
@@ -207,7 +195,6 @@ def get_offer_details(num_offers):
             st.text_input(f"Offer Name {i + 1}", key=f"offer_name_{i}")
             st.text_input("(%) דמי ניהול מהפקדה", placeholder="לדוגמה: 1.5%", key=f"fee_deposit_{i}")
             st.text_input("(%) דמי ניהול מצבירה", placeholder="לדוגמה: 0.5%", key=f"fee_balance_{i}")
-        
         submitted = st.form_submit_button("הוסף הצעה")
 
     if submitted:
@@ -216,7 +203,6 @@ def get_offer_details(num_offers):
             deposit_raw = st.session_state.get(f"fee_deposit_{i}", "").strip()
             balance_raw = st.session_state.get(f"fee_balance_{i}", "").strip()
 
-            # Convert fee inputs; handle errors gracefully.
             try:
                 fee_from_deposit = float(deposit_raw.replace("%", "")) / 100 if deposit_raw else None
             except ValueError:
@@ -232,9 +218,9 @@ def get_offer_details(num_offers):
                 "fee_from_deposit": fee_from_deposit,
                 "fee_from_balance": fee_from_balance
             })
+        st.write("Collected Offers:", offers)
         return offers
     return None
-
 
 def get_base_df(user_inputs):
     """
@@ -505,45 +491,17 @@ def get_final_df(user_inputs):
 
 def main():
     st.title("💰🧮 מחשבון פנסיה לשכירים 🧮💰")
-    st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
-
-    # (Assuming you have a get_user_inputs() function for other details)
-    user_inputs = get_user_inputs()  # Your existing function for basic inputs
-    if not user_inputs:
-        return
-
-    # Step 1: Confirm the number of offers
-    confirmed, num_offers = confirm_num_offers()
-
-    # Step 2: Display the offer details form only if confirmed
-    if confirmed:
+    
+    # Step 1: Confirm the number of offers.
+    confirm_num_offers()
+    
+    # Step 2: Only show the offer details form if the number is confirmed.
+    if st.session_state.get("num_offers_confirmed"):
         st.write("אנא הזן את פרטי ההצעות:")
-        offers = get_offer_details(num_offers)
-        if offers:
-            st.write("Offers:", offers)
-            # You can now proceed with further processing, such as:
-            df = get_final_df(user_inputs)  # Your existing function for calculations
-            st.subheader("פנסיה צפויה")
-            st.dataframe(df)
+        offers = get_offer_details()
+        # Proceed with further logic if offers are collected
     else:
         st.info("נא לאשר את מספר ההצעות כדי להמשיך.")
-
-# # Dummy get_user_inputs and get_final_df functions for demonstration.
-# # Replace these with your actual implementations.
-# def get_user_inputs():
-#     with st.form("user_inputs_form"):
-#         salary = st.text_input("שכר חודשי (ברוטו)")
-#         submitted = st.form_submit_button("שלח פרטי משתמש")
-#     if submitted and salary:
-#         return {"salary": float(salary)}
-#     return None
-
-# def get_final_df(user_inputs):
-#     import pandas as pd
-
-#     # Create a simple DataFrame for demonstration purposes
-#     data = {"Balance": [1000, 2000, 3000]}
-#     return pd.DataFrame(data)
 
 if __name__ == "__main__":
     main()
