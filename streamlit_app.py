@@ -132,9 +132,9 @@ def get_user_inputs():
                 st.error("נא להזין ערכים מספריים תקינים.")              
         else:
             st.warning("יש למלא את כל הפרטים לפני השליחה")
-        else:
-            st.info("פרטי המשתמש כבר נשמרו:")
-            st.write(st.session_state.user_inputs)
+        # else:
+        #     st.info("פרטי המשתמש כבר נשמרו:")
+        #     st.write(st.session_state.user_inputs)
             return None
 
 
