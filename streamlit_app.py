@@ -505,6 +505,7 @@ def main():
                 time.sleep(1)
                 my_bar.empty()
                 st.subheader("פנסיה צפויה")
+                st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
                 st.dataframe(df)
                 # show_download_button(df)
 
