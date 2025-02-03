@@ -4,6 +4,7 @@ import pandas as pd
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from IPython.display import display, HTML, clear_output
+import time
 
 
 start_date = datetime.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
