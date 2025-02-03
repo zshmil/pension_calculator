@@ -506,7 +506,7 @@ def main():
                 my_bar.empty()
                 st.subheader("פנסיה צפויה")
                 st.dataframe(df)
-                show_download_button(df)
+                # show_download_button(df)
 
 if __name__ == "__main__":
     main()
