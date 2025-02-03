@@ -126,7 +126,7 @@ def get_user_inputs():
                                                 "severance_pay": float(severance_pay.strip().replace("%", ""))/100 if severance_pay.strip() else 0.0833,
                                                 "expected_annual_yield": float(expected_annual_yield.strip().replace("%", ""))/100/12 if expected_annual_yield.strip() else 0.045/12,
                                                }
-                st.success(" נתונים לחישוב נקלטו!")
+                st.success("נתונים לחישוב נקלטו!")
                 return st.session_state.get("user_inputs")
             except ValueError:
                 st.error("נא להזין ערכים מספריים תקינים.")              
@@ -185,12 +185,10 @@ def confirm_num_offers():
 
     with st.form("num_offers_form"):
         st.header("מספר הצעות")
-        desired_num_offers = st.number_input(
-            "כמה הצעות תרצה להשוות?",
-            min_value=1,
-            step=1,
-            value=st.session_state.num_offers
-        )
+        desired_num_offers = st.number_input("כמה הצעות תרצה להשוות?",
+                                             min_value=1,
+                                             step=1,
+                                             value=st.session_state.num_offers)
         submitted = st.form_submit_button("אשר מספר הצעות")
         if submitted:
             st.session_state.num_offers = desired_num_offers
@@ -233,7 +231,7 @@ def get_offer_details():
                     "fee_from_balance": fee_from_balance
                 })
             st.session_state.offers = offers
-            st.success("פרטי ההצעות נשמרו!")
+            st.success("פרטי ההצעות נקלטו!")
     return st.session_state.get("offers")
 
 
@@ -449,7 +447,7 @@ def format_currency_columns(df):
     return df
 
 
-def get_final_df(user_inputs):
+def get_final_df(user_inputs, offers):
     """
     Generate the final DataFrame after combining base pension data with 
     multiple offers and formatting the result.
