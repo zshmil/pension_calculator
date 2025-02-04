@@ -584,10 +584,11 @@ def main():
                 st.subheader("פנסיה צפויה")
                 st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
                 st.dataframe(df)
+                show_download_button(df)
                 st.divider() 
                 st.subheader("סהכ דמי ניהול לאורך שנות החיסכון")
                 st.dataframe(get_bottom_line(df))
-                show_download_button(df)
+                
 
 if __name__ == "__main__":
     main()
