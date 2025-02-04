@@ -455,41 +455,43 @@ def get_final_df(user_inputs, offers):
 
 
 
-# def convert_df_to_excel(df):
-#     """
-#     Export a MultiIndex DataFrame to an Excel file with merged headers for hierarchical column names.
+def convert_df_to_excel(df):
+    """
+    Export a MultiIndex DataFrame to an Excel file with merged headers for hierarchical column names.
 
-#     Parameters:
-#     - df (pd.DataFrame): The DataFrame to export.
-#     - file_name (str): The name of the Excel file to save.
-#     - sheet_name (str): The name of the sheet in the Excel file.
-#     """
-#     file_name = 'pension_calculator.xlsx'
-#     sheet_name="Sheet1"
-#     with pd.ExcelWriter(file_name, engine="openpyxl") as writer:
-#         # Write the DataFrame to Excel with merged headers
-#         df.to_excel(writer,
-#                     sheet_name=sheet_name,
-#                     # index=False,
-#                     merge_cells=True)
+    Parameters:
+    - df (pd.DataFrame): The DataFrame to export.
+    - file_name (str): The name of the Excel file to save.
+    - sheet_name (str): The name of the sheet in the Excel file.
+    """
+    # file_name = 'pension_calculator.xlsx'
+    # sheet_name="Sheet1"
+    # with pd.ExcelWriter(file_name, engine="openpyxl") as writer:
+    #     # Write the DataFrame to Excel with merged headers
+    #     df.to_excel(writer,
+    #                 sheet_name=sheet_name,
+    #                 # index=False,
+    #                 merge_cells=True)
+    return df.to_excel('pension_calculator.xlsx',
+                       sheet_name='Sheet_name_1',
+                       merge_cells=True)  
 
 
-# def show_download_button(df):
-#     """
-#     Displays a download button if the predictions (or final DataFrame) are ready.
-#     """
-#     # Check if the predictions are done. Adjust the condition as needed.
-#     if st.session_state.get("predictions_done", False):
-#         st.write("Download your results below:")
-#         # Convert the DataFrame to Excel format.
-#         excel_data = convert_df_to_excel(df)
-#         st.download_button(
-#             label='שמור תוצאות באקסל', 
-#             data=excel_data,
-#             file_name="pension_calculator.xlsx",
-#             # mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-#             mime="application/octet-stream"
-#         )
+def show_download_button(df):
+    """
+    Displays a download button if the predictions (or final DataFrame) are ready.
+    """
+    # Check if the predictions are done. Adjust the condition as needed.
+    if st.session_state.get("predictions_done", False):
+        st.write("Download your results below:")
+        # Convert the DataFrame to Excel format.
+        excel_data = convert_df_to_excel(df)
+        st.download_button(
+            label='שמור תוצאות באקסל', 
+            data=excel_data,
+            file_name="pension_calculator.xlsx",
+            mime="application/octet-stream"
+        )
 
 
 
@@ -538,7 +540,7 @@ def main():
                 st.subheader("פנסיה צפויה")
                 st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
                 st.dataframe(df)
-                # show_download_button(df)
+                show_download_button(df)
 
 if __name__ == "__main__":
     main()
