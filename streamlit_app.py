@@ -530,6 +530,35 @@ def show_download_button(df):
     )
 
 
+def get_excpeted_monthly_allowance(df,coefficient):
+    """
+    Calculate and print the expected monthly allowance based on the final balance.
+    This function retrieves the final pension balance from the global DataFrame `df`
+    at column ('', 'balance'), converts it to a numeric float, then divides it by 
+    the given coefficient to estimate a monthly allowance. The result is formatted 
+    with commas and two decimal places, and then printed. 
+    Note:
+        - This function does not return a value; it only prints the allowance.
+        - `df` must be defined globally or accessible in the current scope.
+        - The final balance is assumed to be stored as a currency string 
+          (e.g., '₪1,234,567') which this function converts to a float.
+    Args:
+        coefficient (float): The divisor used to convert the final balance
+            into an approximate monthly allowance (e.g., life-expectancy-based
+            annuitization factor).
+    Example:
+        >>> # Suppose df['', 'balance'] = ['₪1,500,000', ...]
+        >>> get_excpeted_monthly_allowance(200)
+        Your Excpeted Monthly Allowance Is 7,500.00₪ Per Month.
+    """
+    
+    last_balance = df[('', 'צבירה')].tolist()[-1]  # Retrieve the last balance from df
+    last_balance_float = float(last_balance.replace('₪', '').replace(',', ''))
+    allowance = f"{last_balance_float / coefficient:,.2f}"
+    # print(f"הקצבה הצפויה לך בפרישה היא {allowance}₪")
+    text = f"הקצבה הצפויה לך בפרישה היא {allowance}₪"
+    return text
+
 
 def main():
     st.title("💰🧮 מחשבון פנסיה לשכירים 🧮💰")
@@ -581,6 +610,7 @@ def main():
                 st.subheader("סהכ דמי ניהול לאורך שנות החיסכון")
                 st.dataframe(get_bottom_line(df))
                 st.divider() 
+                st.write(get_excpeted_monthly_allowance(df,220))
                 
 
 if __name__ == "__main__":
