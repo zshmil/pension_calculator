@@ -564,7 +564,7 @@ def get_excpeted_monthly_allowance(df,coefficient):
 
 def main():
     st.title("💰🧮 מחשבון פנסיה לשכירים 🧮💰")
-    st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
+    st.subheader("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
     
     # Step 1: Get and save user inputs.
     user_inputs = get_user_inputs()
