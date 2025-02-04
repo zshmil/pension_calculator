@@ -564,7 +564,7 @@ def get_excpeted_monthly_allowance(df,coefficient):
 
 
 def main():
-    st.logo('me_linkedin.png)
+    st.logo('me_linkedin.png')
     st.title("💰🧮 מחשבון פנסיה לשכירים 🧮💰")
     st.divider()
     st.markdown('''
