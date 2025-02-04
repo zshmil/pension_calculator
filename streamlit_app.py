@@ -476,7 +476,7 @@ def convert_df_to_excel(df):
         # Write the DataFrame to Excel with merged headers
         df.to_excel(writer,
                     sheet_name='Sheet1',
-                    # index=False,
+                    index=False,
                     merge_cells=True)
     processed_data = output.getvalue()
     return processed_data
