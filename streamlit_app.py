@@ -428,6 +428,71 @@ def rename_df_columns(df):
     df = df.rename(columns={'Lowest_total_fee': 'הצעה הזולה ביותר'}, level=0)
     return df
 
+
+import pandas as pd
+import random
+import re
+
+# -----------------------------
+# 1. Rename the DataFrame columns
+# -----------------------------
+def rename_df_columns(df):
+    rename_dict = {
+        'date': 'תאריך',
+        'balance': 'צבירה',
+        'monthly_deposit': 'הפקדה חודשית',
+        'fee_from_balance': 'דמי ניהול מצבירה',
+        'fee_from_deposit': 'דמי ניהול מהפקדה',
+        'offer_name': 'שם הצעה'
+    }
+    
+    # Rename columns on level=1
+    df = df.rename(columns=rename_dict, level=1)
+    df = df.rename(columns={'total_fee': 'דמי הניהול הכי נמוכים מבין כל ההצעות'}, level=1)
+    df = df.rename(columns=lambda x: x.replace('total_fee', 'סהכ דמי ניהול'), level=1)
+    df = df.rename(columns={'Lowest_total_fee': 'הצעה הזול ביותר'}, level=0)
+    return df
+
+
+
+# def get_random_color():
+#     return f"#{random.randint(0, 0xFFFFFF):06x}"
+
+# company_colors = {company: get_random_color() for company in company_names}
+
+
+# def get_company_from_col(col_label):
+#     """
+#     Given a column label (a tuple from the MultiIndex), return the company name.
+    
+#     - If the first level is one of our companies, we simply return it.
+#     - If the first level is 'Total_Fee_by_company', we extract the company name 
+#       from the second level using a regex. For example, if the second level is
+#       'פניקס_2_סהכ דמי ניהול', we extract 'פניקס_2'.
+#     """
+#     # Check if the first level is one of our companies.
+#     if col_label[0] in company_colors:
+#         return col_label[0]
+#     # If it's an aggregated column, try to extract the company from the second level.
+#     elif col_label[0] == 'Total_Fee_by_company':
+#         match = re.match(r"(.+?)_סהכ", col_label[1])
+#         if match:
+#             return match.group(1)
+#     return None
+
+# def highlight_company(column):
+#     """
+#     This function is applied to each column (a pandas Series). It extracts the 
+#     company name from the column label and then returns a list of CSS styles (one 
+#     per cell in that column) to set the background color based on the company.
+#     """
+#     company = get_company_from_col(column.name)
+#     if company and company in company_colors:
+#         return [f"background-color: {company_colors[company]}" for _ in column]
+#     else:
+#         return ["" for _ in column]
+
+
 def get_final_df(user_inputs, offers):
     """
     Generate the final DataFrame after combining base pension data with 
@@ -451,8 +516,7 @@ def get_final_df(user_inputs, offers):
     # unified_df = unify_total_fee_columns(formated_df, unified_header='Total_Fee_by_company')
     unified_df = unify_total_fee_columns(formated_df, unified_header='סהכ דמי ניהול לפי חברה')
     final_df = rename_df_columns(unified_df)
-    # st.session_state.offers = final_df
-    # return st.session_state.get("final_df")
+    # styled_df = df.style.apply(highlight_company, axis=0)
     return final_df
 
 
