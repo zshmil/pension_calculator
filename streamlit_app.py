@@ -461,7 +461,7 @@ def get_final_df(user_inputs, offers):
 
 
 def get_final_total_sum(df):
-    cols = df.loc[:, df.columns.get_level_values(0) == 'סהכ דמי ניהול לפי חברה']
+    cols = df.loc[:, df.columns.get_level_values(0) == 'סהכ דמי ניהול לפי חברה'].iloc[:, :-1]
     cols_numeric = cols.replace({'₪': '', ',': ''}, regex=True).astype(float)
     sums = cols_numeric.sum(axis=0)
     sums_formatted = sums.apply(lambda x: f'₪{x:,.2f}')
