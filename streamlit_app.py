@@ -452,8 +452,8 @@ def get_final_df(user_inputs, offers):
     unified_df = unify_total_fee_columns(formated_df, unified_header='סהכ דמי ניהול לפי חברה')
     final_df = rename_df_columns(unified_df)
     st.session_state.offers = final_df
-    return st.session_state.get("final_df")
-    # return final_df
+    # return st.session_state.get("final_df")
+    return final_df
 
 
 
