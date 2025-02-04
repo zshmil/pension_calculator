@@ -431,47 +431,6 @@ def rename_df_columns(df):
 
 
 
-
-
-
-# def get_random_color():
-#     return f"#{random.randint(0, 0xFFFFFF):06x}"
-
-# company_colors = {company: get_random_color() for company in company_names}
-
-
-# def get_company_from_col(col_label):
-#     """
-#     Given a column label (a tuple from the MultiIndex), return the company name.
-    
-#     - If the first level is one of our companies, we simply return it.
-#     - If the first level is 'Total_Fee_by_company', we extract the company name 
-#       from the second level using a regex. For example, if the second level is
-#       'פניקס_2_סהכ דמי ניהול', we extract 'פניקס_2'.
-#     """
-#     # Check if the first level is one of our companies.
-#     if col_label[0] in company_colors:
-#         return col_label[0]
-#     # If it's an aggregated column, try to extract the company from the second level.
-#     elif col_label[0] == 'Total_Fee_by_company':
-#         match = re.match(r"(.+?)_סהכ", col_label[1])
-#         if match:
-#             return match.group(1)
-#     return None
-
-# def highlight_company(column):
-#     """
-#     This function is applied to each column (a pandas Series). It extracts the 
-#     company name from the column label and then returns a list of CSS styles (one 
-#     per cell in that column) to set the background color based on the company.
-#     """
-#     company = get_company_from_col(column.name)
-#     if company and company in company_colors:
-#         return [f"background-color: {company_colors[company]}" for _ in column]
-#     else:
-#         return ["" for _ in column]
-
-
 def get_final_df(user_inputs, offers):
     """
     Generate the final DataFrame after combining base pension data with 
@@ -495,7 +454,6 @@ def get_final_df(user_inputs, offers):
     # unified_df = unify_total_fee_columns(formated_df, unified_header='Total_Fee_by_company')
     unified_df = unify_total_fee_columns(formated_df, unified_header='סהכ דמי ניהול לפי חברה')
     final_df = rename_df_columns(unified_df)
-    # styled_df = df.style.apply(highlight_company, axis=0)
     return final_df
 
 
@@ -522,21 +480,28 @@ def get_final_df(user_inputs, offers):
 #                        merge_cells=True)  
 
 
-# def show_download_button(df):
-#     """
-#     Displays a download button if the predictions (or final DataFrame) are ready.
-#     """
-#     # Check if the predictions are done. Adjust the condition as needed.
-#     if st.session_state.get("final_df", False):
-#         st.write("Download your results below:")
-#         # Convert the DataFrame to Excel format.
-#         excel_data = convert_df_to_excel(df)
-#         st.download_button(
-#             label='שמור תוצאות באקסל', 
-#             data=excel_data,
-#             file_name="pension_calculator.xlsx",
-#             mime="application/octet-stream"
-#         )
+@st.cache_data
+def convert_df_to_excel(df):
+    # IMPORTANT: Cache the conversion to prevent computation on every rerun
+    return df.to_excel(merge_cells=True)  
+
+
+
+def show_download_button(df):
+    """
+    Displays a download button if the predictions (or final DataFrame) are ready.
+    """
+    # Check if the predictions are done. Adjust the condition as needed.
+    # if st.session_state.get("final_df", False):
+    #     st.write("Download your results below:")
+        # Convert the DataFrame to Excel format.
+    excel_data = convert_df_to_excel(df)
+    st.download_button(
+        label='שמור תוצאות באקסל', 
+        data=excel_data,
+        file_name="pension_calculator.xlsx",
+        mime="application/octet-stream"
+    )
 
 
 
@@ -586,7 +551,7 @@ def main():
                 st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
                 st.dataframe(df)
                 # if "final_df" in st.session_state:
-                #     show_download_button(df)
+                show_download_button(df)
 
 if __name__ == "__main__":
     main()
