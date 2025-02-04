@@ -482,7 +482,7 @@ def style_lowest_total(df_one_line):
             # Convert the formatted string back to float
             value = float(cell.replace("₪", "").replace(",", ""))
             if value == min_val:
-                return 'background-color: #81c784'
+                return 'background-color: #99ff33'
         except Exception:
             pass
         return ''
