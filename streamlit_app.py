@@ -5,7 +5,8 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from IPython.display import display, HTML, clear_output
 import time
-
+import random
+import re
 
 start_date = datetime.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
 
@@ -429,29 +430,7 @@ def rename_df_columns(df):
     return df
 
 
-import pandas as pd
-import random
-import re
 
-# -----------------------------
-# 1. Rename the DataFrame columns
-# -----------------------------
-def rename_df_columns(df):
-    rename_dict = {
-        'date': 'תאריך',
-        'balance': 'צבירה',
-        'monthly_deposit': 'הפקדה חודשית',
-        'fee_from_balance': 'דמי ניהול מצבירה',
-        'fee_from_deposit': 'דמי ניהול מהפקדה',
-        'offer_name': 'שם הצעה'
-    }
-    
-    # Rename columns on level=1
-    df = df.rename(columns=rename_dict, level=1)
-    df = df.rename(columns={'total_fee': 'דמי הניהול הכי נמוכים מבין כל ההצעות'}, level=1)
-    df = df.rename(columns=lambda x: x.replace('total_fee', 'סהכ דמי ניהול'), level=1)
-    df = df.rename(columns={'Lowest_total_fee': 'הצעה הזול ביותר'}, level=0)
-    return df
 
 
 
