@@ -129,7 +129,7 @@ def get_user_inputs():
                                                }
                 user_input_text = f''':הפרטים שהוזנו,\n
     # משכורת: {st.session_state.user_inputs['salary']}
-    משכורת: ₪{st.session_state.user_inputs['salary'],.2f}
+    משכורת: ₪{st.session_state.user_inputs['salary']:,.2f}
     צבירה: {st.session_state.user_inputs['current_balance']}
     גיל: {st.session_state.user_inputs['current_age']}
     גיל פרישה: {st.session_state.user_inputs['retirement_age']}
