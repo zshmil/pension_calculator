@@ -309,7 +309,7 @@ def concat_base_and_offers_df(offers, base_df):
     else:
         df = base_df
     
-    base_cols = [('', 'date'), ('', 'monthly_deposit'), ('', 'balance') ]
+    base_cols = [('', 'date'), ('', 'balance'), ('', 'monthly_deposit')]
     df = df.reset_index()
     df.columns = pd.MultiIndex.from_tuples(base_cols + offer_cols)
     return df
