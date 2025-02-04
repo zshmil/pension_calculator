@@ -451,7 +451,9 @@ def get_final_df(user_inputs, offers):
     # unified_df = unify_total_fee_columns(formated_df, unified_header='Total_Fee_by_company')
     unified_df = unify_total_fee_columns(formated_df, unified_header='סהכ דמי ניהול לפי חברה')
     final_df = rename_df_columns(unified_df)
-    return final_df
+    st.session_state.offers = final_df
+    return st.session_state.get("final_df")
+    # return final_df
 
 
 
@@ -482,7 +484,7 @@ def show_download_button(df):
     Displays a download button if the predictions (or final DataFrame) are ready.
     """
     # Check if the predictions are done. Adjust the condition as needed.
-    if st.session_state.get("predictions_done", False):
+    if st.session_state.get("final_df", False):
         st.write("Download your results below:")
         # Convert the DataFrame to Excel format.
         excel_data = convert_df_to_excel(df)
@@ -540,7 +542,8 @@ def main():
                 st.subheader("פנסיה צפויה")
                 st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
                 st.dataframe(df)
-                show_download_button(df)
+                if "final_df" in st.session_state:
+                    show_download_button(df)
 
 if __name__ == "__main__":
     main()
