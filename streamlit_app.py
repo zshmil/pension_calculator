@@ -128,16 +128,15 @@ def get_user_inputs():
                                                 "expected_annual_yield": float(expected_annual_yield.strip().replace("%", ""))/100/12 if expected_annual_yield.strip() else 0.045/12,
                                                }
                 user_input_text = f''':הפרטים שהוזנו,\n
-    # משכורת: {st.session_state.user_inputs['salary']}
-    משכורת: ₪{st.session_state.user_inputs['salary']:,.2f}
-    צבירה: {st.session_state.user_inputs['current_balance']}
+    משכורת: {st.session_state.user_inputs['salary']:,.0f}₪
+    צבירה: {st.session_state.user_inputs['current_balance']:,.0f}₪
     גיל: {st.session_state.user_inputs['current_age']}
     גיל פרישה: {st.session_state.user_inputs['retirement_age']}
-    הפקדות עובד: {st.session_state.user_inputs['employee_deposit']}
-    הפקדות מעסיק: {st.session_state.user_inputs['employer_deposit']}
-    פיצויים: {st.session_state.user_inputs['severance_pay']}
-    תשואה צפויה: {st.session_state.user_inputs['expected_annual_yield']}
-                '''
+    הפקדות עובד: {st.session_state.user_inputs['employee_deposit']*100:,.2f}%
+    הפקדות מעסיק: {st.session_state.user_inputs['employer_deposit']*100:,.2f}%
+    פיצויים: {st.session_state.user_inputs['severance_pay']*100:,.2f}%
+    תשואה צפויה: {st.session_state.user_inputs['expected_annual_yield']*100*12:,.2f}%
+    '''
 
                 st.success("נתונים לחישוב נקלטו!")
                 # st.write(st.session_state.user_inputs)
