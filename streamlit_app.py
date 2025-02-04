@@ -609,9 +609,7 @@ def main():
                 st.divider() 
                 st.subheader("סהכ דמי ניהול לאורך שנות החיסכון")
                 st.dataframe(get_bottom_line(df))
-                st.divider() 
                 st.subheader(get_excpeted_monthly_allowance(df,220), divider=False)
-                # st.write(get_excpeted_monthly_allowance(df,220))
                 
 
 if __name__ == "__main__":
