@@ -128,7 +128,7 @@ def get_user_inputs():
                                                 "expected_annual_yield": float(expected_annual_yield.strip().replace("%", ""))/100/12 if expected_annual_yield.strip() else 0.045/12,
                                                }
                 user_input_text = f'''הפרטים שהוזנו,
-                משכורת: {st.session_state.user_inputs['salary]}
+                משכורת: {st.session_state.user_inputs['salary']}
                 '''
 
                 st.success("נתונים לחישוב נקלטו!")
