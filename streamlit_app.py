@@ -127,9 +127,13 @@ def get_user_inputs():
                                                 "severance_pay": float(severance_pay.strip().replace("%", ""))/100 if severance_pay.strip() else 0.0833,
                                                 "expected_annual_yield": float(expected_annual_yield.strip().replace("%", ""))/100/12 if expected_annual_yield.strip() else 0.045/12,
                                                }
+                user_input_text = f'''הפרטים שהוזנו,
+                משכורת: {st.session_state.user_inputs['salary]}
+                '''
+
                 st.success("נתונים לחישוב נקלטו!")
-                st.write(st.session_state.user_inputs)
-                # st.success(f"Creative set created successfully with ID: {creative_set_id}")
+                # st.write(st.session_state.user_inputs)
+                st.write(user_input_text)
                 return st.session_state.get("user_inputs")
             except ValueError:
                 st.error("נא להזין ערכים מספריים תקינים.")              
