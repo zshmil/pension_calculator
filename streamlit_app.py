@@ -492,24 +492,20 @@ def style_lowest_total(df_one_line):
 
 def get_bottom_line(df):
     df_one_line = get_final_total_sum(df)
-    # style_lowest_total(df_one_line)
     return style_lowest_total(df_one_line)
-
 
 
 @st.cache_data
 def convert_df_to_excel(df):
     """
     Export a MultiIndex DataFrame to an Excel file with merged headers for hierarchical column names.
-
     Parameters:
     - df (pd.DataFrame): The DataFrame to export.
     - file_name (str): The name of the Excel file to save.
     - sheet_name (str): The name of the sheet in the Excel file.
     """
+    
     output = io.BytesIO()
-    # file_name = 'pension_calculator.xlsx'
-    # sheet_name="Sheet1"
     with pd.ExcelWriter(output, engine="openpyxl") as writer:
         # Write the DataFrame to Excel with merged headers
         df.to_excel(writer,
@@ -524,10 +520,6 @@ def show_download_button(df):
     """
     Displays a download button if the predictions (or final DataFrame) are ready.
     """
-    # Check if the predictions are done. Adjust the condition as needed.
-    # if st.session_state.get("final_df", False):
-    #     st.write("Download your results below:")
-        # Convert the DataFrame to Excel format.
     excel_data = convert_df_to_excel(df)
     st.download_button(
         label='שמור תוצאות באקסל', 
@@ -560,7 +552,7 @@ def main():
     פיצויים: {st.session_state.user_inputs['severance_pay']*100:,.2f}%
     תשואה צפויה: {st.session_state.user_inputs['expected_annual_yield']*100*12:,.2f}%
     ''')
-        
+        st.divider()    
         # Step 2: Confirm the number of offers.
         confirm_num_offers()
         
