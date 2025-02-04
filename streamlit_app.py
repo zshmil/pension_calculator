@@ -127,20 +127,20 @@ def get_user_inputs():
                                                 "severance_pay": float(severance_pay.strip().replace("%", ""))/100 if severance_pay.strip() else 0.0833,
                                                 "expected_annual_yield": float(expected_annual_yield.strip().replace("%", ""))/100/12 if expected_annual_yield.strip() else 0.045/12,
                                                }
-                user_input_text = f''':הפרטים שהוזנו,\n
-    משכורת: {st.session_state.user_inputs['salary']:,.0f}₪
-    צבירה: {st.session_state.user_inputs['current_balance']:,.0f}₪
-    גיל: {st.session_state.user_inputs['current_age']}
-    גיל פרישה: {st.session_state.user_inputs['retirement_age']}
-    הפקדות עובד: {st.session_state.user_inputs['employee_deposit']*100:,.2f}%
-    הפקדות מעסיק: {st.session_state.user_inputs['employer_deposit']*100:,.2f}%
-    פיצויים: {st.session_state.user_inputs['severance_pay']*100:,.2f}%
-    תשואה צפויה: {st.session_state.user_inputs['expected_annual_yield']*100*12:,.2f}%
-    '''
+    #             user_input_text = f''':הפרטים שהוזנו,\n
+    # משכורת: {st.session_state.user_inputs['salary']:,.0f}₪
+    # צבירה: {st.session_state.user_inputs['current_balance']:,.0f}₪
+    # גיל: {st.session_state.user_inputs['current_age']}
+    # גיל פרישה: {st.session_state.user_inputs['retirement_age']}
+    # הפקדות עובד: {st.session_state.user_inputs['employee_deposit']*100:,.2f}%
+    # הפקדות מעסיק: {st.session_state.user_inputs['employer_deposit']*100:,.2f}%
+    # פיצויים: {st.session_state.user_inputs['severance_pay']*100:,.2f}%
+    # תשואה צפויה: {st.session_state.user_inputs['expected_annual_yield']*100*12:,.2f}%
+    # '''
 
                 st.success("נתונים לחישוב נקלטו!")
                 # st.write(st.session_state.user_inputs)
-                st.write(user_input_text)
+                # st.write(user_input_text)
                 return st.session_state.get("user_inputs")
             except ValueError:
                 st.error("נא להזין ערכים מספריים תקינים.")              
@@ -501,7 +501,18 @@ def main():
     
     # Once user inputs are saved, proceed.
     if "user_inputs" in st.session_state:
-        user_inputs = st.session_state.user_inputs
+        user_inputs = st.session_state.
+        
+        st.write(f''':הפרטים שהוזנו,\n
+    משכורת: {st.session_state.user_inputs['salary']:,.0f}₪
+    צבירה: {st.session_state.user_inputs['current_balance']:,.0f}₪
+    גיל: {st.session_state.user_inputs['current_age']}
+    גיל פרישה: {st.session_state.user_inputs['retirement_age']}
+    הפקדות עובד: {st.session_state.user_inputs['employee_deposit']*100:,.2f}%
+    הפקדות מעסיק: {st.session_state.user_inputs['employer_deposit']*100:,.2f}%
+    פיצויים: {st.session_state.user_inputs['severance_pay']*100:,.2f}%
+    תשואה צפויה: {st.session_state.user_inputs['expected_annual_yield']*100*12:,.2f}%
+    ''')
         
         # Step 2: Confirm the number of offers.
         confirm_num_offers()
