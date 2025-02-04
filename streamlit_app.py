@@ -308,7 +308,7 @@ def concat_base_and_offers_df(offers, base_df):
     else:
         df = base_df
     
-    base_cols = [('', 'date'), ('', 'balance'), ('', 'monthly_deposit')]
+    base_cols = [('', 'date'), ('', 'monthly_deposit'), ('', 'balance') ]
     df = df.reset_index()
     df.columns = pd.MultiIndex.from_tuples(base_cols + offer_cols)
     return df
@@ -414,8 +414,8 @@ def format_currency_columns(df):
 
 def rename_df_columns(df):
     rename_dict = {'date': 'תאריך',
-                   # 'balance': 'צבירה',
-                   # 'monthly_deposit': 'הפקדה חודשית',
+                   'balance': 'צבירה',
+                   'monthly_deposit': 'הפקדה חודשית',
                    'fee_from_balance': 'דמי ניהול מצבירה',
                    'fee_from_deposit': 'דמי ניהול מהפקדה',
                    'offer_name': 'שם הצעה'
