@@ -127,8 +127,15 @@ def get_user_inputs():
                                                 "severance_pay": float(severance_pay.strip().replace("%", ""))/100 if severance_pay.strip() else 0.0833,
                                                 "expected_annual_yield": float(expected_annual_yield.strip().replace("%", ""))/100/12 if expected_annual_yield.strip() else 0.045/12,
                                                }
-                user_input_text = f'''הפרטים שהוזנו,
-                משכורת: {st.session_state.user_inputs['salary']}
+                user_input_text = f''':הפרטים שהוזנו,\n
+                משכורת: {st.session_state.user_inputs['salary']}\n
+                צבירה: {st.session_state.user_inputs['current_balance']}\n
+                גיל: {st.session_state.user_inputs['current_age']}\n
+                גיל פרישה: {st.session_state.user_inputs['retirement_age']}\n
+                הפקדות עובד: {st.session_state.user_inputs['employee_deposit']}\n
+                הפקדות מעסיק: {st.session_state.user_inputs['employer_deposit']}\n
+                פיצויים: {st.session_state.user_inputs['severance_pay']}\n
+                תשואה צפויה: {st.session_state.user_inputs['expected_annual_yield']}\n
                 '''
 
                 st.success("נתונים לחישוב נקלטו!")
