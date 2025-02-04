@@ -526,7 +526,8 @@ def show_download_button(df):
         data=excel_data,
         file_name="pension_calculator.xlsx",
         # mime="application/octet-stream"
-        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        icon=":material/download:"
     )
 
 
