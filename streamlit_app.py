@@ -410,7 +410,22 @@ def format_currency_columns(df):
         if pd.api.types.is_numeric_dtype(df[col]):
             df[col] = df[col].astype(float).apply(lambda x: f"₪{x:,.2f}")   
     return df
+    
 
+def rename_df_columns(df):
+    rename_dict = {'date': 'תאריך',
+                   'balance': 'צבירה',
+                   'monthly_deposit': 'הפקדה חודשית',
+                   'fee_from_balance': 'דמי ניהול מצבירה',
+                   'fee_from_deposit': 'דמי ניהול מהפקדה',
+                   'offer_name': 'שם הצעה'
+                  }
+
+# Rename columns on level=1
+df = df.rename(columns=rename_dict, level=1)
+df = df.rename(columns={'total_fee': 'דמי הניהול הכי נמוכים מבין  כל ההצעות'}, level=1)
+df = df.rename(columns=lambda x: x.replace('total_fee', 'סהכ דמי ניהול'), level=1)
+return df
 
 def get_final_df(user_inputs, offers):
     """
@@ -432,8 +447,9 @@ def get_final_df(user_inputs, offers):
     full_df = concat_base_and_offers_df(offers, base_df)
     reorganized_df, total_fee_df = reorganize_and_split_final_df(full_df)
     formated_df = format_currency_columns(reorganized_df)
-    # final_df = unify_total_fee_columns(formated_df, unified_header='Total_Fee_by_company')
-    final_df = unify_total_fee_columns(formated_df, unified_header='סך הכל דמי ניהול לפי חברה')
+    # unified_df = unify_total_fee_columns(formated_df, unified_header='Total_Fee_by_company')
+    unified_df = unify_total_fee_columns(formated_df, unified_header='סך הכל דמי ניהול לפי חברה')
+    final_df = rename_df_columns(df)
     return final_df
 
 
