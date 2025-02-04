@@ -572,6 +572,7 @@ def main():
                    **אך אינו מהווה המלצה ו/או תחליף לייעוץ מקצועי**.
                    ''')
     # st.subheader("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
+    st.divider()
     
     # Step 1: Get and save user inputs.
     user_inputs = get_user_inputs()
