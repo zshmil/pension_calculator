@@ -425,6 +425,7 @@ def rename_df_columns(df):
     df = df.rename(columns=rename_dict, level=1)
     df = df.rename(columns={'total_fee': 'דמי הניהול הכי נמוכים מבין  כל ההצעות'}, level=1)
     df = df.rename(columns=lambda x: x.replace('total_fee', 'סהכ דמי ניהול'), level=1)
+    df = df.rename(columns={'Lowest_total_fee': 'הצעה הזול ביותר'}, level=0)
     return df
 
 def get_final_df(user_inputs, offers):
@@ -448,7 +449,7 @@ def get_final_df(user_inputs, offers):
     reorganized_df, total_fee_df = reorganize_and_split_final_df(full_df)
     formated_df = format_currency_columns(reorganized_df)
     # unified_df = unify_total_fee_columns(formated_df, unified_header='Total_Fee_by_company')
-    unified_df = unify_total_fee_columns(formated_df, unified_header='סך הכל דמי ניהול לפי חברה')
+    unified_df = unify_total_fee_columns(formated_df, unified_header='סהכ דמי ניהול לפי חברה')
     final_df = rename_df_columns(unified_df)
     return final_df
 
