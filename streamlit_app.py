@@ -449,7 +449,7 @@ def get_final_df(user_inputs, offers):
     formated_df = format_currency_columns(reorganized_df)
     # unified_df = unify_total_fee_columns(formated_df, unified_header='Total_Fee_by_company')
     unified_df = unify_total_fee_columns(formated_df, unified_header='סך הכל דמי ניהול לפי חברה')
-    final_df = rename_df_columns(df)
+    final_df = rename_df_columns(unified_df)
     return final_df
 
 
