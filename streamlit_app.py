@@ -186,8 +186,8 @@ def get_offer_details():
             for i in range(st.session_state.num_offers):
                 st.markdown(f"### הצעה {i + 1}")
                 st.text_input(f"שם ההצעה {i + 1}", key=f"offer_name_{i}")
-                st.text_input(f"(%) דמי ניהול מהפקדה {i + 1}", placeholder="לדוגמה: 1.5%", key=f"fee_deposit_{i}")
-                st.text_input(f"(%) דמי ניהול מצבירה {i + 1}", placeholder="לדוגמה: 0.5%", key=f"fee_balance_{i}")
+                st.text_input(f"(%) הצעה - {i + 1} - דמי ניהול מהפקדה", placeholder="לדוגמה: 1.5%", key=f"fee_deposit_{i}")
+                st.text_input(f"(%) הצעה - {i + 1} - דמי ניהול מצבירה", placeholder="לדוגמה: 0.5%", key=f"fee_balance_{i}")
             submitted = st.form_submit_button("השווה הצעות")
             
         if submitted:
