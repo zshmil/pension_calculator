@@ -459,6 +459,44 @@ def get_final_df(user_inputs, offers):
     return final_df
 
 
+def get_final_total_sum(df):
+    cols = df.loc[:, df.columns.get_level_values(0) == 'סהכ דמי ניהול לפי חברה']
+    cols_numeric = cols.replace({'₪': '', ',': ''}, regex=True).astype(float)
+    sums = cols_numeric.sum(axis=0)
+    sums_formatted = sums.apply(lambda x: f'₪{x:,.2f}')
+    df_one_line = sums_formatted.to_frame().T
+    return df_one_line
+
+
+def style_lowest_total(df_one_line):
+    """
+    Styles the cell containing the lowest value in the one-line DataFrame.
+    Assumes that the DataFrame's cells are formatted as currency strings (e.g., "₪135.15").
+    """
+    # Convert the row to numeric values for comparison
+    numeric_row = df_one_line.iloc[0].replace({'₪': '', ',': ''}, regex=True).astype(float)
+    min_val = numeric_row.min()
+    
+    def highlight_lowest(cell):
+        try:
+            # Convert the formatted string back to float
+            value = float(cell.replace("₪", "").replace(",", ""))
+            if value == min_val:
+                return 'background-color: #81c784'
+        except Exception:
+            pass
+        return ''
+    
+    return df_one_line.style.map(highlight_lowest)
+
+
+def get_bottom_line():
+    df_one_line = get_final_total_sum(df)
+    style_lowest_total(df_one_line)
+    return style_lowest_total(df_one_line)
+
+
+
 @st.cache_data
 def convert_df_to_excel(df):
     """
@@ -546,7 +584,9 @@ def main():
                 st.subheader("פנסיה צפויה")
                 st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
                 st.dataframe(df)
-                # if "final_df" in st.session_state:
+                st.divider() 
+                st.subheader("סהכ דמי ניהול לאורך שנות החיסכון")
+                st.dataframe(get_bottom_line())
                 show_download_button(df)
 
 if __name__ == "__main__":
