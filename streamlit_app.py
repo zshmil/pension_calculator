@@ -586,7 +586,7 @@ def main():
                 st.dataframe(df)
                 st.divider() 
                 st.subheader("סהכ דמי ניהול לאורך שנות החיסכון")
-                st.dataframe(get_bottom_line())
+                st.dataframe(get_bottom_line(df))
                 show_download_button(df)
 
 if __name__ == "__main__":
