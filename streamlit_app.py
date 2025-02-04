@@ -425,7 +425,7 @@ def rename_df_columns(df):
     df = df.rename(columns=rename_dict, level=1)
     df = df.rename(columns={'total_fee': 'דמי הניהול הכי נמוכים מבין  כל ההצעות'}, level=1)
     df = df.rename(columns=lambda x: x.replace('total_fee', 'סהכ דמי ניהול'), level=1)
-    df = df.rename(columns={'Lowest_total_fee': 'הצעה הזול ביותר'}, level=0)
+    df = df.rename(columns={'Lowest_total_fee': 'הצעה הזולה ביותר'}, level=0)
     return df
 
 def get_final_df(user_inputs, offers):
