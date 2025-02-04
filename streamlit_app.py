@@ -490,9 +490,9 @@ def style_lowest_total(df_one_line):
     return df_one_line.style.map(highlight_lowest)
 
 
-def get_bottom_line():
+def get_bottom_line(df):
     df_one_line = get_final_total_sum(df)
-    style_lowest_total(df_one_line)
+    # style_lowest_total(df_one_line)
     return style_lowest_total(df_one_line)
 
 
