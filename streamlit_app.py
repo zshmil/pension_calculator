@@ -128,6 +128,8 @@ def get_user_inputs():
                                                 "expected_annual_yield": float(expected_annual_yield.strip().replace("%", ""))/100/12 if expected_annual_yield.strip() else 0.045/12,
                                                }
                 st.success("נתונים לחישוב נקלטו!")
+                st.write(st.session_state.user_inputs)
+                # st.success(f"Creative set created successfully with ID: {creative_set_id}")
                 return st.session_state.get("user_inputs")
             except ValueError:
                 st.error("נא להזין ערכים מספריים תקינים.")              
