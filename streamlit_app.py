@@ -237,7 +237,7 @@ def get_base_df(user_inputs):
                                     user_inputs["severance_pay"]
                                    )
     df = add_future_value_column(df, user_inputs["current_balance"], user_inputs["expected_annual_yield"])
-    
+    df = df[['date','balance','monthly_deposit']]
     # df = add_monthly_deposit_column(df, 28000, 0.07, 0.065, 0.0833)
     # df = add_future_value_column(df, 750000, 0.07/12)
     # df['date'] = pd.to_datetime(df['date']).dt.strftime('%Y-%m-%d')
