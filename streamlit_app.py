@@ -414,8 +414,8 @@ def format_currency_columns(df):
 
 def rename_df_columns(df):
     rename_dict = {'date': 'תאריך',
-                   'balance': 'צבירה',
-                   'monthly_deposit': 'הפקדה חודשית',
+                   # 'balance': 'צבירה',
+                   # 'monthly_deposit': 'הפקדה חודשית',
                    'fee_from_balance': 'דמי ניהול מצבירה',
                    'fee_from_deposit': 'דמי ניהול מהפקדה',
                    'offer_name': 'שם הצעה'
