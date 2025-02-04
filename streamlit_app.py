@@ -88,6 +88,7 @@ def add_fee_columns(df, fee_from_deposit, fee_from_balance):
     df['total_fee'] = df['fee_from_deposit'] + df['fee_from_balance']
     return df
 
+
 def get_user_inputs():
     """
     Create and display a form in Streamlit for user pension inputs.
@@ -156,7 +157,7 @@ def confirm_num_offers():
                                              min_value=1,
                                              step=1,
                                              value=st.session_state.num_offers)
-        submitted = st.form_submit_button("אשר מספר הצעות")
+        submitted = st.form_submit_button("אשר מספר הצעות", icon=":material/check_circle:")
         if submitted:
             st.session_state.num_offers = desired_num_offers
             st.session_state.num_offers_confirmed = True
@@ -176,7 +177,7 @@ def get_offer_details():
                 st.text_input(f"שם הצעה {i + 1}", key=f"offer_name_{i}")
                 st.text_input(f"(%) הצעה - {i + 1} - דמי ניהול מהפקדה", placeholder="לדוגמה: 1.5%", key=f"fee_deposit_{i}")
                 st.text_input(f"(%) הצעה - {i + 1} - דמי ניהול מצבירה", placeholder="לדוגמה: 0.5%", key=f"fee_balance_{i}")
-            submitted = st.form_submit_button("השווה הצעות")
+            submitted = st.form_submit_button("השווה הצעות", icon=":material/calculate:")
             
         if submitted:
             offers = []
