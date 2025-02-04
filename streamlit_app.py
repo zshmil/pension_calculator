@@ -7,6 +7,8 @@ from IPython.display import display, HTML, clear_output
 import time
 import random
 import re
+import io
+
 
 start_date = datetime.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
 
