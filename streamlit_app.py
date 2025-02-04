@@ -127,28 +127,13 @@ def get_user_inputs():
                                                 "severance_pay": float(severance_pay.strip().replace("%", ""))/100 if severance_pay.strip() else 0.0833,
                                                 "expected_annual_yield": float(expected_annual_yield.strip().replace("%", ""))/100/12 if expected_annual_yield.strip() else 0.045/12,
                                                }
-    #             user_input_text = f''':הפרטים שהוזנו,\n
-    # משכורת: {st.session_state.user_inputs['salary']:,.0f}₪
-    # צבירה: {st.session_state.user_inputs['current_balance']:,.0f}₪
-    # גיל: {st.session_state.user_inputs['current_age']}
-    # גיל פרישה: {st.session_state.user_inputs['retirement_age']}
-    # הפקדות עובד: {st.session_state.user_inputs['employee_deposit']*100:,.2f}%
-    # הפקדות מעסיק: {st.session_state.user_inputs['employer_deposit']*100:,.2f}%
-    # פיצויים: {st.session_state.user_inputs['severance_pay']*100:,.2f}%
-    # תשואה צפויה: {st.session_state.user_inputs['expected_annual_yield']*100*12:,.2f}%
-    # '''
 
                 st.success("נתונים לחישוב נקלטו!")
-                # st.write(st.session_state.user_inputs)
-                # st.write(user_input_text)
                 return st.session_state.get("user_inputs")
             except ValueError:
                 st.error("נא להזין ערכים מספריים תקינים.")              
         else:
             st.warning("יש למלא את כל הפרטים לפני השליחה")
-        # else:
-        #     st.info("פרטי המשתמש כבר נשמרו:")
-        #     st.write(st.session_state.user_inputs)
             return None
 
 
@@ -185,7 +170,7 @@ def get_offer_details():
             st.header("פרטי הצעות")
             for i in range(st.session_state.num_offers):
                 st.markdown(f"### הצעה {i + 1}")
-                st.text_input(f"שם ההצעה {i + 1}", key=f"offer_name_{i}")
+                st.text_input(f"שם הצעה {i + 1}", key=f"offer_name_{i}")
                 st.text_input(f"(%) הצעה - {i + 1} - דמי ניהול מהפקדה", placeholder="לדוגמה: 1.5%", key=f"fee_deposit_{i}")
                 st.text_input(f"(%) הצעה - {i + 1} - דמי ניהול מצבירה", placeholder="לדוגמה: 0.5%", key=f"fee_balance_{i}")
             submitted = st.form_submit_button("השווה הצעות")
@@ -493,7 +478,6 @@ def get_final_df(user_inputs, offers):
 
 def main():
     st.title("💰🧮 מחשבון פנסיה לשכירים 🧮💰")
-    # st.write("תהליך: 1. הזנת פרטי משתמש → שמירת סטייט → 2. מספר הצעות → שמירת סטייט → 3. פרטי הצעות → 4. חישוב")
     st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
     
     # Step 1: Get and save user inputs.
@@ -503,7 +487,7 @@ def main():
     if "user_inputs" in st.session_state:
         user_inputs = st.session_state.user_inputs
         
-        st.write(f''':הפרטים שהוזנו,\n
+        st.write(f''':הפרטים שהוזנו\n
     משכורת: {st.session_state.user_inputs['salary']:,.0f}₪
     צבירה: {st.session_state.user_inputs['current_balance']:,.0f}₪
     גיל: {st.session_state.user_inputs['current_age']}
