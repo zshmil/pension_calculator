@@ -436,7 +436,6 @@ def get_final_df(user_inputs, offers):
     formated_df = format_currency_columns(reorganized_df)
     # final_df = unify_total_fee_columns(formated_df, unified_header='Total_Fee_by_company')
     final_df = unify_total_fee_columns(formated_df, unified_header='סה"כ דמי ניהול לפי חברה')
-    df['final_df'] = pd.to_datetime(final_df['date']).dt.strftime('%Y-%m-%d')
     return final_df
 
 
