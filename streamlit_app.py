@@ -457,33 +457,33 @@ def get_final_df(user_inputs, offers):
     return final_df
 
 
-
-# def convert_df_to_excel(df):
-#     """
-#     Export a MultiIndex DataFrame to an Excel file with merged headers for hierarchical column names.
-
-#     Parameters:
-#     - df (pd.DataFrame): The DataFrame to export.
-#     - file_name (str): The name of the Excel file to save.
-#     - sheet_name (str): The name of the sheet in the Excel file.
-#     """
-#     # file_name = 'pension_calculator.xlsx'
-#     # sheet_name="Sheet1"
-#     # with pd.ExcelWriter(file_name, engine="openpyxl") as writer:
-#     #     # Write the DataFrame to Excel with merged headers
-#     #     df.to_excel(writer,
-#     #                 sheet_name=sheet_name,
-#     #                 # index=False,
-#     #                 merge_cells=True)
-#     return df.to_excel('pension_calculator.xlsx',
-#                        sheet_name='Sheet_name_1',
-#                        merge_cells=True)  
-
-
 @st.cache_data
 def convert_df_to_excel(df):
-    # IMPORTANT: Cache the conversion to prevent computation on every rerun
-    return df.to_excel(merge_cells=True)  
+    """
+    Export a MultiIndex DataFrame to an Excel file with merged headers for hierarchical column names.
+
+    Parameters:
+    - df (pd.DataFrame): The DataFrame to export.
+    - file_name (str): The name of the Excel file to save.
+    - sheet_name (str): The name of the sheet in the Excel file.
+    """
+    # file_name = 'pension_calculator.xlsx'
+    # sheet_name="Sheet1"
+    with pd.ExcelWriter(file_name, engine="openpyxl") as writer:
+        # Write the DataFrame to Excel with merged headers
+        # df.to_excel(writer,
+        #             sheet_name=sheet_name,
+        #             # index=False,
+        #             merge_cells=True)
+        return df.to_excel(writer,
+                           sheet_name='Sheet_name_1',
+                           merge_cells=True)  
+
+
+# @st.cache_data
+# def convert_df_to_excel(df):
+#     # IMPORTANT: Cache the conversion to prevent computation on every rerun
+#     return df.to_excel(merge_cells=True)  
 
 
 
