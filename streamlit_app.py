@@ -475,7 +475,7 @@ def convert_df_to_excel(df):
     with pd.ExcelWriter(output, engine="openpyxl") as writer:
         # Write the DataFrame to Excel with merged headers
         df.to_excel(writer,
-                    sheet_name=sheet_name,
+                    sheet_name='Sheet1',
                     # index=False,
                     merge_cells=True)
     processed_data = output.getvalue()
