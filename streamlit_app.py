@@ -501,7 +501,7 @@ def main():
     
     # Once user inputs are saved, proceed.
     if "user_inputs" in st.session_state:
-        user_inputs = st.session_state.
+        user_inputs = st.session_state.user_inputs
         
         st.write(f''':הפרטים שהוזנו,\n
     משכורת: {st.session_state.user_inputs['salary']:,.0f}₪
