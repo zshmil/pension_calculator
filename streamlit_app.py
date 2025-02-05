@@ -582,7 +582,7 @@ def style_lowest_total(df_one_line):
     return df_one_line.style.apply(highlight_lowest_column, axis=0)
 
 
-def get_bottom_line():
+def get_bottom_line(df):
     df_one_line = get_final_total_sum(df)
     bottom_line_df = add_difference_row(df_one_line,220)
     bottom_line_df.rename(index={0: 'צבירה ודמי ניהול לפי חברה'}, inplace=True)
