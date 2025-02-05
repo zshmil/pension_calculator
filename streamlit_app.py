@@ -461,43 +461,6 @@ def get_final_df(user_inputs, offers):
     return final_df
 
 
-# def get_final_total_sum(df):
-#     cols = df.loc[:, df.columns.get_level_values(0) == 'סהכ דמי ניהול לפי חברה'].iloc[:, :-1]
-#     cols.columns = cols.columns.map(lambda col: (col[0], col[1].replace('_סהכ דמי ניהול', '')))
-#     cols_numeric = cols.replace({'₪': '', ',': ''}, regex=True).astype(float)
-#     sums = cols_numeric.sum(axis=0)
-#     sums_formatted = sums.apply(lambda x: f'₪{x:,.2f}')
-#     df_one_line = sums_formatted.to_frame().T
-#     total_value = df.loc[:, df.columns.get_level_values(0) == ''].iloc[:, 1].tolist()[-1]
-#     df_one_line.insert(0, 'צבירה', total_value)
-#     return df_one_line
-
-# def style_lowest_total(df_one_line):
-#     """
-#     Styles the cell containing the lowest value in the one-line DataFrame.
-#     Assumes that the DataFrame's cells are formatted as currency strings (e.g., "₪135.15").
-#     """
-#     # Convert the row to numeric values for comparison
-#     numeric_row = df_one_line.iloc[0].replace({'₪': '', ',': ''}, regex=True).astype(float)
-#     min_val = numeric_row.min()
-    
-#     def highlight_lowest(cell):
-#         try:
-#             # Convert the formatted string back to float
-#             value = float(cell.replace("₪", "").replace(",", ""))
-#             if value == min_val:
-#                 return 'background-color: #99ff33'
-#         except Exception:
-#             pass
-#         return ''
-    
-#     return df_one_line.style.map(highlight_lowest)
-
-
-# def get_bottom_line(df):
-#     df_one_line = get_final_total_sum(df)
-#     return style_lowest_total(df_one_line)
-
 def get_final_total_sum(df):
     cols = df.loc[:, df.columns.get_level_values(0) == 'סהכ דמי ניהול לפי חברה'].iloc[:, :-1]
     cols.columns = cols.columns.map(lambda col: (col[0], col[1].replace('_סהכ דמי ניהול', '')))
@@ -628,36 +591,6 @@ def show_download_button(df):
     )
 
 
-# def get_excpeted_monthly_allowance(df,coefficient):
-#     """
-#     Calculate and print the expected monthly allowance based on the final balance.
-#     This function retrieves the final pension balance from the global DataFrame `df`
-#     at column ('', 'balance'), converts it to a numeric float, then divides it by 
-#     the given coefficient to estimate a monthly allowance. The result is formatted 
-#     with commas and two decimal places, and then printed. 
-#     Note:
-#         - This function does not return a value; it only prints the allowance.
-#         - `df` must be defined globally or accessible in the current scope.
-#         - The final balance is assumed to be stored as a currency string 
-#           (e.g., '₪1,234,567') which this function converts to a float.
-#     Args:
-#         coefficient (float): The divisor used to convert the final balance
-#             into an approximate monthly allowance (e.g., life-expectancy-based
-#             annuitization factor).
-#     Example:
-#         >>> # Suppose df['', 'balance'] = ['₪1,500,000', ...]
-#         >>> get_excpeted_monthly_allowance(200)
-#         Your Excpeted Monthly Allowance Is 7,500.00₪ Per Month.
-#     """
-    
-#     last_balance = df[('', 'צבירה')].tolist()[-1]  # Retrieve the last balance from df
-#     last_balance_float = float(last_balance.replace('₪', '').replace(',', ''))
-#     allowance = f"{last_balance_float / coefficient:,.2f}"
-#     # print(f"הקצבה הצפויה לך בפרישה היא {allowance}₪")
-#     text = f"הקצבה הצפויה לך בפרישה היא {allowance}₪"
-#     return text
-
-
 def get_excpeted_monthly_allowance(df):
     df_one_line = get_final_total_sum(df)
     bottom_line_df = add_difference_row(df_one_line,220)
@@ -667,14 +600,13 @@ def get_excpeted_monthly_allowance(df):
     allowance_row_numeric = bottom_line_df.iloc[2,1:].replace({'₪': '', ',': ''}, regex=True).astype(float)
     allowance = f'₪{allowance_row_numeric.max():,.2f}'
     company_name = allowance_row_numeric.idxmax()[1]
-    final_text = f'{company_name} מציעים את ההצעה הזולה ביותר, עם דמי ניהול של {fee} לכל אורך שנות החיסכון,\n מה שמביא לקצבה צפויה של כ-{allowance}'
+    final_text = f'{company_name} מציעים את ההצעה הזולה ביותר, עם דמי ניהול של {fee} לכל אורך שנות החיסכון, מה שמביא לקצבה צפויה של כ-{allowance}'
     return final_text
 
 
 def styled_subheader(text, color="#27ae60", align="right", font_family="Arial", font_size="1.75em", margin="20px 0 10px 0"):
     """
-    Renders text as a styled subheader using HTML.
-    
+    Renders text as a styled subheader using HTML.    
     Parameters:
       - text (str): The subheader text.
       - color (str): The text color in hex.
