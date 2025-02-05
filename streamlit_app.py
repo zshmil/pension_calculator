@@ -460,6 +460,43 @@ def get_final_df(user_inputs, offers):
     return final_df
 
 
+# def get_final_total_sum(df):
+#     cols = df.loc[:, df.columns.get_level_values(0) == 'סהכ דמי ניהול לפי חברה'].iloc[:, :-1]
+#     cols.columns = cols.columns.map(lambda col: (col[0], col[1].replace('_סהכ דמי ניהול', '')))
+#     cols_numeric = cols.replace({'₪': '', ',': ''}, regex=True).astype(float)
+#     sums = cols_numeric.sum(axis=0)
+#     sums_formatted = sums.apply(lambda x: f'₪{x:,.2f}')
+#     df_one_line = sums_formatted.to_frame().T
+#     total_value = df.loc[:, df.columns.get_level_values(0) == ''].iloc[:, 1].tolist()[-1]
+#     df_one_line.insert(0, 'צבירה', total_value)
+#     return df_one_line
+
+# def style_lowest_total(df_one_line):
+#     """
+#     Styles the cell containing the lowest value in the one-line DataFrame.
+#     Assumes that the DataFrame's cells are formatted as currency strings (e.g., "₪135.15").
+#     """
+#     # Convert the row to numeric values for comparison
+#     numeric_row = df_one_line.iloc[0].replace({'₪': '', ',': ''}, regex=True).astype(float)
+#     min_val = numeric_row.min()
+    
+#     def highlight_lowest(cell):
+#         try:
+#             # Convert the formatted string back to float
+#             value = float(cell.replace("₪", "").replace(",", ""))
+#             if value == min_val:
+#                 return 'background-color: #99ff33'
+#         except Exception:
+#             pass
+#         return ''
+    
+#     return df_one_line.style.map(highlight_lowest)
+
+
+# def get_bottom_line(df):
+#     df_one_line = get_final_total_sum(df)
+#     return style_lowest_total(df_one_line)
+
 def get_final_total_sum(df):
     cols = df.loc[:, df.columns.get_level_values(0) == 'סהכ דמי ניהול לפי חברה'].iloc[:, :-1]
     cols.columns = cols.columns.map(lambda col: (col[0], col[1].replace('_סהכ דמי ניהול', '')))
@@ -467,35 +504,91 @@ def get_final_total_sum(df):
     sums = cols_numeric.sum(axis=0)
     sums_formatted = sums.apply(lambda x: f'₪{x:,.2f}')
     df_one_line = sums_formatted.to_frame().T
+    # df_one_line['צבירה'] = df.loc[:, df.columns.get_level_values(0) == ''].iloc[:, 1].tolist()[-1]
     total_value = df.loc[:, df.columns.get_level_values(0) == ''].iloc[:, 1].tolist()[-1]
     df_one_line.insert(0, 'צבירה', total_value)
     return df_one_line
 
+
+def add_difference_row(df, coefficient):
+    """
+    Given a one-row DataFrame with MultiIndex columns like:
+        ('צבירה', '')
+        ('סהכ דמי ניהול לפי חברה', 'הראל')
+        ('סהכ דמי ניהול לפי חברה', 'פניקס')
+        ('סהכ דמי ניהול לפי חברה', 'מנורה') 
+    This function creates two new rows:
+      1. "הפרש" – For each offer column, it computes: (צבירה - offer value)
+      2. "תוצאה חלקי {coefficient}" – For each offer column, it computes:
+         (צבירה - offer value) divided by the given coefficient.       
+    The new rows are appended to the original DataFrame.
+    """
+    # Assume the DataFrame has only one row; get its index (usually 0)
+    row_idx = df.index[0]
+    
+    # Extract the 'צבירה' value (assumed to be in the column with top-level 'צבירה' and empty second level)
+    total_str = df.loc[row_idx, ('צבירה', '')]
+    total = float(total_str.replace("₪", "").replace(",", ""))
+    
+    # Build the "הפרש" row (difference row)
+    diff_row = {}
+    for col in df.columns:
+        if col[0] == 'סהכ דמי ניהול לפי חברה':
+            offer_str = df.loc[row_idx, col]
+            offer_val = float(offer_str.replace("₪", "").replace(",", ""))
+            diff_val = total - offer_val
+            diff_row[col] = f'₪{diff_val:,.2f}'
+        else:
+            diff_row[col] = ''
+    diff_df = pd.DataFrame(diff_row, index=["צבירה בניכוי דמי ניהול"])
+    
+    # Build the division row (result divided by coefficient)
+    div_row = {}
+    for col in df.columns:
+        if col[0] == 'סהכ דמי ניהול לפי חברה':
+            offer_str = df.loc[row_idx, col]
+            offer_val = float(offer_str.replace("₪", "").replace(",", ""))
+            diff_val = total - offer_val
+            div_val = diff_val / coefficient
+            div_row[col] = f'₪{div_val:,.2f}'
+        else:
+            div_row[col] = ''
+    div_label = 'קצבה צפויה'
+    div_df = pd.DataFrame(div_row, index=[div_label])
+    
+    # Concatenate the original one-row DataFrame with the two new rows
+    result_df = pd.concat([df, diff_df, div_df])
+    return result_df
+
+
 def style_lowest_total(df_one_line):
     """
-    Styles the cell containing the lowest value in the one-line DataFrame.
+    Styles the entire column(s) that contain the lowest value in the one-line DataFrame.
     Assumes that the DataFrame's cells are formatted as currency strings (e.g., "₪135.15").
     """
-    # Convert the row to numeric values for comparison
+    # Convert the first row's values to numeric values for comparison
     numeric_row = df_one_line.iloc[0].replace({'₪': '', ',': ''}, regex=True).astype(float)
     min_val = numeric_row.min()
     
-    def highlight_lowest(cell):
-        try:
-            # Convert the formatted string back to float
-            value = float(cell.replace("₪", "").replace(",", ""))
-            if value == min_val:
-                return 'background-color: #99ff33'
-        except Exception:
-            pass
-        return ''
+    # Identify the column names (i.e. MultiIndex tuples) that have the minimum value
+    lowest_columns = numeric_row[numeric_row == min_val].index.tolist()
     
-    return df_one_line.style.map(highlight_lowest)
+    # Define a function to style an entire column if its name is in the lowest_columns list
+    def highlight_lowest_column(col):
+        if col.name in lowest_columns:
+            return ['background-color: #99ff33'] * len(col)
+        else:
+            return [''] * len(col)  
+    return df_one_line.style.apply(highlight_lowest_column, axis=0)
 
 
-def get_bottom_line(df):
+def get_bottom_line():
     df_one_line = get_final_total_sum(df)
-    return style_lowest_total(df_one_line)
+    bottom_line_df = add_difference_row(df_one_line,220)
+    bottom_line_df.rename(index={0: 'צבירה ודמי ניהול לפי חברה'}, inplace=True)
+    # style_lowest_total(df_one_line)
+    return style_lowest_total(bottom_line_df)
+    # return df_one_line
 
 
 @st.cache_data
@@ -534,34 +627,47 @@ def show_download_button(df):
     )
 
 
-def get_excpeted_monthly_allowance(df,coefficient):
-    """
-    Calculate and print the expected monthly allowance based on the final balance.
-    This function retrieves the final pension balance from the global DataFrame `df`
-    at column ('', 'balance'), converts it to a numeric float, then divides it by 
-    the given coefficient to estimate a monthly allowance. The result is formatted 
-    with commas and two decimal places, and then printed. 
-    Note:
-        - This function does not return a value; it only prints the allowance.
-        - `df` must be defined globally or accessible in the current scope.
-        - The final balance is assumed to be stored as a currency string 
-          (e.g., '₪1,234,567') which this function converts to a float.
-    Args:
-        coefficient (float): The divisor used to convert the final balance
-            into an approximate monthly allowance (e.g., life-expectancy-based
-            annuitization factor).
-    Example:
-        >>> # Suppose df['', 'balance'] = ['₪1,500,000', ...]
-        >>> get_excpeted_monthly_allowance(200)
-        Your Excpeted Monthly Allowance Is 7,500.00₪ Per Month.
-    """
+# def get_excpeted_monthly_allowance(df,coefficient):
+#     """
+#     Calculate and print the expected monthly allowance based on the final balance.
+#     This function retrieves the final pension balance from the global DataFrame `df`
+#     at column ('', 'balance'), converts it to a numeric float, then divides it by 
+#     the given coefficient to estimate a monthly allowance. The result is formatted 
+#     with commas and two decimal places, and then printed. 
+#     Note:
+#         - This function does not return a value; it only prints the allowance.
+#         - `df` must be defined globally or accessible in the current scope.
+#         - The final balance is assumed to be stored as a currency string 
+#           (e.g., '₪1,234,567') which this function converts to a float.
+#     Args:
+#         coefficient (float): The divisor used to convert the final balance
+#             into an approximate monthly allowance (e.g., life-expectancy-based
+#             annuitization factor).
+#     Example:
+#         >>> # Suppose df['', 'balance'] = ['₪1,500,000', ...]
+#         >>> get_excpeted_monthly_allowance(200)
+#         Your Excpeted Monthly Allowance Is 7,500.00₪ Per Month.
+#     """
     
-    last_balance = df[('', 'צבירה')].tolist()[-1]  # Retrieve the last balance from df
-    last_balance_float = float(last_balance.replace('₪', '').replace(',', ''))
-    allowance = f"{last_balance_float / coefficient:,.2f}"
-    # print(f"הקצבה הצפויה לך בפרישה היא {allowance}₪")
-    text = f"הקצבה הצפויה לך בפרישה היא {allowance}₪"
-    return text
+#     last_balance = df[('', 'צבירה')].tolist()[-1]  # Retrieve the last balance from df
+#     last_balance_float = float(last_balance.replace('₪', '').replace(',', ''))
+#     allowance = f"{last_balance_float / coefficient:,.2f}"
+#     # print(f"הקצבה הצפויה לך בפרישה היא {allowance}₪")
+#     text = f"הקצבה הצפויה לך בפרישה היא {allowance}₪"
+#     return text
+
+
+def get_excpeted_monthly_allowance(df):
+    df_one_line = get_final_total_sum(df)
+    bottom_line_df = add_difference_row(df_one_line,220)
+    bottom_line_df.rename(index={0: 'צבירה ודמי ניהול לפי חברה'}, inplace=True)
+    fee_row_numeric = bottom_line_df.iloc[0,1:].replace({'₪': '', ',': ''}, regex=True).astype(float)
+    fee = f'₪{fee_row_numeric.min():,.2f}'
+    allowance_row_numeric = bottom_line_df.iloc[2,1:].replace({'₪': '', ',': ''}, regex=True).astype(float)
+    allowance = f'₪{allowance_row_numeric.max():,.2f}'
+    company_name = allowance_row_numeric.idxmax()[1]
+    final_text = f'{company_name} מציעים את ההצעה הזולה ביותר, עם דמי ניהול של {fee} לכל אורך שנות החיסכון, מה שמביא לקצבה צפויה של כ-{allowance}'
+    return final_text
 
 
 def main():
@@ -621,8 +727,7 @@ def main():
                 st.divider() 
                 st.subheader("סהכ דמי ניהול לאורך שנות החיסכון")
                 st.dataframe(get_bottom_line(df))
-                # st.subheader(get_excpeted_monthly_allowance(df,220), divider=False)
+                st.subheader(get_excpeted_monthly_allowance(df), divider=False)
                 
-
 if __name__ == "__main__":
     main()
