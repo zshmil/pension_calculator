@@ -671,6 +671,30 @@ def get_excpeted_monthly_allowance(df):
     return final_text
 
 
+def styled_subheader(text, color="#27ae60", align="left", font_family="Arial", font_size="1.75em", margin="20px 0 10px 0"):
+    """
+    Renders text as a styled subheader using HTML.
+    
+    Parameters:
+      - text (str): The subheader text.
+      - color (str): The text color in hex.
+      - align (str): Text alignment.
+      - font_family (str): The font family.
+      - font_size (str): The font size.
+      - margin (str): CSS margin (top, right, bottom, left).
+    """
+    html_str = f"""
+    <h3 style="
+        text-align: {align};
+        color: {color};
+        font-family: {font_family};
+        font-size: {font_size};
+        margin: {margin};
+    ">{text}</h3>
+    """
+    st.markdown(html_str, unsafe_allow_html=True)
+
+
 def main():
     st.logo('me_linkedin.png')
     st.title("💰🧮 מחשבון פנסיה לשכירים 🧮💰")
@@ -728,7 +752,9 @@ def main():
                 st.divider() 
                 st.subheader("סהכ דמי ניהול לאורך שנות החיסכון")
                 st.dataframe(get_bottom_line(df))
-                st.subheader(get_excpeted_monthly_allowance(df), divider=False)
+                # st.subheader(get_excpeted_monthly_allowance(df), divider=False)
+                final_text = get_excpeted_monthly_allowance(df)
+                styled_subheader(final_text)
                 
 if __name__ == "__main__":
     main()
