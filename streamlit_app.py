@@ -671,7 +671,7 @@ def get_excpeted_monthly_allowance(df):
     return final_text
 
 
-def styled_subheader(text, color="#27ae60", align="left", font_family="Arial", font_size="1.75em", margin="20px 0 10px 0"):
+def styled_subheader(text, color="#27ae60", align="right", font_family="Arial", font_size="1.75em", margin="20px 0 10px 0"):
     """
     Renders text as a styled subheader using HTML.
     
