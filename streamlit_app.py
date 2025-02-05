@@ -467,8 +467,9 @@ def get_final_total_sum(df):
     sums = cols_numeric.sum(axis=0)
     sums_formatted = sums.apply(lambda x: f'₪{x:,.2f}')
     df_one_line = sums_formatted.to_frame().T
+    total_value = df.loc[:, df.columns.get_level_values(0) == ''].iloc[:, 1].tolist()[-1]
+    df_one_line.insert(0, 'צבירה', total_value)
     return df_one_line
-
 
 def style_lowest_total(df_one_line):
     """
