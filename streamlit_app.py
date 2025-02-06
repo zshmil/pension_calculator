@@ -697,7 +697,7 @@ def main():
     styled_markdown(''',מחשבון פנסיה לשכירים – כלי פשוט ונוח המאפשר להזין פרטים אישיים כגון שכר, גיל, הפקדות ותשואה צפויה<br>
     .ולחזות את צפי החיסכון הפנסיוני העתידי שלך<br>
     המחשבון מסייע לעשות סדר בהשוואת הצעות שונות ובבחירה בין מספר הצעות שקיבלת (אך אינו מחפש הצעות מול חברות, יש להזין פרטי ההצעות)<br>
-    <strong>.המחשבון אינו מהווה המלצה ו/או תחליף לייעוץ מקצועי.</strong>''', background="white")
+    <strong>.המחשבון אינו מהווה המלצה ו/או תחליף לייעוץ מקצועי</strong>.''', background="white")
     st.divider()
     
     # Step 1: Get and save user inputs.
@@ -724,7 +724,6 @@ def main():
         
         # Step 3: If the number of offers is confirmed, show the offer details form.
         if st.session_state.get("num_offers_confirmed"):
-            # st.write("אנא הזן את פרטי ההצעות:")
             styled_markdown('''<strong>:אנא הזן את פרטי ההצעות</strong>''')
             offers = get_offer_details()
             
