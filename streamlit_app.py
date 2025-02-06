@@ -675,7 +675,7 @@ def styled_title(text, color="black", align="right", font_family="Arial", font_s
 
 def styled_markdown(text, color="black", align="right", font_family="Arial (Body CS)", font_size="1.2", margin="10px 0 10px 0"):
     """
-    Renders text as a styled title using HTML.   
+    Renders text as a styled title using HTML.
     Parameters:
       - text (str): The title text.
       - color (str): The text color (e.g., 'black' or any valid CSS color).
@@ -706,11 +706,11 @@ def main():
     #                **המחשבון אינו מהווה המלצה ו/או תחליף לייעוץ מקצועי**.
     #                ''')
 
-    styled_markdown('''מחשבון פנסיה לשכירים – כלי פשוט ונוח המאפשר להזין פרטים אישיים כגון שכר, גיל, הפקדות ותשואה צפויה, ולחזות
-    את צפי החיסכון הפנסיוני העתידי שלך.
-    המחשבון מסייע לעשות סדרת בהשוואת הצעות שונות ובבחירה בין מספר הצעות שקיבלת (אינו מחפש הצעות מול חברות, יש להזין פרטי ההצעות)
- .המחשבון אינו מהווה המלצה ו/או תחליף לייעוץ מקצועי
- ''')
+    styled_markdown('''
+    מחשבון פנסיה לשכירים – כלי פשוט ונוח המאפשר להזין פרטים אישיים כגון שכר, גיל, הפקדות ותשואה צפויה, ולחזות את צפי החיסכון הפנסיוני העתידי שלך.<br>
+    המחשבון מסייע לעשות סדרת בהשוואת הצעות שונות ובבחירה בין מספר הצעות שקיבלת (אינו מחפש הצעות מול חברות, יש להזין פרטי ההצעות)<br>
+    <strong>.המחשבון אינו מהווה המלצה ו/או תחליף לייעוץ מקצועי</strong>
+    ''')
     st.divider()
     
     # Step 1: Get and save user inputs.
