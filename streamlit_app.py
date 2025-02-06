@@ -674,7 +674,7 @@ def styled_title(text, color="black", align="right", font_family="Arial", font_s
 
 
 
-def styled_markdown(text, color="black", align="right", font_family="Arial (Body CS)", font_size="12", margin="20px 0 10px 0"):
+def styled_markdown(text, color="black", align="right", font_family="Arial (Body CS)", font_size="1.2", margin="20px 0 10px 0"):
     """
     Renders text as a styled title using HTML.   
     Parameters:
