@@ -736,7 +736,7 @@ def main():
         # Step 3: If the number of offers is confirmed, show the offer details form.
         if st.session_state.get("num_offers_confirmed"):
             # st.write("אנא הזן את פרטי ההצעות:")
-            styled_markdown('''אנא הזן את פרטי ההצעות:''')
+            styled_markdown(''':אנא הזן את פרטי ההצעות''')
             offers = get_offer_details()
             
             # Step 4: If offers are saved, calculate and display the result.
@@ -755,7 +755,7 @@ def main():
                 # st.subheader("פנסיה צפויה")
                 styled_subheader_black("פנסיה צפויה")
                 # st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
-                styled_markdown('''<strong>.המחשבון אינו מהווה המלצה ו/או תחליף לייעוץ מקצועי</strong>''')
+                styled_markdown('''<strong>.תוצאות המחשבון אינן מהוות המלצה ו/או תחליף לייעוץ מקצועי</strong>''')
                 st.dataframe(df)
                 show_download_button(df)
                 st.divider() 
