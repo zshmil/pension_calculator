@@ -749,7 +749,7 @@ def main():
             if "offers" in st.session_state:
                 offers = st.session_state.offers
                 df = get_final_df(user_inputs, offers)
-                #     # Display Progress Bar
+                    # Display Progress Bar
                 progress_text = ".מבצע חישוב, אנא המתן"
                 my_bar = st.progress(0, text=progress_text)
                 for percent_complete in range(100):
