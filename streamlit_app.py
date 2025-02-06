@@ -604,7 +604,7 @@ def get_excpeted_monthly_allowance(df):
     return final_text
 
 
-def styled_subheader(text, color="#27ae60", align="right", font_family="Arial", font_size="1.75em", margin="20px 0 10px 0"):
+def styled_subheader_green(text, color="#27ae60", align="right", font_family="Arial", font_size="1.75em", margin="20px 0 10px 0"):
     """
     Renders text as a styled subheader using HTML.    
     Parameters:
@@ -625,6 +625,53 @@ def styled_subheader(text, color="#27ae60", align="right", font_family="Arial", 
     ">{text}</h3>
     """
     st.markdown(html_str, unsafe_allow_html=True)
+
+
+def styled_subheader_black(text, color="black", align="right", font_family="Arial", font_size="1.75em", margin="20px 0 10px 0"):
+    """
+    Renders text as a styled subheader using HTML.    
+    Parameters:
+      - text (str): The subheader text.
+      - color (str): The text color in hex.
+      - align (str): Text alignment.
+      - font_family (str): The font family.
+      - font_size (str): The font size.
+      - margin (str): CSS margin (top, right, bottom, left).
+    """
+    html_str = f"""
+    <h3 style="
+        text-align: {align};
+        color: {color};
+        font-family: {font_family};
+        font-size: {font_size};
+        margin: {margin};
+    ">{text}</h3>
+    """
+    st.markdown(html_str, unsafe_allow_html=True)
+
+
+def styled_title(text, color="black", align="right", font_family="Arial", font_size="3em", margin="20px 0 10px 0"):
+    """
+    Renders text as a styled title using HTML.   
+    Parameters:
+      - text (str): The title text.
+      - color (str): The text color (e.g., 'black' or any valid CSS color).
+      - align (str): Text alignment (e.g., 'center', 'left', 'right').
+      - font_family (str): The font family (e.g., 'Arial', 'Helvetica').
+      - font_size (str): The font size (e.g., '3em', '36px').
+      - margin (str): CSS margin (top, right, bottom, left).
+    """
+    html_str = f"""
+    <h1 style="
+        text-align: {align};
+        color: {color};
+        font-family: {font_family};
+        font-size: {font_size};
+        margin: {margin};
+    ">{text}</h1>
+    """
+    st.markdown(html_str, unsafe_allow_html=True)
+
 
 
 def main():
@@ -677,16 +724,18 @@ def main():
                     my_bar.progress(percent_complete + 1, text=progress_text)
                 time.sleep(1)
                 my_bar.empty()
-                st.subheader("פנסיה צפויה")
+                # st.subheader("פנסיה צפויה")
+                styled_subheader_black("פנסיה צפויה")
                 st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
                 st.dataframe(df)
                 show_download_button(df)
                 st.divider() 
-                st.subheader("סהכ דמי ניהול לאורך שנות החיסכון")
+                # st.subheader("סהכ דמי ניהול לאורך שנות החיסכון")
+                styled_subheader_black("סהכ דמי ניהול לאורך שנות החיסכון")
                 st.dataframe(get_bottom_line(df))
                 # st.subheader(get_excpeted_monthly_allowance(df), divider=False)
                 final_text = get_excpeted_monthly_allowance(df)
-                styled_subheader(final_text)
+                styled_subheader_green(final_text)
                 
 if __name__ == "__main__":
     main()
