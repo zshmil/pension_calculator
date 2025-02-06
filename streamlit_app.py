@@ -672,36 +672,6 @@ def styled_title(text, color="black", align="right", font_family="Arial", font_s
     """
     st.markdown(html_str, unsafe_allow_html=True)
 
-# Inter, ui-sans-serif, system-ui, Helvetica, Arial, sans-serif;
-
-def styled_markdown(text, color="black", align="right", font_family="Inter", font_size="1.55em", margin="20px 0 10px 0", background_color="#FFFFFF"):
-    """
-    Renders markdown text as a styled block using HTML.    
-    Parameters:
-      - text (str): The markdown text to display.
-      - color (str): The text color (default is 'black').
-      - align (str): Text alignment (default is 'right').
-      - font_family (str): The font family (default is 'Arial').
-      - font_size (str): The font size (default is '1.55em').
-      - margin (str): CSS margin in the format "top right bottom left".
-      - background_color (str): The background color of the block (default is 'white').
-    """
-    html_str = f"""
-    <div style="
-        text-align: {align};
-        color: {color};
-        font-family: {font_family};
-        font-size: {font_size};
-        margin: {margin};
-        background-color: {background_color};
-        font-weight: bold;
-    ">
-        {text}
-    </div>
-    """
-    st.markdown(html_str, unsafe_allow_html=True)
-
-
 
 def main():
     st.logo('me_linkedin.png')
@@ -712,14 +682,6 @@ def main():
                     המחשבון מסייע לעשות סדרת בהשוואת הצעות שונות ובבחירה בין מספר הצעות שקיבלת (אינו מחפש הצעות מול חברות, יש להזין פרטי ההצעות) \n 
                    **המחשבון אינו מהווה המלצה ו/או תחליף לייעוץ מקצועי**.
                    ''')
-    
-    # styled_markdown('''
-    #                ,מחשבון פנסיה לשכירים – כלי פשוט ונוח המאפשר להזין פרטים אישיים כגון שכר, גיל, הפקדות ותשואה צפויה
-    #                .ולחזות את צפי החיסכון הפנסיוני העתידי שלך
-    #                המחשבון מסייע לעשות סדרת בהשוואת הצעות שונות ובבחירה בין
-    #                מספר הצעות שקיבלת (אינו מחפש הצעות מול חברות, יש להזין פרטי ההצעות)
-    #                .המחשבון אינו מהווה המלצה ו/או תחליף לייעוץ מקצועי
-    #                ''', background_color="#FFFFFF")
     st.divider()
     
     # Step 1: Get and save user inputs.
