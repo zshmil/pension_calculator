@@ -627,7 +627,7 @@ def styled_subheader_green(text, color="#27ae60", align="right", font_family="Ar
     st.markdown(html_str, unsafe_allow_html=True)
 
 
-def styled_subheader_black(text, color="black", align="right", font_family="Arial", font_size="1.75em", margin="20px 0 10px 0"):
+def styled_subheader_black(text, color="black", align="center", font_family="Arial", font_size="1.75em", margin="20px 0 10px 0"):
     """
     Renders text as a styled subheader using HTML.    
     Parameters:
