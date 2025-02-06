@@ -673,25 +673,49 @@ def styled_title(text, color="black", align="right", font_family="Arial", font_s
     st.markdown(html_str, unsafe_allow_html=True)
 
 
-def styled_markdown(text, color="black", align="right", font_family="Arial (Body CS)", font_size="1.2", margin="10px 0 10px 0"):
+# def styled_markdown(text, color="black", align="right", font_family="Arial (Body CS)", font_size="1.2", margin="10px 0 10px 0"):
+#     """
+#     Renders text as a styled title using HTML.
+#     Parameters:
+#       - text (str): The title text.
+#       - color (str): The text color (e.g., 'black' or any valid CSS color).
+#       - align (str): Text alignment (e.g., 'center', 'left', 'right').
+#       - font_family (str): The font family (e.g., 'Arial', 'Helvetica').
+#       - font_size (str): The font size (e.g., '3em', '36px').
+#       - margin (str): CSS margin (top, right, bottom, left).
+#     """
+#     html_str = f"""
+#     <p style="
+#         text-align: {align};
+#         color: {color};
+#         font-family: {font_family};
+#         font-size: {font_size};
+#         margin: {margin};
+#     ">{text}</p>
+#     """
+#     st.markdown(html_str, unsafe_allow_html=True)
+
+def styled_text(text, align="right", background="#f0f0f0", font_size="12px", font_family="Arial (Body CS)"):
     """
-    Renders text as a styled title using HTML.
+    Renders the given text with custom styling.
     Parameters:
-      - text (str): The title text.
-      - color (str): The text color (e.g., 'black' or any valid CSS color).
-      - align (str): Text alignment (e.g., 'center', 'left', 'right').
-      - font_family (str): The font family (e.g., 'Arial', 'Helvetica').
-      - font_size (str): The font size (e.g., '3em', '36px').
-      - margin (str): CSS margin (top, right, bottom, left).
+      - text (str): The text to be rendered.
+      - align (str): Text alignment (default is "right").
+      - background (str): Background color (default is light gray, "#f0f0f0").
+      - font_size (str): Font size (default is "12px").
+      - font_family (str): Font family (default is "Arial (Body CS)").
     """
     html_str = f"""
-    <p style="
-        text-align: {align};
-        color: {color};
-        font-family: {font_family};
-        font-size: {font_size};
-        margin: {margin};
-    ">{text}</p>
+    <div style="
+         text-align: {align};
+         background-color: {background};
+         font-size: {font_size};
+         font-family: '{font_family}';
+         white-space: pre-line;
+         padding: 10px;
+         ">
+         {text}
+    </div>
     """
     st.markdown(html_str, unsafe_allow_html=True)
 
@@ -718,17 +742,29 @@ def main():
     # Once user inputs are saved, proceed.
     if "user_inputs" in st.session_state:
         user_inputs = st.session_state.user_inputs
-        
-        st.write(f''':הפרטים שהוזנו\n
-    משכורת: {st.session_state.user_inputs['salary']:,.0f}₪
-    צבירה: {st.session_state.user_inputs['current_balance']:,.0f}₪
-    גיל: {st.session_state.user_inputs['current_age']}
-    גיל פרישה: {st.session_state.user_inputs['retirement_age']}
-    הפקדות עובד: {st.session_state.user_inputs['employee_deposit']*100:,.2f}%
-    הפקדות מעסיק: {st.session_state.user_inputs['employer_deposit']*100:,.2f}%
-    פיצויים: {st.session_state.user_inputs['severance_pay']*100:,.2f}%
-    תשואה צפויה: {st.session_state.user_inputs['expected_annual_yield']*100*12:,.2f}%
-    ''')
+
+        summarized_input_text = f""":הפרטים שהוזנו
+משכורת: {st.session_state.user_inputs['salary']:,.0f}₪
+צבירה: {st.session_state.user_inputs['current_balance']:,.0f}₪
+גיל: {st.session_state.user_inputs['current_age']}
+גיל פרישה: {st.session_state.user_inputs['retirement_age']}
+הפקדות עובד: {st.session_state.user_inputs['employee_deposit']*100:,.2f}%
+הפקדות מעסיק: {st.session_state.user_inputs['employer_deposit']*100:,.2f}%
+פיצויים: {st.session_state.user_inputs['severance_pay']*100:,.2f}%
+תשואה צפויה: {st.session_state.user_inputs['expected_annual_yield']*100*12:,.2f}%
+"""
+    styled_text(summarized_input_text)
+        styled_text
+        # st.write(f''':הפרטים שהוזנו\n
+    # משכורת: {st.session_state.user_inputs['salary']:,.0f}₪
+    # צבירה: {st.session_state.user_inputs['current_balance']:,.0f}₪
+    # גיל: {st.session_state.user_inputs['current_age']}
+    # גיל פרישה: {st.session_state.user_inputs['retirement_age']}
+    # הפקדות עובד: {st.session_state.user_inputs['employee_deposit']*100:,.2f}%
+    # הפקדות מעסיק: {st.session_state.user_inputs['employer_deposit']*100:,.2f}%
+    # פיצויים: {st.session_state.user_inputs['severance_pay']*100:,.2f}%
+    # תשואה צפויה: {st.session_state.user_inputs['expected_annual_yield']*100*12:,.2f}%
+    # ''')
         st.divider()    
         # Step 2: Confirm the number of offers.
         confirm_num_offers()
@@ -736,7 +772,8 @@ def main():
         # Step 3: If the number of offers is confirmed, show the offer details form.
         if st.session_state.get("num_offers_confirmed"):
             # st.write("אנא הזן את פרטי ההצעות:")
-            styled_markdown('''<strong>:אנא הזן את פרטי ההצעות</strong>''')
+            # styled_markdown('''<strong>:אנא הזן את פרטי ההצעות</strong>''')
+            styled_text('''<strong>:אנא הזן את פרטי ההצעות</strong>''')
             offers = get_offer_details()
             
             # Step 4: If offers are saved, calculate and display the result.
