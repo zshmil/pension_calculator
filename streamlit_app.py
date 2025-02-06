@@ -673,14 +673,44 @@ def styled_title(text, color="black", align="right", font_family="Arial", font_s
     st.markdown(html_str, unsafe_allow_html=True)
 
 
+
+def styled_markdown(text, color="black", align="right", font_family="Arial (Body CS)", font_size="12", margin="20px 0 10px 0"):
+    """
+    Renders text as a styled title using HTML.   
+    Parameters:
+      - text (str): The title text.
+      - color (str): The text color (e.g., 'black' or any valid CSS color).
+      - align (str): Text alignment (e.g., 'center', 'left', 'right').
+      - font_family (str): The font family (e.g., 'Arial', 'Helvetica').
+      - font_size (str): The font size (e.g., '3em', '36px').
+      - margin (str): CSS margin (top, right, bottom, left).
+    """
+    html_str = f"""
+    <h1 style="
+        text-align: {align};
+        color: {color};
+        font-family: {font_family};
+        font-size: {font_size};
+        margin: {margin};
+    ">{text}</h1>
+    """
+    st.markdown(html_str, unsafe_allow_html=True)
+
+
 def main():
     st.logo('me_linkedin.png')
     st.title("💰🧮 מחשבון פנסיה לשכירים 🧮💰")
     st.divider()
-    st.markdown('''
-                   מחשבון פנסיה לשכירים – כלי פשוט ונוח המאפשר להזין פרטים אישיים כגון שכר, גיל, הפקדות ותשואה צפויה, ולחזות את צפי החיסכון הפנסיוני העתידי שלך. \n
-                    המחשבון מסייע לעשות סדרת בהשוואת הצעות שונות ובבחירה בין מספר הצעות שקיבלת (אינו מחפש הצעות מול חברות, יש להזין פרטי ההצעות) \n 
-                   **המחשבון אינו מהווה המלצה ו/או תחליף לייעוץ מקצועי**.
+    # st.markdown('''
+    #                מחשבון פנסיה לשכירים – כלי פשוט ונוח המאפשר להזין פרטים אישיים כגון שכר, גיל, הפקדות ותשואה צפויה, ולחזות את צפי החיסכון הפנסיוני העתידי שלך. \n
+    #                 המחשבון מסייע לעשות סדרת בהשוואת הצעות שונות ובבחירה בין מספר הצעות שקיבלת (אינו מחפש הצעות מול חברות, יש להזין פרטי ההצעות) \n 
+    #                **המחשבון אינו מהווה המלצה ו/או תחליף לייעוץ מקצועי**.
+    #                ''')
+
+    styled_markdown('''
+                   .מחשבון פנסיה לשכירים – כלי פשוט ונוח המאפשר להזין פרטים אישיים כגון שכר, גיל, הפקדות ותשואה צפויה, ולחזות את צפי החיסכון הפנסיוני העתידי שלך
+                    המחשבון מסייע לעשות סדרת בהשוואת הצעות שונות ובבחירה בין מספר הצעות שקיבלת (אינו מחפש הצעות מול חברות, יש להזין פרטי ההצעות)
+                   .**המחשבון אינו מהווה המלצה ו/או תחליף לייעוץ מקצועי**
                    ''')
     st.divider()
     
