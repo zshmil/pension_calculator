@@ -673,49 +673,26 @@ def styled_title(text, color="black", align="right", font_family="Arial", font_s
     st.markdown(html_str, unsafe_allow_html=True)
 
 
-# def styled_markdown(text, color="black", align="right", font_family="Arial (Body CS)", font_size="1.2", margin="10px 0 10px 0"):
-#     """
-#     Renders text as a styled title using HTML.
-#     Parameters:
-#       - text (str): The title text.
-#       - color (str): The text color (e.g., 'black' or any valid CSS color).
-#       - align (str): Text alignment (e.g., 'center', 'left', 'right').
-#       - font_family (str): The font family (e.g., 'Arial', 'Helvetica').
-#       - font_size (str): The font size (e.g., '3em', '36px').
-#       - margin (str): CSS margin (top, right, bottom, left).
-#     """
-#     html_str = f"""
-#     <p style="
-#         text-align: {align};
-#         color: {color};
-#         font-family: {font_family};
-#         font-size: {font_size};
-#         margin: {margin};
-#     ">{text}</p>
-#     """
-#     st.markdown(html_str, unsafe_allow_html=True)
-
-def styled_text(text, align="right", background="#f0f0f0", font_size="12px", font_family="Arial (Body CS)"):
+def styled_markdown(text, color="black", align="right",  background="#f0f0f0", font_family="Arial (Body CS)", font_size="1.2", margin="10px 0 10px 0"):
     """
-    Renders the given text with custom styling.
+    Renders text as a styled title using HTML.
     Parameters:
-      - text (str): The text to be rendered.
-      - align (str): Text alignment (default is "right").
-      - background (str): Background color (default is light gray, "#f0f0f0").
-      - font_size (str): Font size (default is "12px").
-      - font_family (str): Font family (default is "Arial (Body CS)").
+      - text (str): The title text.
+      - color (str): The text color (e.g., 'black' or any valid CSS color).
+      - align (str): Text alignment (e.g., 'center', 'left', 'right').
+      - font_family (str): The font family (e.g., 'Arial', 'Helvetica').
+      - font_size (str): The font size (e.g., '3em', '36px').
+      - margin (str): CSS margin (top, right, bottom, left).
     """
     html_str = f"""
-    <div style="
-         text-align: {align};
-         background-color: {background};
-         font-size: {font_size};
-         font-family: '{font_family}';
-         white-space: pre-line;
-         padding: 10px;
-         ">
-         {text}
-    </div>
+    <p style="
+        text-align: {align};
+        background-color: {background};
+        color: {color};
+        font-family: {font_family};
+        font-size: {font_size};
+        margin: {margin};
+    ">{text}</p>
     """
     st.markdown(html_str, unsafe_allow_html=True)
 
@@ -724,12 +701,6 @@ def main():
     st.logo('me_linkedin.png')
     st.title("💰🧮 מחשבון פנסיה לשכירים 🧮💰")
     st.divider()
-    # st.markdown('''
-    #                מחשבון פנסיה לשכירים – כלי פשוט ונוח המאפשר להזין פרטים אישיים כגון שכר, גיל, הפקדות ותשואה צפויה, ולחזות את צפי החיסכון הפנסיוני העתידי שלך. \n
-    #                 המחשבון מסייע לעשות סדרת בהשוואת הצעות שונות ובבחירה בין מספר הצעות שקיבלת (אינו מחפש הצעות מול חברות, יש להזין פרטי ההצעות) \n 
-    #                **המחשבון אינו מהווה המלצה ו/או תחליף לייעוץ מקצועי**.
-    #                ''')
-
     styled_text(''',מחשבון פנסיה לשכירים – כלי פשוט ונוח המאפשר להזין פרטים אישיים כגון שכר, גיל, הפקדות ותשואה צפויה<br>
     .ולחזות את צפי החיסכון הפנסיוני העתידי שלך<br>
     המחשבון מסייע לעשות סדר בהשוואת הצעות שונות ובבחירה בין מספר הצעות שקיבלת (אך אינו מחפש הצעות מול חברות, יש להזין פרטי ההצעות)<br>
@@ -753,7 +724,7 @@ def main():
 פיצויים: {st.session_state.user_inputs['severance_pay']*100:,.2f}%
 תשואה צפויה: {st.session_state.user_inputs['expected_annual_yield']*100*12:,.2f}%
 """
-        styled_text(summarized_input_text)
+        styled_markdown(summarized_input_text)
         # st.write(f''':הפרטים שהוזנו\n
     # משכורת: {st.session_state.user_inputs['salary']:,.0f}₪
     # צבירה: {st.session_state.user_inputs['current_balance']:,.0f}₪
