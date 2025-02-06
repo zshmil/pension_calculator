@@ -10,7 +10,6 @@ import re
 import io
 
 
-
 start_date = datetime.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
 
 
@@ -311,8 +310,7 @@ def concat_base_and_offers_df(offers, base_df):
         offers_df = offers_df[offer_cols]
         df = pd.concat([base_df.set_index('date'), offers_df], axis=1)
     else:
-        df = base_df
-    
+        df = base_df    
     base_cols = [('', 'date'), ('', 'balance'), ('', 'monthly_deposit')]
     df = df.reset_index()
     df.columns = pd.MultiIndex.from_tuples(base_cols + offer_cols)
@@ -330,8 +328,7 @@ def add_min_total_fee_column(total_fee_df):
     """
     # Calculate the minimum value across all columns for each row
     total_fee_df[('Lowest_total_fee', 'total_fee')] = total_fee_df.min(axis=1)
-    total_fee_df[('Lowest_total_fee', 'offer_name')] = total_fee_df.idxmin(axis=1).apply(lambda x: x[0])
-    
+    total_fee_df[('Lowest_total_fee', 'offer_name')] = total_fee_df.idxmin(axis=1).apply(lambda x: x[0])    
     return total_fee_df
 
 
@@ -393,8 +390,6 @@ def unify_total_fee_columns(df, unified_header='Total_Fee_by_company'):
             new_columns.append((unified_header, col[1]))
         else:
             new_columns.append(col)
-
-    # Update the DataFrame with the new columns
     df.columns = pd.MultiIndex.from_tuples(new_columns)
     return df
 
@@ -550,9 +545,7 @@ def get_bottom_line(df):
     df_one_line = get_final_total_sum(df)
     bottom_line_df = add_difference_row(df_one_line,220)
     bottom_line_df.rename(index={0: 'צבירה ודמי ניהול לפי חברה'}, inplace=True)
-    # style_lowest_total(df_one_line)
     return style_lowest_total(bottom_line_df)
-    # return df_one_line
 
 
 @st.cache_data
@@ -739,7 +732,7 @@ def main():
             if "offers" in st.session_state:
                 offers = st.session_state.offers
                 df = get_final_df(user_inputs, offers)
-                    # Display Progress Bar
+                # Display Progress Bar #
                 progress_text = ".מבצע חישוב, אנא המתן"
                 my_bar = st.progress(0, text=progress_text)
                 for percent_complete in range(100):
@@ -748,17 +741,13 @@ def main():
                 time.sleep(1)
                 my_bar.empty()
                 st.divider() 
-                # st.subheader("פנסיה צפויה")
                 styled_subheader_black("פנסיה צפויה")
-                # st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
                 styled_markdown('''<strong>.תוצאות המחשבון אינן מהוות המלצה ו/או תחליף לייעוץ מקצועי</strong>''')
                 st.dataframe(df)
                 show_download_button(df)
                 st.divider() 
-                # st.subheader("סהכ דמי ניהול לאורך שנות החיסכון")
                 styled_subheader_black("סהכ דמי ניהול לאורך שנות החיסכון")
                 st.dataframe(get_bottom_line(df))
-                # st.subheader(get_excpeted_monthly_allowance(df), divider=False)
                 final_text = get_excpeted_monthly_allowance(df)
                 styled_subheader_green(final_text)
                 
