@@ -753,8 +753,7 @@ def main():
 פיצויים: {st.session_state.user_inputs['severance_pay']*100:,.2f}%
 תשואה צפויה: {st.session_state.user_inputs['expected_annual_yield']*100*12:,.2f}%
 """
-    styled_text(summarized_input_text)
-        styled_text
+        styled_text(summarized_input_text)
         # st.write(f''':הפרטים שהוזנו\n
     # משכורת: {st.session_state.user_inputs['salary']:,.0f}₪
     # צבירה: {st.session_state.user_inputs['current_balance']:,.0f}₪
