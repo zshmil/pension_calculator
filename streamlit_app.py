@@ -723,7 +723,7 @@ def main():
     הפקדות מעסיק: {st.session_state.user_inputs['employer_deposit']*100:,.2f}%<br>
     פיצויים: {st.session_state.user_inputs['severance_pay']*100:,.2f}%<br>
     תשואה צפויה: {st.session_state.user_inputs['expected_annual_yield']*100*12:,.2f}%<br>
-    ''',  font_size="20px", background="white")
+    ''',  font_size="16px", background="white")
 
         st.divider()    
         # Step 2: Confirm the number of offers.
