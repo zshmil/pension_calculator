@@ -673,16 +673,17 @@ def styled_title(text, color="black", align="right", font_family="Arial", font_s
     st.markdown(html_str, unsafe_allow_html=True)
 
 
-def styled_markdown(text, color="black", align="right", font_family="Arial", font_size="1.5em", margin="20px 0 10px 0"):
+def styled_markdown(text, color="black", align="right", font_family="Arial", font_size="1.55em", margin="20px 0 10px 0", background_color="transparent"):
     """
-    Renders markdown text as a styled block using HTML.   
+    Renders markdown text as a styled block using HTML.    
     Parameters:
       - text (str): The markdown text to display.
       - color (str): The text color (default is 'black').
       - align (str): Text alignment (default is 'right').
       - font_family (str): The font family (default is 'Arial').
-      - font_size (str): The font size (default is '1em').
+      - font_size (str): The font size (default is '1.55em').
       - margin (str): CSS margin in the format "top right bottom left".
+      - background_color (str): The background color of the block (default is 'transparent').
     """
     html_str = f"""
     <div style="
@@ -691,12 +692,12 @@ def styled_markdown(text, color="black", align="right", font_family="Arial", fon
         font-family: {font_family};
         font-size: {font_size};
         margin: {margin};
+        background-color: {background_color};
     ">
         {text}
     </div>
     """
     st.markdown(html_str, unsafe_allow_html=True)
-
 
 
 def main():
