@@ -686,13 +686,13 @@ def styled_markdown(text, color="black", align="right", font_family="Arial (Body
       - margin (str): CSS margin (top, right, bottom, left).
     """
     html_str = f"""
-    <h1 style="
+    <p style="
         text-align: {align};
         color: {color};
         font-family: {font_family};
         font-size: {font_size};
         margin: {margin};
-    ">{text}</h1>
+    ">{text}</p>
     """
     st.markdown(html_str, unsafe_allow_html=True)
 
