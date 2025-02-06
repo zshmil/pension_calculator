@@ -759,6 +759,7 @@ def main():
                     my_bar.progress(percent_complete + 1, text=progress_text)
                 time.sleep(1)
                 my_bar.empty()
+                st.divider() 
                 # st.subheader("פנסיה צפויה")
                 styled_subheader_black("פנסיה צפויה")
                 st.write("תוצאות המחשבון אינן מהוות המלצה או תחליף לייעוץ.")
