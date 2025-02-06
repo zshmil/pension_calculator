@@ -673,7 +673,7 @@ def styled_title(text, color="black", align="right", font_family="Arial", font_s
     st.markdown(html_str, unsafe_allow_html=True)
 
 
-def styled_markdown(text, color="black", align="right", font_family="Arial", font_size="160%", margin="20px 0 10px 0"):
+def styled_markdown(text, color="black", align="right", font_family="Arial", font_size="1.5em", margin="20px 0 10px 0"):
     """
     Renders markdown text as a styled block using HTML.   
     Parameters:
