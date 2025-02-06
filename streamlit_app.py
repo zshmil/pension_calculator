@@ -704,7 +704,7 @@ def main():
     styled_markdown(''',מחשבון פנסיה לשכירים – כלי פשוט ונוח המאפשר להזין פרטים אישיים כגון שכר, גיל, הפקדות ותשואה צפויה<br>
     .ולחזות את צפי החיסכון הפנסיוני העתידי שלך<br>
     המחשבון מסייע לעשות סדר בהשוואת הצעות שונות ובבחירה בין מספר הצעות שקיבלת (אך אינו מחפש הצעות מול חברות, יש להזין פרטי ההצעות)<br>
-    <strong>.המחשבון אינו מהווה המלצה ו/או תחליף לייעוץ מקצועי</strong>''')
+    <strong>.המחשבון אינו מהווה המלצה ו/או תחליף לייעוץ מקצועי</strong>''', background="white")
     st.divider()
     
     # Step 1: Get and save user inputs.
@@ -723,7 +723,7 @@ def main():
     הפקדות מעסיק: {st.session_state.user_inputs['employer_deposit']*100:,.2f}%<br>
     פיצויים: {st.session_state.user_inputs['severance_pay']*100:,.2f}%<br>
     תשואה צפויה: {st.session_state.user_inputs['expected_annual_yield']*100*12:,.2f}%<br>
-    ''')
+    ''', background="white")
         # st.write(f''':הפרטים שהוזנו\n
     # משכורת: {st.session_state.user_inputs['salary']:,.0f}₪
     # צבירה: {st.session_state.user_inputs['current_balance']:,.0f}₪
