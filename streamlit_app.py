@@ -693,11 +693,13 @@ def styled_markdown(text, color="black", align="right", font_family="Arial", fon
         font-size: {font_size};
         margin: {margin};
         background-color: {background_color};
+        font-weight: bold;
     ">
         {text}
     </div>
     """
     st.markdown(html_str, unsafe_allow_html=True)
+
 
 
 def main():
@@ -716,7 +718,7 @@ def main():
                    המחשבון מסייע לעשות סדרת בהשוואת הצעות שונות ובבחירה בין
                    מספר הצעות שקיבלת (אינו מחפש הצעות מול חברות, יש להזין פרטי ההצעות)
                    .המחשבון אינו מהווה המלצה ו/או תחליף לייעוץ מקצועי
-                   ''')
+                   ''', background_color="#f0f0f0")
     st.divider()
     
     # Step 1: Get and save user inputs.
