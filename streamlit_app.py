@@ -714,17 +714,16 @@ def main():
     if "user_inputs" in st.session_state:
         user_inputs = st.session_state.user_inputs
 
-        summarized_input_text = f""":הפרטים שהוזנו
-משכורת: {st.session_state.user_inputs['salary']:,.0f}₪
-צבירה: {st.session_state.user_inputs['current_balance']:,.0f}₪
-גיל: {st.session_state.user_inputs['current_age']}
-גיל פרישה: {st.session_state.user_inputs['retirement_age']}
-הפקדות עובד: {st.session_state.user_inputs['employee_deposit']*100:,.2f}%
-הפקדות מעסיק: {st.session_state.user_inputs['employer_deposit']*100:,.2f}%
-פיצויים: {st.session_state.user_inputs['severance_pay']*100:,.2f}%
-תשואה צפויה: {st.session_state.user_inputs['expected_annual_yield']*100*12:,.2f}%
-"""
-        styled_markdown(summarized_input_text)
+        styled_markdown(f''':הפרטים שהוזנו<br>
+    משכורת: {st.session_state.user_inputs['salary']:,.0f}₪<br>
+    צבירה: {st.session_state.user_inputs['current_balance']:,.0f}₪<br>
+    גיל: {st.session_state.user_inputs['current_age']}<br>
+    גיל פרישה: {st.session_state.user_inputs['retirement_age']}<br>
+    הפקדות עובד: {st.session_state.user_inputs['employee_deposit']*100:,.2f}%<br>
+    הפקדות מעסיק: {st.session_state.user_inputs['employer_deposit']*100:,.2f}%<br>
+    פיצויים: {st.session_state.user_inputs['severance_pay']*100:,.2f}%<br>
+    תשואה צפויה: {st.session_state.user_inputs['expected_annual_yield']*100*12:,.2f}%<br>
+    ''')
         # st.write(f''':הפרטים שהוזנו\n
     # משכורת: {st.session_state.user_inputs['salary']:,.0f}₪
     # צבירה: {st.session_state.user_inputs['current_balance']:,.0f}₪
