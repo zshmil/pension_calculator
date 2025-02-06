@@ -736,7 +736,7 @@ def main():
         # Step 3: If the number of offers is confirmed, show the offer details form.
         if st.session_state.get("num_offers_confirmed"):
             # st.write("אנא הזן את פרטי ההצעות:")
-            styled_markdown(''':אנא הזן את פרטי ההצעות''')
+            styled_markdown('''<strong>:אנא הזן את פרטי ההצעות</strong>''')
             offers = get_offer_details()
             
             # Step 4: If offers are saved, calculate and display the result.
