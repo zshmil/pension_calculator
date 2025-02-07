@@ -755,8 +755,6 @@ def main():
                 styled_subheader_green(f'''{final_text[company_name]} מציעים את ההצעה הזולה ביותר, עם דמי ניהול של<br>
 {final_text[fee]} לכל אורך שנות החיסכון, מה שמביא לקצבה צפויה של כ-{final_text[allowance]}'
     ''',  font_size="18px", background="#E8F9EE")
-)
-
                 
 if __name__ == "__main__":
     main()
