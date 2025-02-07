@@ -752,7 +752,7 @@ def main():
                 st.dataframe(get_bottom_line(df))
                 final_text = get_excpeted_monthly_allowance(df)
                 # styled_subheader_green(final_text)
-                styled_subheader_green(final_text)
+                styled_subheader_green(final_text[company_name])
 
 #                 styled_subheader_green(f'''{final_text[company_name]} מציעים את ההצעה הזולה ביותר, עם דמי ניהול של<br>
 # {final_text[fee]} לכל אורך שנות החיסכון, מה שמביא לקצבה צפויה של כ-{final_text[allowance]}
