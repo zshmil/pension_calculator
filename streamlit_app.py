@@ -754,7 +754,7 @@ def main():
                 # styled_subheader_green(final_text)
                 styled_subheader_green(final_text[company_name])
 
-#                 styled_subheader_green(f'''{final_text[company_name]} מציעים את ההצעה הזולה ביותר, עם דמי ניהול של<br>
+#                 styled_subheader_green(f'''{final_text.keys()} מציעים את ההצעה הזולה ביותר, עם דמי ניהול של<br>
 # {final_text[fee]} לכל אורך שנות החיסכון, מה שמביא לקצבה צפויה של כ-{final_text[allowance]}
 #     ''',  font_size="18px", background="#E8F9EE")
                 
