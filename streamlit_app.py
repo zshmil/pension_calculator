@@ -520,55 +520,25 @@ def add_difference_row(df, coefficient):
     return result_df
 
 
-# def style_lowest_total(df_one_line):
-#     """
-#     Styles the entire column(s) that contain the lowest value in the one-line DataFrame.
-#     Assumes that the DataFrame's cells are formatted as currency strings (e.g., "₪135.15").
-#     """
-#     # Convert the first row's values to numeric values for comparison
-#     numeric_row = df_one_line.iloc[0].replace({'₪': '', ',': ''}, regex=True).astype(float)
-#     min_val = numeric_row.min()
-    
-#     # Identify the column names (i.e. MultiIndex tuples) that have the minimum value
-#     lowest_columns = numeric_row[numeric_row == min_val].index.tolist()
-    
-#     # Define a function to style an entire column if its name is in the lowest_columns list
-#     def highlight_lowest_column(col):
-#         if col.name in lowest_columns:
-#             return ['background-color: #99ff33'] * len(col)
-#         else:
-#             return [''] * len(col)  
-#     return df_one_line.style.apply(highlight_lowest_column, axis=0)
-
 def style_lowest_total(df_one_line):
     """
-    Styles the entire column(s) that contain the lowest value in the one-line DataFrame
-    and centers all headers and cell values.
-    
+    Styles the entire column(s) that contain the lowest value in the one-line DataFrame.
     Assumes that the DataFrame's cells are formatted as currency strings (e.g., "₪135.15").
     """
-    # Convert the first row's values to numeric values for comparison.
+    # Convert the first row's values to numeric values for comparison
     numeric_row = df_one_line.iloc[0].replace({'₪': '', ',': ''}, regex=True).astype(float)
     min_val = numeric_row.min()
     
-    # Identify the column names (MultiIndex tuples) that have the minimum value.
+    # Identify the column names (i.e. MultiIndex tuples) that have the minimum value
     lowest_columns = numeric_row[numeric_row == min_val].index.tolist()
     
-    # Define a function to style an entire column if its name is in the lowest_columns list.
+    # Define a function to style an entire column if its name is in the lowest_columns list
     def highlight_lowest_column(col):
         if col.name in lowest_columns:
             return ['background-color: #99ff33'] * len(col)
         else:
-            return [''] * len(col)
-    
-    # Create the styler, applying our highlight function.
-    styler = df_one_line.style.apply(highlight_lowest_column, axis=0)
-    styler = styler.set_properties(**{'text-align': 'center'})
-    styler = styler.set_table_styles([{'selector': 'th', 
-                                       'props': [('text-align', 'center')]}]
-                                    )    
-    return styler
-
+            return [''] * len(col)  
+    return df_one_line.style.apply(highlight_lowest_column, axis=0)
 
 
 def get_bottom_line(df):
