@@ -595,7 +595,7 @@ def get_excpeted_monthly_allowance(df):
     company_name = allowance_row_numeric.idxmax()[1]
     final_text = f'''{company_name} מציעים את ההצעה הזולה ביותר<br>
 ,עם דמי ניהול של {fee} לכל אורך שנות החיסכון<br>
-מה שמביא לקצבה צפויה של כ-{allowance}'''
+-מה שמביא לקצבה צפויה של כ{allowance}'''
     return final_text
 
 
