@@ -594,7 +594,7 @@ def get_excpeted_monthly_allowance(df):
     allowance = f'₪{allowance_row_numeric.max():,.2f}'
     company_name = allowance_row_numeric.idxmax()[1]
     final_text = f'''{company_name} מציעים את ההצעה הזולה ביותר<br>
-,עם דמי ניהול של {fee}לכל אורך שנות החיסכון<br>
+,עם דמי ניהול של {fee} לכל אורך שנות החיסכון<br>
 מה שמביא לקצבה צפויה של כ-{allowance}'''
     return final_text
 
@@ -750,7 +750,7 @@ def main():
                 styled_subheader_black("סהכ דמי ניהול לאורך שנות החיסכון")
                 st.dataframe(get_bottom_line(df))
                 final_text = get_excpeted_monthly_allowance(df)
-                styled_subheader_green(final_text, background="#E8F9EE")
+                styled_subheader_green(final_text, background="#f0f0f0"")
                 
 if __name__ == "__main__":
     main()
