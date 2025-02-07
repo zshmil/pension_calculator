@@ -750,7 +750,7 @@ def main():
                 styled_subheader_black("סהכ דמי ניהול לאורך שנות החיסכון")
                 st.dataframe(get_bottom_line(df))
                 final_text = get_excpeted_monthly_allowance(df)
-                styled_subheader_green(final_text, background="#f0f0f0"")
+                styled_subheader_green(final_text, background="#f0f0f0")
                 
 if __name__ == "__main__":
     main()
