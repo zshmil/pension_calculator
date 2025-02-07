@@ -593,11 +593,14 @@ def get_excpeted_monthly_allowance(df):
     allowance_row_numeric = bottom_line_df.iloc[2,1:].replace({'₪': '', ',': ''}, regex=True).astype(float)
     allowance = f'₪{allowance_row_numeric.max():,.2f}'
     company_name = allowance_row_numeric.idxmax()[1]
-    final_text = f'{company_name} מציעים את ההצעה הזולה ביותר, עם דמי ניהול של {fee} לכל אורך שנות החיסכון, מה שמביא לקצבה צפויה של כ-{allowance}'
+    # final_text = f'{company_name} מציעים את ההצעה הזולה ביותר, עם דמי ניהול של {fee} לכל אורך שנות החיסכון, מה שמביא לקצבה צפויה של כ-{allowance}'
+    final_text = {'allowance': allowance,
+                 'fee': fee,
+                  'company_name': company_name}
     return final_text
 
 
-def styled_subheader_green(text, color="#27ae60", align="right", font_family="Arial", font_size="1.75em", margin="20px 0 10px 0"):
+def styled_subheader_green(text, color="#27ae60", align="right", background="#f0f0f0", font_family="Arial", font_size="1.75em", margin="20px 0 10px 0"):
     """
     Renders text as a styled subheader using HTML.    
     Parameters:
@@ -748,7 +751,12 @@ def main():
                 styled_subheader_black("סהכ דמי ניהול לאורך שנות החיסכון")
                 st.dataframe(get_bottom_line(df))
                 final_text = get_excpeted_monthly_allowance(df)
-                styled_subheader_green(final_text)
+                # styled_subheader_green(final_text)
+                styled_subheader_green(f'''{final_text[company_name]} מציעים את ההצעה הזולה ביותר, עם דמי ניהול של<br>
+{final_text[fee]} לכל אורך שנות החיסכון, מה שמביא לקצבה צפויה של כ-{final_text[allowance]}'
+    ''',  font_size="18px", background="#E8F9EE")
+)
+
                 
 if __name__ == "__main__":
     main()
