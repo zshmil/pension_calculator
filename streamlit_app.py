@@ -745,13 +745,13 @@ def main():
                 my_bar.empty()
                 st.divider() 
                 styled_subheader_black("פנסיה צפויה")
-                styled_markdown('''<strong>.תוצאות המחשבון אינן מהוות המלצה ו/או תחליף לייעוץ מקצועי</strong>''',  background="#ffa500")
+                styled_markdown('''<strong>.תוצאות המחשבון אינן מהוות המלצה ו/או תחליף לייעוץ מקצועי</strong>''',  color="black", align="right", background="#ffa500")
 
-#FFA500 – A classic, vibrant orange that's commonly used to draw attention.
-#FF8C00 – A deeper, dark orange that provides a strong, energetic feel.
-#FF7F50 – Known as Coral, this shade has a softer, slightly pinkish tone.
-#FFB347 – A lighter, pastel orange that is warm and inviting.
-#F5A623 – A golden, sunglow-inspired orange that is both bright and engaging.
+# #FFA500 – A classic, vibrant orange that's commonly used to draw attention.
+# #FF8C00 – A deeper, dark orange that provides a strong, energetic feel.
+# #FF7F50 – Known as Coral, this shade has a softer, slightly pinkish tone.
+# #FFB347 – A lighter, pastel orange that is warm and inviting.
+# #F5A623 – A golden, sunglow-inspired orange that is both bright and engaging.
                 
                 st.dataframe(df)
                 show_download_button(df)
