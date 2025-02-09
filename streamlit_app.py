@@ -745,7 +745,14 @@ def main():
                 my_bar.empty()
                 st.divider() 
                 styled_subheader_black("פנסיה צפויה")
-                styled_markdown('''<strong>.תוצאות המחשבון אינן מהוות המלצה ו/או תחליף לייעוץ מקצועי *</strong>''')
+                styled_markdown('''<strong>.תוצאות המחשבון אינן מהוות המלצה ו/או תחליף לייעוץ מקצועי*</strong>''', background = '#FFA500')
+
+#FFA500
+#FFB347
+#FF9933
+#FF9800
+#FFC107
+                
                 st.dataframe(df)
                 show_download_button(df)
                 st.divider() 
