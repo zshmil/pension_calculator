@@ -745,7 +745,7 @@ def main():
                 my_bar.empty()
                 st.divider() 
                 styled_subheader_black("פנסיה צפויה")
-                styled_markdown('''<strong>.תוצאות המחשבון אינן מהוות המלצה ו/או תחליף לייעוץ מקצועי</strong>''',  background="#FFA500")
+                styled_markdown('''<strong>.תוצאות המחשבון אינן מהוות המלצה ו/או תחליף לייעוץ מקצועי</strong>''',  background="#ffa500")
 
 #FFA500 – A classic, vibrant orange that's commonly used to draw attention.
 #FF8C00 – A deeper, dark orange that provides a strong, energetic feel.
