@@ -694,7 +694,8 @@ def styled_markdown(text, color="black", align="right",  background="#f0f0f0", f
 
 def main():
     st.logo('me_linkedin.png')
-    st.title("💰🧮 מחשבון פנסיה לשכירים 🧮💰")
+    # st.title("💰🧮 מחשבון פנסיה לשכירים 🧮💰")
+    st.title("מחשבון פנסיה לשכירים")
     st.divider()
     styled_markdown('''כלי פשוט ונוח המאפשר להזין פרטים אישיים כגון שכר, גיל, הפקדות ותשואה צפויה כדי לקבל את גובה החיסכון<br>
     .הפנסיוני הצפוי לך בפרישה<br>
