@@ -599,6 +599,30 @@ def get_excpeted_monthly_allowance(df):
     return final_text
 
 
+def styled_header(text, color="#27ae60", align="center", background="#f0f0f0", font_family="Arial", font_size="1.75em", margin="20px 0 10px 0"):
+    """
+    Renders text as a styled subheader using HTML.    
+    Parameters:
+      - text (str): The subheader text.
+      - color (str): The text color in hex.
+      - align (str): Text alignment.
+      - font_family (str): The font family.
+      - font_size (str): The font size.
+      - margin (str): CSS margin (top, right, bottom, left).
+    """
+    html_str = f"""
+    <h3 style="
+        text-align: {align};
+        color: {color};
+        font-family: {font_family};
+        font-size: {font_size};
+        margin: {margin};
+    ">{text}</h3>
+    """
+    st.markdown(html_str, unsafe_allow_html=True)
+
+
+
 def styled_subheader_green(text, color="#27ae60", align="right", background="#f0f0f0", font_family="Arial", font_size="1.75em", margin="20px 0 10px 0"):
     """
     Renders text as a styled subheader using HTML.    
@@ -695,7 +719,7 @@ def styled_markdown(text, color="black", align="right",  background="#f0f0f0", f
 def main():
     st.logo('me_linkedin.png')
     # st.title("💰🧮 מחשבון פנסיה לשכירים 🧮💰")
-    st.title("מחשבון פנסיה לשכירים")
+    styled_header("מחשבון פנסיה לשכירים")
     st.divider()
     styled_markdown('''כלי פשוט ונוח המאפשר להזין פרטים אישיים כגון שכר, גיל, הפקדות ותשואה צפויה כדי לקבל את גובה החיסכון<br>
     .הפנסיוני הצפוי לך בפרישה<br>
