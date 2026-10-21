@@ -1,6 +1,4 @@
-# 🎈 Blank app template
-
-A simple Streamlit app template for you to modify!
+# 🎈  My Pension calculator
 
 [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://shmil-pension-calculator.streamlit.app/)
 
